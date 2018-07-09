@@ -27,11 +27,6 @@ package def.processing.core;
 import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
-import java.util.Iterator;
-
-import javax.imageio.*;
-import javax.imageio.metadata.*;
-
 
 /**
    * ( begin auto-generated from PImage.xml )
@@ -3210,118 +3205,7 @@ int testFunction(int dst, int src) {
    * To get a list of the supported formats for writing, use: <BR>
    * <TT>println(javax.imageio.ImageIO.getReaderFormatNames())</TT>
    */
-  protected boolean saveImageIO(String path) throws IOException {
-    try {
-      int outputFormat = (format == ARGB) ?
-        BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB;
-
-      String extension =
-        path.substring(path.lastIndexOf('.') + 1).toLowerCase();
-
-      // JPEG and BMP images that have an alpha channel set get pretty unhappy.
-      // BMP just doesn't write, and JPEG writes it as a CMYK image.
-      // http://code.google.com/p/processing/issues/detail?id=415
-      if (extension.equals("bmp") || extension.equals("jpg") || extension.equals("jpeg")) {
-        outputFormat = BufferedImage.TYPE_INT_RGB;
-      }
-
-      BufferedImage bimage = new BufferedImage(pixelWidth, pixelHeight, outputFormat);
-      bimage.setRGB(0, 0, pixelWidth, pixelHeight, pixels, 0, pixelWidth);
-
-      File file = new File(path);
-
-      ImageWriter writer = null;
-      ImageWriteParam param = null;
-      IIOMetadata metadata = null;
-
-      if (extension.equals("jpg") || extension.equals("jpeg")) {
-        if ((writer = imageioWriter("jpeg")) != null) {
-          // Set JPEG quality to 90% with baseline optimization. Setting this
-          // to 1 was a huge jump (about triple the size), so this seems good.
-          // Oddly, a smaller file size than Photoshop at 90%, but I suppose
-          // it's a completely different algorithm.
-          param = writer.getDefaultWriteParam();
-          param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-          param.setCompressionQuality(0.9f);
-        }
-      }
-
-      if (extension.equals("png")) {
-        if ((writer = imageioWriter("png")) != null) {
-          param = writer.getDefaultWriteParam();
-          if (false) {
-            metadata = imageioDPI(writer, param, 100);
-          }
-        }
-      }
-
-      if (writer != null) {
-        BufferedOutputStream output =
-          new BufferedOutputStream(PApplet.createOutput(file));
-        writer.setOutput(ImageIO.createImageOutputStream(output));
-//        writer.write(null, new IIOImage(bimage, null, null), param);
-        writer.write(metadata, new IIOImage(bimage, null, metadata), param);
-        writer.dispose();
-
-        output.flush();
-        output.close();
-        return true;
-      }
-      // If iter.hasNext() somehow fails up top, it falls through to here
-      return javax.imageio.ImageIO.write(bimage, extension, file);
-
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new IOException("image save failed.");
-    }
-  }
-
-
-  private ImageWriter imageioWriter(String extension) {
-    Iterator<ImageWriter> iter = ImageIO.getImageWritersByFormatName(extension);
-    if (iter.hasNext()) {
-      return iter.next();
-    }
-    return null;
-  }
-
-
-  private IIOMetadata imageioDPI(ImageWriter writer, ImageWriteParam param, double dpi) {
-    // http://stackoverflow.com/questions/321736/how-to-set-dpi-information-in-an-image
-    ImageTypeSpecifier typeSpecifier =
-      ImageTypeSpecifier.createFromBufferedImageType(BufferedImage.TYPE_INT_RGB);
-    IIOMetadata metadata =
-      writer.getDefaultImageMetadata(typeSpecifier, param);
-
-    if (!metadata.isReadOnly() && metadata.isStandardMetadataFormatSupported()) {
-      // for PNG, it's dots per millimeter
-      double dotsPerMilli = dpi / 25.4;
-
-      IIOMetadataNode horiz = new IIOMetadataNode("HorizontalPixelSize");
-      horiz.setAttribute("value", Double.toString(dotsPerMilli));
-
-      IIOMetadataNode vert = new IIOMetadataNode("VerticalPixelSize");
-      vert.setAttribute("value", Double.toString(dotsPerMilli));
-
-      IIOMetadataNode dim = new IIOMetadataNode("Dimension");
-      dim.appendChild(horiz);
-      dim.appendChild(vert);
-
-      IIOMetadataNode root = new IIOMetadataNode("javax_imageio_1.0");
-      root.appendChild(dim);
-
-      try {
-        metadata.mergeTree("javax_imageio_1.0", root);
-        return metadata;
-
-      } catch (IIOInvalidTreeException e) {
-        System.err.println("Could not set the DPI of the output image");
-        e.printStackTrace();
-      }
-    }
-    return null;
-  }
-
+  protected native boolean saveImageIO(String path) throws IOException;
 
   protected String[] saveImageFormats;
 
@@ -3371,68 +3255,5 @@ int testFunction(int dst, int src) {
    * @usage application
    * @param filename a sequence of letters and numbers
    */
-  public boolean save(String filename) {  // ignore
-    boolean success = false;
-
-    if (parent != null) {
-      // use savePath(), so that the intermediate directories are created
-      filename = parent.savePath(filename);
-
-    } else {
-      File file = new File(filename);
-      if (file.isAbsolute()) {
-        // make sure that the intermediate folders have been created
-        PApplet.createPath(file);
-      } else {
-        String msg =
-          "PImage.save() requires an absolute path. " +
-          "Use createImage(), or pass savePath() to save().";
-        PGraphics.showException(msg);
-      }
-    }
-
-    // Make sure the pixel data is ready to go
-    loadPixels();
-
-    try {
-      OutputStream os = null;
-
-      if (saveImageFormats == null) {
-        saveImageFormats = javax.imageio.ImageIO.getWriterFormatNames();
-      }
-      if (saveImageFormats != null) {
-        for (int i = 0; i < saveImageFormats.length; i++) {
-          if (filename.endsWith("." + saveImageFormats[i])) {
-            if (!saveImageIO(filename)) {
-              System.err.println("Error while saving image.");
-              return false;
-            }
-            return true;
-          }
-        }
-      }
-
-      if (filename.toLowerCase().endsWith(".tga")) {
-        os = new BufferedOutputStream(new FileOutputStream(filename), 32768);
-        success = saveTGA(os); //, pixels, width, height, format);
-
-      } else {
-        if (!filename.toLowerCase().endsWith(".tif") &&
-            !filename.toLowerCase().endsWith(".tiff")) {
-          // if no .tif extension, add it..
-          filename += ".tif";
-        }
-        os = new BufferedOutputStream(new FileOutputStream(filename), 32768);
-        success = saveTIFF(os); //, pixels, width, height);
-      }
-      os.flush();
-      os.close();
-
-    } catch (IOException e) {
-      System.err.println("Error while saving image.");
-      e.printStackTrace();
-      success = false;
-    }
-    return success;
-  }
+  public native boolean save(String filename);
 }

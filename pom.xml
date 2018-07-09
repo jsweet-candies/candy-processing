@@ -36,6 +36,13 @@
 			<artifactId>jsweet-core</artifactId>
 			<version>6-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.jsweet.extension</groupId>
+			<artifactId>processing-jsweet-support</artifactId>
+			<version>3.3.7-SNAPSHOT</version>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
@@ -69,6 +76,10 @@
 					<dtsOut>src/main/resources/META-INF/resources/typings/${project.artifactId}/${project.version}</dtsOut>
 					<targetVersion>ES5</targetVersion>
 					<encoding>UTF-8</encoding>
+					<ignoredProblems>
+						<ignoredProblem>INVALID_METHOD_BODY_IN_INTERFACE</ignoredProblem>
+					</ignoredProblems>
+					<factoryClassName>org.jsweet.extension.processing.ProcessingJSweetFactory</factoryClassName>
 				</configuration>
 				<executions>
 					<execution>

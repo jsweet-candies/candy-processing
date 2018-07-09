@@ -24,6 +24,7 @@
 
 package def.processing.core;
 
+// TODO use processing jsweet factory ? map awt to unknown
 // used by link()
 import java.awt.Desktop;
 import java.awt.DisplayMode;
@@ -800,22 +801,6 @@ public class PApplet implements PConstants {
     return surface;
   }
 
-
-  /**
-   * A dummy frame to keep compatibility with 2.x code
-   * and encourage users to update.
-   */
-  public Frame frame;
-
-
-//  public Frame getFrame() {
-//    return frame;
-//  }
-//
-//
-//  public void setFrame(Frame frame) {
-//    this.frame = frame;
-//  }
 
 
   // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -4966,8 +4951,6 @@ public class PApplet implements PConstants {
   // RANDOM NUMBERS
 
 
-  Random internalRandom;
-
   /**
    *
    */
@@ -4977,17 +4960,10 @@ public class PApplet implements PConstants {
       return 0;
     }
 
-    if (internalRandom == null) {
-      internalRandom = new Random();
-    }
-
     // for some reason (rounding error?) Math.random() * 3
     // can sometimes return '3' (once in ~30 million tries)
     // so a check was added to avoid the inclusion of 'howbig'
     float value = 0;
-    do {
-      value = internalRandom.nextFloat() * high;
-    } while (value == high);
     return value;
   }
 
@@ -5009,10 +4985,7 @@ public class PApplet implements PConstants {
    * @see PApplet#noise(float, float, float)
    */
   public final float randomGaussian() {
-    if (internalRandom == null) {
-      internalRandom = new Random();
-    }
-    return (float) internalRandom.nextGaussian();
+    return 0;
   }
 
 
@@ -5066,10 +5039,6 @@ public class PApplet implements PConstants {
    * @see PApplet#noiseSeed(long)
    */
   public final void randomSeed(long seed) {
-    if (internalRandom == null) {
-      internalRandom = new Random();
-    }
-    internalRandom.setSeed(seed);
   }
 
 
@@ -5103,9 +5072,6 @@ public class PApplet implements PConstants {
   int perlin_TWOPI, perlin_PI;
   float[] perlin_cosTable;
   float[] perlin;
-
-  Random perlinRandom;
-
 
   /**
    */
@@ -5161,12 +5127,8 @@ public class PApplet implements PConstants {
    */
   public float noise(float x, float y, float z) {
     if (perlin == null) {
-      if (perlinRandom == null) {
-        perlinRandom = new Random();
-      }
       perlin = new float[PERLIN_SIZE + 1];
       for (int i = 0; i < PERLIN_SIZE + 1; i++) {
-        perlin[i] = perlinRandom.nextFloat(); //(float)Math.random();
       }
       // [toxi 031112]
       // noise broke due to recent change of cos table in PGraphics
@@ -5291,8 +5253,6 @@ public class PApplet implements PConstants {
    * @see PApplet#randomSeed(long)
    */
   public void noiseSeed(long seed) {
-    if (perlinRandom == null) perlinRandom = new Random();
-    perlinRandom.setSeed(seed);
     // force table reset after changing the random number seed [0122]
     perlin = null;
   }
@@ -9094,30 +9054,6 @@ public class PApplet implements PConstants {
     return outgoing;
   }
 
-
-  static protected LinkedHashMap<String, Pattern> matchPatterns;
-
-  static Pattern matchPattern(String regexp) {
-    Pattern p = null;
-    if (matchPatterns == null) {
-      matchPatterns = new LinkedHashMap<String, Pattern>(16, 0.75f, true) {
-        @Override
-        protected boolean removeEldestEntry(Map.Entry<String, Pattern> eldest) {
-          // Limit the number of match patterns at 10 most recently used
-          return size() == 10;
-        }
-      };
-    } else {
-      p = matchPatterns.get(regexp);
-    }
-    if (p == null) {
-      p = Pattern.compile(regexp, Pattern.MULTILINE | Pattern.DOTALL);
-      matchPatterns.put(regexp, p);
-    }
-    return p;
-  }
-
-
   /**
    * ( begin auto-generated from match.xml )
    *
@@ -9152,19 +9088,7 @@ public class PApplet implements PConstants {
    * @see PApplet#join(String[], String)
    * @see PApplet#trim(String)
    */
-  static public String[] match(String str, String regexp) {
-    Pattern p = matchPattern(regexp);
-    Matcher m = p.matcher(str);
-    if (m.find()) {
-      int count = m.groupCount() + 1;
-      String[] groups = new String[count];
-      for (int i = 0; i < count; i++) {
-        groups[i] = m.group(i);
-      }
-      return groups;
-    }
-    return null;
-  }
+  static public native String[] match(String str, String regexp);
 
 
   /**
@@ -9203,28 +9127,7 @@ public class PApplet implements PConstants {
    * @see PApplet#join(String[], String)
    * @see PApplet#trim(String)
    */
-  static public String[][] matchAll(String str, String regexp) {
-    Pattern p = matchPattern(regexp);
-    Matcher m = p.matcher(str);
-    List<String[]> results = new ArrayList<>();
-    int count = m.groupCount() + 1;
-    while (m.find()) {
-      String[] groups = new String[count];
-      for (int i = 0; i < count; i++) {
-        groups[i] = m.group(i);
-      }
-      results.add(groups);
-    }
-    if (results.isEmpty()) {
-      return null;
-    }
-    String[][] matches = new String[results.size()][count];
-    for (int i = 0; i < matches.length; i++) {
-      matches[i] = results.get(i);
-    }
-    return matches;
-  }
-
+  static public native String[][] matchAll(String str, String regexp);
 
 
   //////////////////////////////////////////////////////////////
@@ -9751,7 +9654,6 @@ public class PApplet implements PConstants {
    * Integer number formatter.
    */
 
-  static private NumberFormat int_nf;
   static private int int_nf_digits;
   static private boolean int_nf_commas;
 
@@ -9789,20 +9691,7 @@ public class PApplet implements PConstants {
   /**
    * @param num the number to format
    */
-  static public String nf(int num, int digits) {
-    if ((int_nf != null) &&
-        (int_nf_digits == digits) &&
-        !int_nf_commas) {
-      return int_nf.format(num);
-    }
-
-    int_nf = NumberFormat.getInstance();
-    int_nf.setGroupingUsed(false); // no commas
-    int_nf_commas = false;
-    int_nf.setMinimumIntegerDigits(digits);
-    int_nf_digits = digits;
-    return int_nf.format(num);
-  }
+  native static public String nf(int num, int digits);
 
   /**
    * ( begin auto-generated from nfc.xml )
@@ -9834,20 +9723,7 @@ public class PApplet implements PConstants {
   /**
    * @param num the number to format
    */
-  static public String nfc(int num) {
-    if ((int_nf != null) &&
-        (int_nf_digits == 0) &&
-        int_nf_commas) {
-      return int_nf.format(num);
-    }
-
-    int_nf = NumberFormat.getInstance();
-    int_nf.setGroupingUsed(true);
-    int_nf_commas = true;
-    int_nf.setMinimumIntegerDigits(0);
-    int_nf_digits = 0;
-    return int_nf.format(num);
-  }
+  native static public String nfc(int num);
 
 
   /**
@@ -9934,7 +9810,6 @@ public class PApplet implements PConstants {
 
   // FLOAT NUMBER FORMATTING
 
-  static private NumberFormat float_nf;
   static private int float_nf_left, float_nf_right;
   static private boolean float_nf_commas;
 
@@ -9950,27 +9825,7 @@ public class PApplet implements PConstants {
     return formatted;
   }
 
-  static public String nf(float num, int left, int right) {
-    if ((float_nf != null) &&
-        (float_nf_left == left) &&
-        (float_nf_right == right) &&
-        !float_nf_commas) {
-      return float_nf.format(num);
-    }
-
-    float_nf = NumberFormat.getInstance();
-    float_nf.setGroupingUsed(false);
-    float_nf_commas = false;
-
-    if (left != 0) float_nf.setMinimumIntegerDigits(left);
-    if (right != 0) {
-      float_nf.setMinimumFractionDigits(right);
-      float_nf.setMaximumFractionDigits(right);
-    }
-    float_nf_left = left;
-    float_nf_right = right;
-    return float_nf.format(num);
-  }
+  native static public String nf(float num, int left, int right);
 
   /**
    * @param right number of digits to the right of the decimal point
@@ -9983,27 +9838,7 @@ public class PApplet implements PConstants {
     return formatted;
   }
 
-  static public String nfc(float num, int right) {
-    if ((float_nf != null) &&
-        (float_nf_left == 0) &&
-        (float_nf_right == right) &&
-        float_nf_commas) {
-      return float_nf.format(num);
-    }
-
-    float_nf = NumberFormat.getInstance();
-    float_nf.setGroupingUsed(true);
-    float_nf_commas = true;
-
-    if (right != 0) {
-      float_nf.setMinimumFractionDigits(right);
-      float_nf.setMaximumFractionDigits(right);
-    }
-    float_nf_left = 0;
-    float_nf_right = right;
-    return float_nf.format(num);
-  }
-
+  native static public String nfc(float num, int right);
 
  /**
   * @param left the number of digits to the left of the decimal point
@@ -10823,69 +10658,7 @@ public class PApplet implements PConstants {
   }
 
 
-  protected PSurface initSurface() {
-    g = createPrimaryGraphics();
-    surface = g.createSurface();
-
-    // Create fake Frame object to warn user about the changes
-    if (g.displayable()) {
-      frame = new Frame() {
-        @Override
-        public void setResizable(boolean resizable) {
-          deprecationWarning("setResizable");
-          surface.setResizable(resizable);
-        }
-
-        @Override
-        public void setVisible(boolean visible) {
-          deprecationWarning("setVisible");
-          surface.setVisible(visible);
-        }
-
-        @Override
-        public void setTitle(String title) {
-          deprecationWarning("setTitle");
-          surface.setTitle(title);
-        }
-
-        @Override
-        public void setUndecorated(boolean ignored) {
-          throw new RuntimeException("'frame' has been removed from Processing 3, " +
-            "use fullScreen() to get an undecorated full screen frame");
-        }
-
-        // Can't override this one because it's called by Window's constructor
-        /*
-        @Override
-        public void setLocation(int x, int y) {
-          deprecationWarning("setLocation");
-          surface.setLocation(x, y);
-        }
-        */
-
-        @Override
-        public void setSize(int w, int h) {
-          deprecationWarning("setSize");
-          surface.setSize(w, h);
-        }
-
-        private void deprecationWarning(String method) {
-          PGraphics.showWarning("Use surface." + method + "() instead of " +
-                                "frame." + method + " in Processing 3");
-          //new Exception(method).printStackTrace(System.out);
-        }
-      };
-
-      surface.initFrame(this); //, backgroundColor, displayNum, fullScreen, spanDisplays);
-      surface.setTitle(getClass().getSimpleName());
-
-    } else {
-      surface.initOffscreen(this);  // for PDF/PSurfaceNone and friends
-    }
-
-//    init();
-    return surface;
-  }
+  protected native PSurface initSurface();
 
 
 //  protected void createSurface() {

@@ -1,0 +1,20 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "target": "es5",
+        "module": "none",
+        "sourceMap": false,
+        "lib": [
+            "dom",
+            "es5",
+            "es6",
+            "scripthost"
+        ]
+    },
+    "include": [
+        "src/main/resources/META-INF/resources/webjars/processing/3.3.7-SNAPSHOT/def/processing/core/*.ts"
+    ],
+    "exclude": [
+      "node_modules"
+    ]
+}

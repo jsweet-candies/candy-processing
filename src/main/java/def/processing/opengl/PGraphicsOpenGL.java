@@ -24,14 +24,35 @@
 
 package def.processing.opengl;
 
-import def.processing.core.*;
-
 import java.io.File;
-import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.net.URL;
-import java.nio.*;
-import java.util.*;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.WeakHashMap;
+
+import def.processing.core.PApplet;
+import def.processing.core.PConstants;
+import def.processing.core.PFont;
+import def.processing.core.PGraphics;
+import def.processing.core.PImage;
+import def.processing.core.PMatrix;
+import def.processing.core.PMatrix2D;
+import def.processing.core.PMatrix3D;
+import def.processing.core.PShape;
+import def.processing.core.PSurface;
+import def.processing.core.PVector;
 
 
 /**
@@ -47,34 +68,12 @@ public class PGraphicsOpenGL extends PGraphics {
   /** Font cache for texture objects. */
   protected WeakHashMap<PFont, FontTexture> fontMap;
 
-  // ........................................................
-
-  // Disposal of native resources
-  // Using the technique alternative to finalization described in:
-  // http://www.oracle.com/technetwork/articles/java/finalization-137655.html
-  private static ReferenceQueue<Object> refQueue = new ReferenceQueue<>();
   private static List<Disposable<? extends Object>> reachableWeakReferences =
     new LinkedList<>();
-
-  static final private int MAX_DRAIN_GLRES_ITERATIONS = 10;
-
-  static void drainRefQueueBounded() {
-    int iterations = 0;
-    while (iterations < MAX_DRAIN_GLRES_ITERATIONS) {
-      Disposable<? extends Object> res =
-        (Disposable<? extends Object>) refQueue.poll();
-      if (res == null) {
-        break;
-      }
-      res.dispose();
-      ++iterations;
-    }
-  }
-
+  
   private static abstract class Disposable<T> extends WeakReference<T> {
     protected Disposable(T obj) {
-      super(obj, refQueue);
-      drainRefQueueBounded();
+      super(obj, null);
       reachableWeakReferences.add(this);
     }
 
