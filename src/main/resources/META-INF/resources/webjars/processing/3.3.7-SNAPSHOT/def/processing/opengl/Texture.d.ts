@@ -98,11 +98,11 @@ declare class Texture implements PConstants {
 
     rgbaPixels : number[];
 
-    pixelBuffer : java.nio.IntBuffer;
+    pixelBuffer : any;
 
     edgePixels : number[];
 
-    edgeBuffer : java.nio.IntBuffer;
+    edgeBuffer : any;
 
     tempFbo : FrameBuffer;
 
@@ -203,7 +203,7 @@ declare class Texture implements PConstants {
 
     public setNative(pixels : number[], x : number, y : number, w : number, h : number);
 
-    public setNative(pixBuf : java.nio.IntBuffer, x : number, y : number, w : number, h : number);
+    public setNative(pixBuf : any, x : number, y : number, w : number, h : number);
 
     /**
      * Copy texture to pixels. Involves video memory to main memory transfer (slow).
@@ -253,7 +253,7 @@ declare class Texture implements PConstants {
 
     public setBufferSource(source : any);
 
-    public copyBufferFromSource(natRef : any, byteBuf : java.nio.ByteBuffer, w : number, h : number);
+    public copyBufferFromSource(natRef : any, byteBuf : any, w : number, h : number);
 
     public disposeSourceBuffer();
 
@@ -411,9 +411,9 @@ declare namespace Texture {
 
         natBuf : any;
 
-        rgbBuf : java.nio.IntBuffer;
+        rgbBuf : any;
 
-        constructor(__parent: any, nat : any, rgb : java.nio.IntBuffer, w : number, h : number);
+        constructor(__parent: any, nat : any, rgb : any, w : number, h : number);
 
         dispose();
     }

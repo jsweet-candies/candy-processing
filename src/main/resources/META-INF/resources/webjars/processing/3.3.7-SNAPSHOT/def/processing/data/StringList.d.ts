@@ -17,7 +17,7 @@ declare class StringList {
 
     public constructor(...items : any[]);
 
-    public constructor(iter : java.lang.Iterable<string>);
+    public constructor(iter : Array<string>);
 
     /**
      * Improve efficiency by removing allocated but unused entries from the

@@ -1085,91 +1085,7 @@ public class PShapeSVG extends PShape {
   }
 
 
-  protected void parseColors(XML properties) {
-    if (properties.hasAttribute("opacity")) {
-      String opacityText = properties.getString("opacity");
-      setOpacity(opacityText);
-    }
-
-    if (properties.hasAttribute("stroke")) {
-      String strokeText = properties.getString("stroke");
-      setColor(strokeText, false);
-    }
-
-    if (properties.hasAttribute("stroke-opacity")) {
-      String strokeOpacityText = properties.getString("stroke-opacity");
-      setStrokeOpacity(strokeOpacityText);
-    }
-
-    if (properties.hasAttribute("stroke-width")) {
-      // if NaN (i.e. if it's 'inherit') then default back to the inherit setting
-      String lineweight = properties.getString("stroke-width");
-      setStrokeWeight(lineweight);
-    }
-
-    if (properties.hasAttribute("stroke-linejoin")) {
-      String linejoin = properties.getString("stroke-linejoin");
-      setStrokeJoin(linejoin);
-    }
-
-    if (properties.hasAttribute("stroke-linecap")) {
-      String linecap = properties.getString("stroke-linecap");
-      setStrokeCap(linecap);
-    }
-
-    // fill defaults to black (though stroke defaults to "none")
-    // http://www.w3.org/TR/SVG/painting.html#FillProperties
-    if (properties.hasAttribute("fill")) {
-      String fillText = properties.getString("fill");
-      setColor(fillText, true);
-    }
-
-    if (properties.hasAttribute("fill-opacity")) {
-      String fillOpacityText = properties.getString("fill-opacity");
-      setFillOpacity(fillOpacityText);
-    }
-
-    if (properties.hasAttribute("style")) {
-      String styleText = properties.getString("style");
-      String[] styleTokens = PApplet.splitTokens(styleText, ";");
-
-      //PApplet.println(styleTokens);
-      for (int i = 0; i < styleTokens.length; i++) {
-        String[] tokens = PApplet.splitTokens(styleTokens[i], ":");
-        //PApplet.println(tokens);
-
-        tokens[0] = PApplet.trim(tokens[0]);
-
-        if (tokens[0].equals("fill")) {
-          setColor(tokens[1], true);
-
-        } else if(tokens[0].equals("fill-opacity")) {
-          setFillOpacity(tokens[1]);
-
-        } else if(tokens[0].equals("stroke")) {
-          setColor(tokens[1], false);
-
-        } else if(tokens[0].equals("stroke-width")) {
-          setStrokeWeight(tokens[1]);
-
-        } else if(tokens[0].equals("stroke-linecap")) {
-          setStrokeCap(tokens[1]);
-
-        } else if(tokens[0].equals("stroke-linejoin")) {
-          setStrokeJoin(tokens[1]);
-
-        } else if(tokens[0].equals("stroke-opacity")) {
-          setStrokeOpacity(tokens[1]);
-
-        } else if(tokens[0].equals("opacity")) {
-          setOpacity(tokens[1]);
-
-        } else {
-          // Other attributes are not yet implemented
-        }
-      }
-    }
-  }
+  protected native void parseColors(XML properties);
 
 
   void setOpacity(String opacityText) {
@@ -1177,50 +1093,6 @@ public class PShapeSVG extends PShape {
     strokeColor = ((int) (opacity * 255)) << 24 | strokeColor & 0xFFFFFF;
     fillColor = ((int) (opacity * 255)) << 24 | fillColor & 0xFFFFFF;
   }
-
-
-  void setStrokeWeight(String lineweight) {
-    strokeWeight = parseUnitSize(lineweight, svgSizeXY);
-  }
-
-
-  void setStrokeOpacity(String opacityText) {
-    strokeOpacity = PApplet.parseFloat(opacityText);
-    strokeColor = ((int) (strokeOpacity * 255)) << 24 | strokeColor & 0xFFFFFF;
-  }
-
-
-  void setStrokeJoin(String linejoin) {
-    if (linejoin.equals("inherit")) {
-      // do nothing, will inherit automatically
-
-    } else if (linejoin.equals("miter")) {
-      strokeJoin = PConstants.MITER;
-
-    } else if (linejoin.equals("round")) {
-      strokeJoin = PConstants.ROUND;
-
-    } else if (linejoin.equals("bevel")) {
-      strokeJoin = PConstants.BEVEL;
-    }
-  }
-
-
-  void setStrokeCap(String linecap) {
-    if (linecap.equals("inherit")) {
-      // do nothing, will inherit automatically
-
-    } else if (linecap.equals("butt")) {
-      strokeCap = PConstants.SQUARE;
-
-    } else if (linecap.equals("round")) {
-      strokeCap = PConstants.ROUND;
-
-    } else if (linecap.equals("square")) {
-      strokeCap = PConstants.PROJECT;
-    }
-  }
-
 
   void setFillOpacity(String opacityText) {
     fillOpacity = PApplet.parseFloat(opacityText);
@@ -1743,40 +1615,6 @@ public class PShapeSVG extends PShape {
       return vertexCount != 0;
     }
   }
-
-
-  // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-
-
-  /**
-   * Get a particular element based on its SVG ID. When editing SVG by hand,
-   * this is the id="" tag on any SVG element. When editing from Illustrator,
-   * these IDs can be edited by expanding the layers palette. The names used
-   * in the layers palette, both for the layers or the shapes and groups
-   * beneath them can be used here.
-   * <PRE>
-   * // This code grabs "Layer 3" and the shapes beneath it.
-   * PShape layer3 = svg.getChild("Layer 3");
-   * </PRE>
-   */
-  @Override
-  public PShape getChild(String name) {
-    PShape found = super.getChild(name);
-    if (found == null) {
-      // Otherwise try with underscores instead of spaces
-      // (this is how Illustrator handles spaces in the layer names).
-      found = super.getChild(name.replace(' ', '_'));
-    }
-    // Set bounding box based on the parent bounding box
-    if (found != null) {
-//      found.x = this.x;
-//      found.y = this.y;
-      found.width = this.width;
-      found.height = this.height;
-    }
-    return found;
-  }
-
 
   /**
    * Prints out the SVG document. Useful for parsing.

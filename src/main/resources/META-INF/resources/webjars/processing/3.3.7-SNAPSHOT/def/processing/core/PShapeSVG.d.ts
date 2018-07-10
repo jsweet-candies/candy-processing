@@ -112,14 +112,6 @@ declare class PShapeSVG extends PShape {
 
     setOpacity(opacityText : string);
 
-    setStrokeWeight(lineweight : string);
-
-    setStrokeOpacity(opacityText : string);
-
-    setStrokeJoin(linejoin : string);
-
-    setStrokeCap(linecap : string);
-
     setFillOpacity(opacityText : string);
 
     setColor(colorText : string, isFill : boolean);

@@ -54,7 +54,7 @@ declare class FloatDict {
 
     resetIndices();
 
-    public entries() : java.lang.Iterable<FloatDict.Entry>;
+    public entries() : Array<FloatDict.Entry>;
 
     public entryIterator() : any;
 

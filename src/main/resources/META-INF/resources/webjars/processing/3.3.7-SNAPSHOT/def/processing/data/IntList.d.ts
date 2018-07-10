@@ -15,7 +15,7 @@ declare class IntList {
 
     public constructor(source : number[]);
 
-    public constructor(iter : java.lang.Iterable<any>);
+    public constructor(iter : Array<any>);
 
     public constructor(...items : any[]);
 

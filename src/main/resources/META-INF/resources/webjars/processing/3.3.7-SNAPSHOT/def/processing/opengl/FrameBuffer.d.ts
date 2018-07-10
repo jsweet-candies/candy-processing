@@ -51,7 +51,7 @@ declare class FrameBuffer implements PConstants {
 
     noDepth : boolean;
 
-    pixelBuffer : java.nio.IntBuffer;
+    pixelBuffer : any;
 
     constructor(pg : PGraphicsOpenGL);
 
@@ -81,7 +81,7 @@ declare class FrameBuffer implements PConstants {
 
     public getPixels(pixels : number[]);
 
-    public getPixelBuffer() : java.nio.IntBuffer;
+    public getPixelBuffer() : any;
 
     public hasDepthBuffer() : boolean;
 

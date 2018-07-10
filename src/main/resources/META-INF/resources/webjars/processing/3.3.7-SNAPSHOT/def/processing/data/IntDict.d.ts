@@ -56,7 +56,7 @@ declare class IntDict {
 
     resetIndices();
 
-    public entries() : java.lang.Iterable<IntDict.Entry>;
+    public entries() : Array<IntDict.Entry>;
 
     public entryIterator() : any;
 

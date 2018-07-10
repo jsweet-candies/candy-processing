@@ -115,7 +115,7 @@ declare abstract class PGL {
      */
     static STROKE_DISPLACEMENT : number;
 
-    firstFrame : java.nio.IntBuffer;
+    firstFrame : any;
 
     static SINGLE_BUFFERED : boolean;
 
@@ -133,25 +133,25 @@ declare abstract class PGL {
 
     numSamples : number;
 
-    glColorFbo : java.nio.IntBuffer;
+    glColorFbo : any;
 
-    glColorTex : java.nio.IntBuffer;
+    glColorTex : any;
 
-    glDepthStencil : java.nio.IntBuffer;
+    glDepthStencil : any;
 
-    glDepth : java.nio.IntBuffer;
+    glDepth : any;
 
-    glStencil : java.nio.IntBuffer;
+    glStencil : any;
 
-    glMultiFbo : java.nio.IntBuffer;
+    glMultiFbo : any;
 
-    glMultiColor : java.nio.IntBuffer;
+    glMultiColor : any;
 
-    glMultiDepthStencil : java.nio.IntBuffer;
+    glMultiDepthStencil : any;
 
-    glMultiDepth : java.nio.IntBuffer;
+    glMultiDepth : any;
 
-    glMultiStencil : java.nio.IntBuffer;
+    glMultiStencil : any;
 
     fboWidth : number;
 
@@ -206,7 +206,7 @@ declare abstract class PGL {
 
     texCoords : number[];
 
-    texData : java.nio.FloatBuffer;
+    texData : any;
 
     static SHADER_PREPROCESSOR_DIRECTIVE : string;
 
@@ -236,17 +236,17 @@ declare abstract class PGL {
 
     setFps : boolean;
 
-    byteBuffer : java.nio.ByteBuffer;
+    byteBuffer : any;
 
-    intBuffer : java.nio.IntBuffer;
+    intBuffer : any;
 
-    viewBuffer : java.nio.IntBuffer;
+    viewBuffer : any;
 
-    colorBuffer : java.nio.IntBuffer;
+    colorBuffer : any;
 
-    depthBuffer : java.nio.FloatBuffer;
+    depthBuffer : any;
 
-    stencilBuffer : java.nio.ByteBuffer;
+    stencilBuffer : any;
 
     /**
      * Used to register amount of geometry rendered in each frame.
@@ -322,7 +322,7 @@ declare abstract class PGL {
 
     public presentY : any;
 
-    closeButtonTex : java.nio.IntBuffer;
+    closeButtonTex : any;
 
     stopButtonColor : number;
 
@@ -458,7 +458,7 @@ declare abstract class PGL {
 
     copyToTexture(target : number, format : number, id : number, x : number, y : number, w : number, h : number, buffer : number[]);
 
-    copyToTexture(target : number, format : number, id : number, x : number, y : number, w : number, h : number, buffer : java.nio.IntBuffer);
+    copyToTexture(target : number, format : number, id : number, x : number, y : number, w : number, h : number, buffer : any);
 
     /**
      * Not an approved function, this will change or be removed in the future.
@@ -665,69 +665,69 @@ declare abstract class PGL {
 
     getMaxTexUnits() : number;
 
-    static allocateDirectByteBuffer(size : number) : java.nio.ByteBuffer;
+    static allocateDirectByteBuffer(size : number) : any;
 
-    static allocateByteBuffer(size : number) : java.nio.ByteBuffer;
+    static allocateByteBuffer(size : number) : any;
 
-    static allocateByteBuffer(arr : number[]) : java.nio.ByteBuffer;
+    static allocateByteBuffer(arr : number[]) : any;
 
-    static updateByteBuffer(buf : java.nio.ByteBuffer, arr : number[], wrap : boolean) : java.nio.ByteBuffer;
+    static updateByteBuffer(buf : any, arr : number[], wrap : boolean) : any;
 
-    static updateByteBuffer(buf : java.nio.ByteBuffer, arr : number[], offset : number, size : number);
+    static updateByteBuffer(buf : any, arr : number[], offset : number, size : number);
 
-    static getByteArray(buf : java.nio.ByteBuffer, arr : number[]);
+    static getByteArray(buf : any, arr : number[]);
 
-    static putByteArray(buf : java.nio.ByteBuffer, arr : number[]);
+    static putByteArray(buf : any, arr : number[]);
 
-    static fillByteBuffer(buf : java.nio.ByteBuffer, i0 : number, i1 : number, val : number);
+    static fillByteBuffer(buf : any, i0 : number, i1 : number, val : number);
 
-    static allocateDirectShortBuffer(size : number) : java.nio.ShortBuffer;
+    static allocateDirectShortBuffer(size : number) : any;
 
-    static allocateShortBuffer(size : number) : java.nio.ShortBuffer;
+    static allocateShortBuffer(size : number) : any;
 
-    static allocateShortBuffer(arr : number[]) : java.nio.ShortBuffer;
+    static allocateShortBuffer(arr : number[]) : any;
 
-    static updateShortBuffer(buf : java.nio.ShortBuffer, arr : number[], wrap : boolean) : java.nio.ShortBuffer;
+    static updateShortBuffer(buf : any, arr : number[], wrap : boolean) : any;
 
-    static updateShortBuffer(buf : java.nio.ShortBuffer, arr : number[], offset : number, size : number);
+    static updateShortBuffer(buf : any, arr : number[], offset : number, size : number);
 
-    static getShortArray(buf : java.nio.ShortBuffer, arr : number[]);
+    static getShortArray(buf : any, arr : number[]);
 
-    static putShortArray(buf : java.nio.ShortBuffer, arr : number[]);
+    static putShortArray(buf : any, arr : number[]);
 
-    static fillShortBuffer(buf : java.nio.ShortBuffer, i0 : number, i1 : number, val : number);
+    static fillShortBuffer(buf : any, i0 : number, i1 : number, val : number);
 
-    static allocateDirectIntBuffer(size : number) : java.nio.IntBuffer;
+    static allocateDirectIntBuffer(size : number) : any;
 
-    static allocateIntBuffer(size : number) : java.nio.IntBuffer;
+    static allocateIntBuffer(size : number) : any;
 
-    static allocateIntBuffer(arr : number[]) : java.nio.IntBuffer;
+    static allocateIntBuffer(arr : number[]) : any;
 
-    static updateIntBuffer(buf : java.nio.IntBuffer, arr : number[], wrap : boolean) : java.nio.IntBuffer;
+    static updateIntBuffer(buf : any, arr : number[], wrap : boolean) : any;
 
-    static updateIntBuffer(buf : java.nio.IntBuffer, arr : number[], offset : number, size : number);
+    static updateIntBuffer(buf : any, arr : number[], offset : number, size : number);
 
-    static getIntArray(buf : java.nio.IntBuffer, arr : number[]);
+    static getIntArray(buf : any, arr : number[]);
 
-    static putIntArray(buf : java.nio.IntBuffer, arr : number[]);
+    static putIntArray(buf : any, arr : number[]);
 
-    static fillIntBuffer(buf : java.nio.IntBuffer, i0 : number, i1 : number, val : number);
+    static fillIntBuffer(buf : any, i0 : number, i1 : number, val : number);
 
-    static allocateDirectFloatBuffer(size : number) : java.nio.FloatBuffer;
+    static allocateDirectFloatBuffer(size : number) : any;
 
-    static allocateFloatBuffer(size : number) : java.nio.FloatBuffer;
+    static allocateFloatBuffer(size : number) : any;
 
-    static allocateFloatBuffer(arr : number[]) : java.nio.FloatBuffer;
+    static allocateFloatBuffer(arr : number[]) : any;
 
-    static updateFloatBuffer(buf : java.nio.FloatBuffer, arr : number[], wrap : boolean) : java.nio.FloatBuffer;
+    static updateFloatBuffer(buf : any, arr : number[], wrap : boolean) : any;
 
-    static updateFloatBuffer(buf : java.nio.FloatBuffer, arr : number[], offset : number, size : number);
+    static updateFloatBuffer(buf : any, arr : number[], offset : number, size : number);
 
-    static getFloatArray(buf : java.nio.FloatBuffer, arr : number[]);
+    static getFloatArray(buf : any, arr : number[]);
 
-    static putFloatArray(buf : java.nio.FloatBuffer, arr : number[]);
+    static putFloatArray(buf : any, arr : number[]);
 
-    static fillFloatBuffer(buf : java.nio.FloatBuffer, i0 : number, i1 : number, val : number);
+    static fillFloatBuffer(buf : any, i0 : number, i1 : number, val : number);
 
     abstract getFontAscent(font : any) : number;
 
@@ -1241,11 +1241,11 @@ declare abstract class PGL {
 
     public abstract disable(value : number);
 
-    public abstract getBooleanv(value : number, data : java.nio.IntBuffer);
+    public abstract getBooleanv(value : number, data : any);
 
-    public abstract getIntegerv(value : number, data : java.nio.IntBuffer);
+    public abstract getIntegerv(value : number, data : any);
 
-    public abstract getFloatv(value : number, data : java.nio.FloatBuffer);
+    public abstract getFloatv(value : number, data : any);
 
     public abstract isEnabled(value : number) : boolean;
 
@@ -1255,23 +1255,23 @@ declare abstract class PGL {
 
     public abstract errorString(err : number) : string;
 
-    public abstract genBuffers(n : number, buffers : java.nio.IntBuffer);
+    public abstract genBuffers(n : number, buffers : any);
 
-    public abstract deleteBuffers(n : number, buffers : java.nio.IntBuffer);
+    public abstract deleteBuffers(n : number, buffers : any);
 
     public abstract bindBuffer(target : number, buffer : number);
 
-    public abstract bufferData(target : number, size : number, data : java.nio.Buffer, usage : number);
+    public abstract bufferData(target : number, size : number, data : any, usage : number);
 
-    public abstract bufferSubData(target : number, offset : number, size : number, data : java.nio.Buffer);
+    public abstract bufferSubData(target : number, offset : number, size : number, data : any);
 
     public abstract isBuffer(buffer : number);
 
-    public abstract getBufferParameteriv(target : number, value : number, data : java.nio.IntBuffer);
+    public abstract getBufferParameteriv(target : number, value : number, data : any);
 
-    public abstract mapBuffer(target : number, access : number) : java.nio.ByteBuffer;
+    public abstract mapBuffer(target : number, access : number) : any;
 
-    public abstract mapBufferRange(target : number, offset : number, length : number, access : number) : java.nio.ByteBuffer;
+    public abstract mapBufferRange(target : number, offset : number, length : number, access : number) : any;
 
     public abstract unmapBuffer(target : number);
 
@@ -1287,11 +1287,11 @@ declare abstract class PGL {
 
     abstract viewportImpl(x : number, y : number, w : number, h : number);
 
-    public readPixels(x : number, y : number, width : number, height : number, format : number, type : number, buffer : java.nio.Buffer);
+    public readPixels(x : number, y : number, width : number, height : number, format : number, type : number, buffer : any);
 
     public readPixels(x : number, y : number, width : number, height : number, format : number, type : number, offset : number);
 
-    abstract readPixelsImpl(x : number, y : number, width : number, height : number, format : number, type : number, buffer : java.nio.Buffer);
+    abstract readPixelsImpl(x : number, y : number, width : number, height : number, format : number, type : number, buffer : any);
 
     abstract readPixelsImpl(x : number, y : number, width : number, height : number, format : number, type : number, offset : number);
 
@@ -1303,13 +1303,13 @@ declare abstract class PGL {
 
     public abstract vertexAttrib4f(index : number, value0 : number, value1 : number, value2 : number, value3 : number);
 
-    public abstract vertexAttrib1fv(index : number, values : java.nio.FloatBuffer);
+    public abstract vertexAttrib1fv(index : number, values : any);
 
-    public abstract vertexAttrib2fv(index : number, values : java.nio.FloatBuffer);
+    public abstract vertexAttrib2fv(index : number, values : any);
 
-    public abstract vertexAttrib3fv(index : number, values : java.nio.FloatBuffer);
+    public abstract vertexAttrib3fv(index : number, values : any);
 
-    public abstract vertexAttrib4fv(index : number, values : java.nio.FloatBuffer);
+    public abstract vertexAttrib4fv(index : number, values : any);
 
     public abstract vertexAttribPointer(index : number, size : number, type : number, normalized : boolean, stride : number, offset : number);
 
@@ -1335,35 +1335,35 @@ declare abstract class PGL {
 
     public abstract pixelStorei(pname : number, param : number);
 
-    public abstract texImage2D(target : number, level : number, internalFormat : number, width : number, height : number, border : number, format : number, type : number, data : java.nio.Buffer);
+    public abstract texImage2D(target : number, level : number, internalFormat : number, width : number, height : number, border : number, format : number, type : number, data : any);
 
     public abstract copyTexImage2D(target : number, level : number, internalFormat : number, x : number, y : number, width : number, height : number, border : number);
 
-    public abstract texSubImage2D(target : number, level : number, xOffset : number, yOffset : number, width : number, height : number, format : number, type : number, data : java.nio.Buffer);
+    public abstract texSubImage2D(target : number, level : number, xOffset : number, yOffset : number, width : number, height : number, format : number, type : number, data : any);
 
     public abstract copyTexSubImage2D(target : number, level : number, xOffset : number, yOffset : number, x : number, y : number, width : number, height : number);
 
-    public abstract compressedTexImage2D(target : number, level : number, internalFormat : number, width : number, height : number, border : number, imageSize : number, data : java.nio.Buffer);
+    public abstract compressedTexImage2D(target : number, level : number, internalFormat : number, width : number, height : number, border : number, imageSize : number, data : any);
 
-    public abstract compressedTexSubImage2D(target : number, level : number, xOffset : number, yOffset : number, width : number, height : number, format : number, imageSize : number, data : java.nio.Buffer);
+    public abstract compressedTexSubImage2D(target : number, level : number, xOffset : number, yOffset : number, width : number, height : number, format : number, imageSize : number, data : any);
 
     public abstract texParameteri(target : number, pname : number, param : number);
 
     public abstract texParameterf(target : number, pname : number, param : number);
 
-    public abstract texParameteriv(target : number, pname : number, params : java.nio.IntBuffer);
+    public abstract texParameteriv(target : number, pname : number, params : any);
 
-    public abstract texParameterfv(target : number, pname : number, params : java.nio.FloatBuffer);
+    public abstract texParameterfv(target : number, pname : number, params : any);
 
     public abstract generateMipmap(target : number);
 
-    public abstract genTextures(n : number, textures : java.nio.IntBuffer);
+    public abstract genTextures(n : number, textures : any);
 
-    public abstract deleteTextures(n : number, textures : java.nio.IntBuffer);
+    public abstract deleteTextures(n : number, textures : any);
 
-    public abstract getTexParameteriv(target : number, pname : number, params : java.nio.IntBuffer);
+    public abstract getTexParameteriv(target : number, pname : number, params : any);
 
-    public abstract getTexParameterfv(target : number, pname : number, params : java.nio.FloatBuffer);
+    public abstract getTexParameterfv(target : number, pname : number, params : any);
 
     public abstract isTexture(texture : number) : boolean;
 
@@ -1385,7 +1385,7 @@ declare abstract class PGL {
 
     public abstract deleteShader(shader : number);
 
-    public abstract shaderBinary(count : number, shaders : java.nio.IntBuffer, binaryFormat : number, binary : java.nio.Buffer, length : number);
+    public abstract shaderBinary(count : number, shaders : any, binaryFormat : number, binary : any, length : number);
 
     public abstract createProgram() : number;
 
@@ -1399,7 +1399,7 @@ declare abstract class PGL {
 
     public abstract deleteProgram(program : number);
 
-    public abstract getActiveAttrib(program : number, index : number, size : java.nio.IntBuffer, type : java.nio.IntBuffer) : string;
+    public abstract getActiveAttrib(program : number, index : number, size : any, type : any) : string;
 
     public abstract getAttribLocation(program : number, name : string) : number;
 
@@ -1407,7 +1407,7 @@ declare abstract class PGL {
 
     public abstract getUniformLocation(program : number, name : string) : number;
 
-    public abstract getActiveUniform(program : number, index : number, size : java.nio.IntBuffer, type : java.nio.IntBuffer) : string;
+    public abstract getActiveUniform(program : number, index : number, size : any, type : any) : string;
 
     public abstract uniform1i(location : number, value : number);
 
@@ -1425,55 +1425,55 @@ declare abstract class PGL {
 
     public abstract uniform4f(location : number, value0 : number, value1 : number, value2 : number, value3 : number);
 
-    public abstract uniform1iv(location : number, count : number, v : java.nio.IntBuffer);
+    public abstract uniform1iv(location : number, count : number, v : any);
 
-    public abstract uniform2iv(location : number, count : number, v : java.nio.IntBuffer);
+    public abstract uniform2iv(location : number, count : number, v : any);
 
-    public abstract uniform3iv(location : number, count : number, v : java.nio.IntBuffer);
+    public abstract uniform3iv(location : number, count : number, v : any);
 
-    public abstract uniform4iv(location : number, count : number, v : java.nio.IntBuffer);
+    public abstract uniform4iv(location : number, count : number, v : any);
 
-    public abstract uniform1fv(location : number, count : number, v : java.nio.FloatBuffer);
+    public abstract uniform1fv(location : number, count : number, v : any);
 
-    public abstract uniform2fv(location : number, count : number, v : java.nio.FloatBuffer);
+    public abstract uniform2fv(location : number, count : number, v : any);
 
-    public abstract uniform3fv(location : number, count : number, v : java.nio.FloatBuffer);
+    public abstract uniform3fv(location : number, count : number, v : any);
 
-    public abstract uniform4fv(location : number, count : number, v : java.nio.FloatBuffer);
+    public abstract uniform4fv(location : number, count : number, v : any);
 
-    public abstract uniformMatrix2fv(location : number, count : number, transpose : boolean, mat : java.nio.FloatBuffer);
+    public abstract uniformMatrix2fv(location : number, count : number, transpose : boolean, mat : any);
 
-    public abstract uniformMatrix3fv(location : number, count : number, transpose : boolean, mat : java.nio.FloatBuffer);
+    public abstract uniformMatrix3fv(location : number, count : number, transpose : boolean, mat : any);
 
-    public abstract uniformMatrix4fv(location : number, count : number, transpose : boolean, mat : java.nio.FloatBuffer);
+    public abstract uniformMatrix4fv(location : number, count : number, transpose : boolean, mat : any);
 
     public abstract validateProgram(program : number);
 
     public abstract isShader(shader : number) : boolean;
 
-    public abstract getShaderiv(shader : number, pname : number, params : java.nio.IntBuffer);
+    public abstract getShaderiv(shader : number, pname : number, params : any);
 
-    public abstract getAttachedShaders(program : number, maxCount : number, count : java.nio.IntBuffer, shaders : java.nio.IntBuffer);
+    public abstract getAttachedShaders(program : number, maxCount : number, count : any, shaders : any);
 
     public abstract getShaderInfoLog(shader : number) : string;
 
     public abstract getShaderSource(shader : number) : string;
 
-    public abstract getShaderPrecisionFormat(shaderType : number, precisionType : number, range : java.nio.IntBuffer, precision : java.nio.IntBuffer);
+    public abstract getShaderPrecisionFormat(shaderType : number, precisionType : number, range : any, precision : any);
 
-    public abstract getVertexAttribfv(index : number, pname : number, params : java.nio.FloatBuffer);
+    public abstract getVertexAttribfv(index : number, pname : number, params : any);
 
-    public abstract getVertexAttribiv(index : number, pname : number, params : java.nio.IntBuffer);
+    public abstract getVertexAttribiv(index : number, pname : number, params : any);
 
-    public abstract getVertexAttribPointerv(index : number, pname : number, data : java.nio.ByteBuffer);
+    public abstract getVertexAttribPointerv(index : number, pname : number, data : any);
 
-    public abstract getUniformfv(program : number, location : number, params : java.nio.FloatBuffer);
+    public abstract getUniformfv(program : number, location : number, params : any);
 
-    public abstract getUniformiv(program : number, location : number, params : java.nio.IntBuffer);
+    public abstract getUniformiv(program : number, location : number, params : any);
 
     public abstract isProgram(program : number) : boolean;
 
-    public abstract getProgramiv(program : number, pname : number, params : java.nio.IntBuffer);
+    public abstract getProgramiv(program : number, pname : number, params : any);
 
     public abstract getProgramInfoLog(program : number) : string;
 
@@ -1515,15 +1515,15 @@ declare abstract class PGL {
 
     abstract bindFramebufferImpl(target : number, framebuffer : number);
 
-    public abstract deleteFramebuffers(n : number, framebuffers : java.nio.IntBuffer);
+    public abstract deleteFramebuffers(n : number, framebuffers : any);
 
-    public abstract genFramebuffers(n : number, framebuffers : java.nio.IntBuffer);
+    public abstract genFramebuffers(n : number, framebuffers : any);
 
     public abstract bindRenderbuffer(target : number, renderbuffer : number);
 
-    public abstract deleteRenderbuffers(n : number, renderbuffers : java.nio.IntBuffer);
+    public abstract deleteRenderbuffers(n : number, renderbuffers : any);
 
-    public abstract genRenderbuffers(n : number, renderbuffers : java.nio.IntBuffer);
+    public abstract genRenderbuffers(n : number, renderbuffers : any);
 
     public abstract renderbufferStorage(target : number, internalFormat : number, width : number, height : number);
 
@@ -1535,11 +1535,11 @@ declare abstract class PGL {
 
     public abstract isFramebuffer(framebuffer : number) : boolean;
 
-    public abstract getFramebufferAttachmentParameteriv(target : number, attachment : number, pname : number, params : java.nio.IntBuffer);
+    public abstract getFramebufferAttachmentParameteriv(target : number, attachment : number, pname : number, params : any);
 
     public abstract isRenderbuffer(renderbuffer : number) : boolean;
 
-    public abstract getRenderbufferParameteriv(target : number, pname : number, params : java.nio.IntBuffer);
+    public abstract getRenderbufferParameteriv(target : number, pname : number, params : any);
 
     public abstract blitFramebuffer(srcX0 : number, srcY0 : number, srcX1 : number, srcY1 : number, dstX0 : number, dstY0 : number, dstX1 : number, dstY1 : number, mask : number, filter : number);
 

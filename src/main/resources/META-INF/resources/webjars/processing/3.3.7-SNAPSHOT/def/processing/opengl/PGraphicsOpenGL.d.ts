@@ -445,7 +445,7 @@ declare class PGraphicsOpenGL extends PGraphics {
     /**
      * IntBuffer wrapping the pixels array.
      */
-    pixelBuffer : java.nio.IntBuffer;
+    pixelBuffer : any;
 
     /**
      * Array to store pixels in OpenGL format.
@@ -455,7 +455,7 @@ declare class PGraphicsOpenGL extends PGraphics {
     /**
      * IntBuffer wrapping the native pixels array.
      */
-    nativePixelBuffer : java.nio.IntBuffer;
+    nativePixelBuffer : any;
 
     /**
      * texture used to apply a filter on the screen image.
@@ -501,7 +501,7 @@ declare class PGraphicsOpenGL extends PGraphics {
     /**
      * Viewport dimensions.
      */
-    viewport : java.nio.IntBuffer;
+    viewport : any;
 
     openContour : boolean;
 
@@ -546,9 +546,9 @@ declare class PGraphicsOpenGL extends PGraphics {
     /**
      * To get data from OpenGL.
      */
-    static intBuffer : java.nio.IntBuffer;
+    static intBuffer : any;
 
-    static floatBuffer : java.nio.FloatBuffer;
+    static floatBuffer : any;
 
     static OPENGL_THREAD_ERROR : string;
 
@@ -913,22 +913,6 @@ declare class PGraphicsOpenGL extends PGraphics {
     public flush();
 
     flushPixels();
-
-    flushPolys();
-
-    flushSortedPolys();
-
-    rawPolys();
-
-    rawSortedPolys();
-
-    flushLines();
-
-    rawLines();
-
-    flushPoints();
-
-    rawPoints();
 
     /**
      * 
@@ -1576,61 +1560,6 @@ declare class PGraphicsOpenGL extends PGraphics {
      * 
      * @param {number} x
      * @param {number} y
-     * @return {number}
-     */
-    public screenX(x : number, y : number) : number;
-
-    /**
-     * 
-     * @param {number} x
-     * @param {number} y
-     * @return {number}
-     */
-    public screenY(x : number, y : number) : number;
-
-    /**
-     * 
-     * @param {number} x
-     * @param {number} y
-     * @param {number} z
-     * @return {number}
-     */
-    public screenX(x : number, y : number, z : number) : number;
-
-    /**
-     * 
-     * @param {number} x
-     * @param {number} y
-     * @param {number} z
-     * @return {number}
-     */
-    public screenY(x : number, y : number, z : number) : number;
-
-    /**
-     * 
-     * @param {number} x
-     * @param {number} y
-     * @param {number} z
-     * @return {number}
-     */
-    public screenZ(x : number, y : number, z : number) : number;
-
-    screenXImpl(x : number, y : number, z : number) : number;
-
-    screenXImpl(x : number, y : number, z : number, w : number) : number;
-
-    screenYImpl(x : number, y : number, z : number) : number;
-
-    screenYImpl(x : number, y : number, z : number, w : number) : number;
-
-    screenZImpl(x : number, y : number, z : number) : number;
-
-    screenZImpl(x : number, y : number, z : number, w : number) : number;
-
-    /**
-     * 
-     * @param {number} x
-     * @param {number} y
      * @param {number} z
      * @return {number}
      */
@@ -1895,12 +1824,6 @@ declare class PGraphicsOpenGL extends PGraphics {
      * @param {number} param
      */
     public filter(kind : number, param : number);
-
-    /**
-     * 
-     * @param {PShader} shader
-     */
-    public filter(shader : PShader);
 
     /**
      * 
@@ -2604,21 +2527,21 @@ declare namespace PGraphicsOpenGL {
 
         lastPolyVertex : number;
 
-        polyVerticesBuffer : java.nio.FloatBuffer;
+        polyVerticesBuffer : any;
 
-        polyColorsBuffer : java.nio.IntBuffer;
+        polyColorsBuffer : any;
 
-        polyNormalsBuffer : java.nio.FloatBuffer;
+        polyNormalsBuffer : any;
 
-        polyTexCoordsBuffer : java.nio.FloatBuffer;
+        polyTexCoordsBuffer : any;
 
-        polyAmbientBuffer : java.nio.IntBuffer;
+        polyAmbientBuffer : any;
 
-        polySpecularBuffer : java.nio.IntBuffer;
+        polySpecularBuffer : any;
 
-        polyEmissiveBuffer : java.nio.IntBuffer;
+        polyEmissiveBuffer : any;
 
-        polyShininessBuffer : java.nio.FloatBuffer;
+        polyShininessBuffer : any;
 
         polyAttribBuffers : any;
 
@@ -2628,7 +2551,7 @@ declare namespace PGraphicsOpenGL {
 
         lastPolyIndex : number;
 
-        polyIndicesBuffer : java.nio.ShortBuffer;
+        polyIndicesBuffer : any;
 
         polyIndexCache : PGraphicsOpenGL.IndexCache;
 
@@ -2638,11 +2561,11 @@ declare namespace PGraphicsOpenGL {
 
         lastLineVertex : number;
 
-        lineVerticesBuffer : java.nio.FloatBuffer;
+        lineVerticesBuffer : any;
 
-        lineColorsBuffer : java.nio.IntBuffer;
+        lineColorsBuffer : any;
 
-        lineDirectionsBuffer : java.nio.FloatBuffer;
+        lineDirectionsBuffer : any;
 
         lineIndexCount : number;
 
@@ -2650,7 +2573,7 @@ declare namespace PGraphicsOpenGL {
 
         lastLineIndex : number;
 
-        lineIndicesBuffer : java.nio.ShortBuffer;
+        lineIndicesBuffer : any;
 
         lineIndexCache : PGraphicsOpenGL.IndexCache;
 
@@ -2660,11 +2583,11 @@ declare namespace PGraphicsOpenGL {
 
         lastPointVertex : number;
 
-        pointVerticesBuffer : java.nio.FloatBuffer;
+        pointVerticesBuffer : any;
 
-        pointColorsBuffer : java.nio.IntBuffer;
+        pointColorsBuffer : any;
 
-        pointOffsetsBuffer : java.nio.FloatBuffer;
+        pointOffsetsBuffer : any;
 
         pointIndexCount : number;
 
@@ -2672,7 +2595,7 @@ declare namespace PGraphicsOpenGL {
 
         lastPointIndex : number;
 
-        pointIndicesBuffer : java.nio.ShortBuffer;
+        pointIndicesBuffer : any;
 
         pointIndexCache : PGraphicsOpenGL.IndexCache;
 
@@ -3348,9 +3271,9 @@ declare namespace PGraphicsOpenGL {
 
         triB : number[];
 
-        marked : java.util.BitSet;
+        marked : any;
 
-        swapped : java.util.BitSet;
+        swapped : any;
 
         pg : PGraphicsOpenGL;
 

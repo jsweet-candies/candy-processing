@@ -1242,20 +1242,6 @@ declare class PShapeOpenGL extends PShape {
      * @param {PGraphics} g
      */
     drawGeometry(g : PGraphics);
-
-    render(g : PGraphicsOpenGL, texture : PImage);
-
-    renderPolys(g : PGraphicsOpenGL, textureImage : PImage);
-
-    rawPolys(g : PGraphicsOpenGL, textureImage : PImage);
-
-    renderLines(g : PGraphicsOpenGL);
-
-    rawLines(g : PGraphicsOpenGL);
-
-    renderPoints(g : PGraphicsOpenGL);
-
-    rawPoints(g : PGraphicsOpenGL);
 }
 
 

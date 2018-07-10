@@ -61,9 +61,9 @@ declare class Table {
 
     public constructor(input : { str: string, cursor: number }, options : string);
 
-    public constructor(rows : java.lang.Iterable<TableRow>);
+    public constructor(rows : Array<TableRow>);
 
-    public constructor(rs : java.sql.ResultSet);
+    public constructor(rs : any);
 
     public typedParse(input : { str: string, cursor: number }, options : string) : Table;
 
@@ -374,16 +374,16 @@ declare class Table {
      * @see Table#findRows(String, int)
      * @see Table#matchRow(String, int)
      * @see Table#matchRows(String, int)
-     * @return {*}
+     * @return {*[]}
      */
-    public rows() : java.lang.Iterable<TableRow>;
+    public rows() : Array<TableRow>;
 
     /**
      * @nowebref
      * @param {Array} indices
-     * @return {*}
+     * @return {*[]}
      */
-    public rows(indices : number[]) : java.lang.Iterable<TableRow>;
+    public rows(indices : number[]) : Array<TableRow>;
 
     /**
      * @webref table:method
@@ -664,16 +664,16 @@ declare class Table {
      * @see Table#findRow(String, int)
      * @see Table#matchRow(String, int)
      * @see Table#matchRows(String, int)
-     * @return {*}
+     * @return {*[]}
      */
-    public findRows(value : string, column : number) : java.lang.Iterable<TableRow>;
+    public findRows(value : string, column : number) : Array<TableRow>;
 
     /**
      * @param {string} columnName title of the column to search
      * @param {string} value
-     * @return {*}
+     * @return {*[]}
      */
-    public findRows(value : string, columnName : string) : java.lang.Iterable<TableRow>;
+    public findRows(value : string, columnName : string) : Array<TableRow>;
 
     /**
      * @brief Finds multiple rows that contain the given value
@@ -755,16 +755,16 @@ declare class Table {
      * @see Table#findRow(String, int)
      * @see Table#findRows(String, int)
      * @see Table#matchRow(String, int)
-     * @return {*}
+     * @return {*[]}
      */
-    public matchRows(regexp : string, column : number) : java.lang.Iterable<TableRow>;
+    public matchRows(regexp : string, column : number) : Array<TableRow>;
 
     /**
      * @param {string} columnName title of the column to search
      * @param {string} regexp
-     * @return {*}
+     * @return {*[]}
      */
-    public matchRows(regexp : string, columnName : string) : java.lang.Iterable<TableRow>;
+    public matchRows(regexp : string, columnName : string) : Array<TableRow>;
 
     /**
      * @webref table:method

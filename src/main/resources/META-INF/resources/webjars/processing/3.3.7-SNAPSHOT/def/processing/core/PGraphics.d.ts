@@ -1194,11 +1194,6 @@ declare class PGraphics extends PImage implements PConstants {
     public resetShader(kind : number);
 
     /**
-     * @param {PShader} shader the fragment shader to apply
-     */
-    public filter(shader : PShader);
-
-    /**
      * ( begin auto-generated from clip.xml )
      * 
      * Limits the rendering to the boundaries of a rectangle defined

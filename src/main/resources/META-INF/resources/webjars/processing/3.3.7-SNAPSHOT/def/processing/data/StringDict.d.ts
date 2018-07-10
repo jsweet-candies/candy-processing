@@ -56,7 +56,7 @@ declare class StringDict {
 
     resetIndices();
 
-    public entries() : java.lang.Iterable<StringDict.Entry>;
+    public entries() : Array<StringDict.Entry>;
 
     public entryIterator() : any;
 

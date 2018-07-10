@@ -89,9 +89,9 @@ declare class PShader implements PConstants {
 
     texUnits : any;
 
-    intBuffer : java.nio.IntBuffer;
+    intBuffer : any;
 
-    floatBuffer : java.nio.FloatBuffer;
+    floatBuffer : any;
 
     loadedAttributes : boolean;
 
