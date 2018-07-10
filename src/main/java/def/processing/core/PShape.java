@@ -1431,45 +1431,6 @@ public class PShape implements PConstants {
     }
   }
 
-
-  ////////////////////////////////////////////////////////////////////////
-  //
-  // Shape copy
-
-
-  // TODO unapproved
-  static protected PShape createShape(PApplet parent, PShape src) {
-    PShape dest = null;
-    if (src.family == GROUP) {
-      dest = parent.createShape(GROUP);
-      PShape.copyGroup(parent, src, dest);
-    } else if (src.family == PRIMITIVE) {
-      dest = parent.createShape(src.kind, src.params);
-      PShape.copyPrimitive(src, dest);
-    } else if (src.family == GEOMETRY) {
-      dest = parent.createShape(src.kind);
-      PShape.copyGeometry(src, dest);
-    } else if (src.family == PATH) {
-      dest = parent.createShape(PATH);
-      PShape.copyPath(src, dest);
-    }
-    dest.setName(src.name);
-    return dest;
-  }
-
-
-  // TODO unapproved
-  static protected void copyGroup(PApplet parent, PShape src, PShape dest) {
-    copyMatrix(src, dest);
-    copyStyles(src, dest);
-    copyImage(src, dest);
-    for (int i = 0; i < src.childCount; i++) {
-      PShape c = PShape.createShape(parent, src.children[i]);
-      dest.addChild(c);
-    }
-  }
-
-
   // TODO unapproved
   static protected void copyPrimitive(PShape src, PShape dest) {
     copyMatrix(src, dest);

@@ -69,10 +69,7 @@ public class PGraphics3D extends PGraphicsOpenGL {
   // CAMERA
 
 
-  @Override
-  protected void defaultCamera() {
-    camera();
-  }
+  protected native void defaultCamera();
 
 
   //////////////////////////////////////////////////////////////
@@ -95,7 +92,7 @@ public class PGraphics3D extends PGraphicsOpenGL {
     modelviewInv.set(modelview);
     modelviewInv.invert();
 
-    camera.set(modelview);
+    ___camera.set(modelview);
     cameraInv.set(modelviewInv);
 
     updateProjmodelview();

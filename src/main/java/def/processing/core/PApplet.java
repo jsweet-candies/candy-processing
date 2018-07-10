@@ -60,15 +60,10 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
-import java.text.*;
 import java.util.*;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.regex.*;
 import java.util.zip.*;
 
 import def.processing.data.*;
-import def.processing.event.*;
 
 
 /**
@@ -544,11 +539,6 @@ public class PApplet implements PConstants {
    */
   public boolean mousePressed;
 
-
-  /** @deprecated Use a mouse event handler that passes an event instead. */
-  @Deprecated
-  public MouseEvent mouseEvent;
-
   /**
    * ( begin auto-generated from key.xml )
    *
@@ -635,13 +625,6 @@ public class PApplet implements PConstants {
    */
   public boolean keyPressed;
   List<Long> pressedKeys = new ArrayList<>(6);
-
-  /**
-   * The last KeyEvent object passed into a mouse function.
-   * @deprecated Use a key event handler that passes an event instead.
-   */
-  @Deprecated
-  public KeyEvent keyEvent;
 
   /**
    * ( begin auto-generated from focused.xml )
@@ -1495,20 +1478,7 @@ public class PApplet implements PConstants {
    * @param methodName name of the method to be called
    * @param target the target object that should receive the event
    */
-  public void registerMethod(String methodName, Object target) {
-    if (methodName.equals("mouseEvent")) {
-      registerWithArgs("mouseEvent", target, new Class[] { def.processing.event.MouseEvent.class });
-
-    } else if (methodName.equals("keyEvent")) {
-      registerWithArgs("keyEvent", target, new Class[] { def.processing.event.KeyEvent.class });
-
-    } else if (methodName.equals("touchEvent")) {
-      registerWithArgs("touchEvent", target, new Class[] { def.processing.event.TouchEvent.class });
-
-    } else {
-      registerNoArgs(methodName, target);
-    }
-  }
+  public native void registerMethod(String methodName, Object target);
 
 
   private void registerNoArgs(String name, Object o) {
@@ -2418,8 +2388,6 @@ public class PApplet implements PConstants {
       // drawing commands can be run inside them. it can't
       // be before, since a call to background() would wipe
       // out anything that had been drawn so far.
-      dequeueEvents();
-
       handleMethods("draw");
 
       redraw = false;  // unset 'redraw' flag in case it was set
@@ -2554,144 +2522,15 @@ public class PApplet implements PConstants {
   //////////////////////////////////////////////////////////////
 
 
-  BlockingQueue<Event> eventQueue = new LinkedBlockingQueue<>();
-  private final Object eventQueueDequeueLock = new Object[0];
-
-
   /**
    * Add an event to the internal event queue, or process it immediately if
    * the sketch is not currently looping.
    */
-  public void postEvent(def.processing.event.Event pe) {
-    eventQueue.add(pe);
-
-    if (!looping) {
-      dequeueEvents();
-    }
-  }
-
-
-  protected void dequeueEvents() {
-    synchronized (eventQueueDequeueLock) {
-      while (!eventQueue.isEmpty()) {
-        Event e = eventQueue.remove();
-        switch (e.getFlavor()) {
-        case Event.MOUSE:
-          handleMouseEvent((MouseEvent) e);
-          break;
-        case Event.KEY:
-          handleKeyEvent((KeyEvent) e);
-          break;
-        }
-      }
-    }
-  }
-
+  public native void postEvent(Object pe);
 
   //////////////////////////////////////////////////////////////
 
 
-  /**
-   * Actually take action based on a mouse event.
-   * Internally updates mouseX, mouseY, mousePressed, and mouseEvent.
-   * Then it calls the event type with no params,
-   * i.e. mousePressed() or mouseReleased() that the user may have
-   * overloaded to do something more useful.
-   */
-  protected void handleMouseEvent(MouseEvent event) {
-    // http://dev.processing.org/bugs/show_bug.cgi?id=170
-    // also prevents mouseExited() on the mac from hosing the mouse
-    // position, because x/y are bizarre values on the exit event.
-    // see also the id check below.. both of these go together.
-    // Not necessary to set mouseX/Y on RELEASE events because the
-    // actual position will have been set by a PRESS or DRAG event.
-    // However, PRESS events might come without a preceeding move,
-    // if the sketch window gains focus on that PRESS.
-    final int action = event.getAction();
-    if (action == MouseEvent.DRAG ||
-        action == MouseEvent.MOVE ||
-        action == MouseEvent.PRESS) {
-      pmouseX = emouseX;
-      pmouseY = emouseY;
-      mouseX = event.getX();
-      mouseY = event.getY();
-    }
-
-    // Get the (already processed) button code
-    mouseButton = event.getButton();
-
-    /*
-    // Compatibility for older code (these have AWT object params, not P5)
-    if (mouseEventMethods != null) {
-      // Probably also good to check this, in case anyone tries to call
-      // postEvent() with an artificial event they've created.
-      if (event.getNative() != null) {
-        mouseEventMethods.handle(new Object[] { event.getNative() });
-      }
-    }
-    */
-
-    // this used to only be called on mouseMoved and mouseDragged
-    // change it back if people run into trouble
-    if (firstMouse) {
-      pmouseX = mouseX;
-      pmouseY = mouseY;
-      dmouseX = mouseX;
-      dmouseY = mouseY;
-      firstMouse = false;
-    }
-
-    mouseEvent = event;
-
-    // Do this up here in case a registered method relies on the
-    // boolean for mousePressed.
-
-    switch (action) {
-    case MouseEvent.PRESS:
-      mousePressed = true;
-      break;
-    case MouseEvent.RELEASE:
-      mousePressed = false;
-      break;
-    }
-
-    handleMethods("mouseEvent", new Object[] { event });
-
-    switch (action) {
-    case MouseEvent.PRESS:
-//      mousePressed = true;
-      mousePressed(event);
-      break;
-    case MouseEvent.RELEASE:
-//      mousePressed = false;
-      mouseReleased(event);
-      break;
-    case MouseEvent.CLICK:
-      mouseClicked(event);
-      break;
-    case MouseEvent.DRAG:
-      mouseDragged(event);
-      break;
-    case MouseEvent.MOVE:
-      mouseMoved(event);
-      break;
-    case MouseEvent.ENTER:
-      mouseEntered(event);
-      break;
-    case MouseEvent.EXIT:
-      mouseExited(event);
-      break;
-    case MouseEvent.WHEEL:
-      mouseWheel(event);
-      break;
-    }
-
-    if ((action == MouseEvent.DRAG) ||
-        (action == MouseEvent.MOVE)) {
-      emouseX = mouseX;
-      emouseY = mouseY;
-    }
-  }
 
 
   /**
@@ -2725,12 +2564,6 @@ public class PApplet implements PConstants {
    */
   public void mousePressed() { }
 
-
-  public void mousePressed(MouseEvent event) {
-    mousePressed();
-  }
-
-
   /**
    * ( begin auto-generated from mouseReleased.xml )
    *
@@ -2752,11 +2585,6 @@ public class PApplet implements PConstants {
    * @see PApplet#mouseWheel(MouseEvent)
    */
   public void mouseReleased() { }
-
-
-  public void mouseReleased(MouseEvent event) {
-    mouseReleased();
-  }
 
 
   /**
@@ -2786,11 +2614,6 @@ public class PApplet implements PConstants {
   public void mouseClicked() { }
 
 
-  public void mouseClicked(MouseEvent event) {
-    mouseClicked();
-  }
-
-
   /**
    * ( begin auto-generated from mouseDragged.xml )
    *
@@ -2812,11 +2635,6 @@ public class PApplet implements PConstants {
    * @see PApplet#mouseWheel(MouseEvent)
    */
   public void mouseDragged() { }
-
-
-  public void mouseDragged(MouseEvent event) {
-    mouseDragged();
-  }
 
 
   /**
@@ -2842,117 +2660,14 @@ public class PApplet implements PConstants {
   public void mouseMoved() { }
 
 
-  public void mouseMoved(MouseEvent event) {
-    mouseMoved();
-  }
-
-
   public void mouseEntered() { }
 
-
-  public void mouseEntered(MouseEvent event) {
-    mouseEntered();
-  }
-
-
   public void mouseExited() { }
-
-
-  public void mouseExited(MouseEvent event) {
-    mouseExited();
-  }
 
   /**
    * @nowebref
    */
   public void mouseWheel() { }
-
-  /**
-   * The event.getAmount() method returns negative values if the mouse wheel
-   * if rotated up or away from the user and positive in the other direction.
-   * On OS X with "natural" scrolling enabled, the values are opposite.
-   *
-   * @webref input:mouse
-   * @param event the MouseEvent
-   * @see PApplet#mouseX
-   * @see PApplet#mouseY
-   * @see PApplet#pmouseX
-   * @see PApplet#pmouseY
-   * @see PApplet#mousePressed
-   * @see PApplet#mousePressed()
-   * @see PApplet#mouseReleased()
-   * @see PApplet#mouseClicked()
-   * @see PApplet#mouseMoved()
-   * @see PApplet#mouseDragged()
-   * @see PApplet#mouseButton
-   */
-  public void mouseWheel(MouseEvent event) {
-    mouseWheel();
-  }
-
-
-
-  //////////////////////////////////////////////////////////////
-
-
-  protected void handleKeyEvent(KeyEvent event) {
-
-    // Get rid of auto-repeating keys if desired and supported
-    if (!keyRepeatEnabled && event.isAutoRepeat()) return;
-
-    keyEvent = event;
-    key = event.getKey();
-    keyCode = event.getKeyCode();
-
-    switch (event.getAction()) {
-    case KeyEvent.PRESS:
-      Long hash = ((long) keyCode << Character.SIZE) | key;
-      if (!pressedKeys.contains(hash)) pressedKeys.add(hash);
-      keyPressed = true;
-      keyPressed(keyEvent);
-      break;
-    case KeyEvent.RELEASE:
-      pressedKeys.remove(((long) keyCode << Character.SIZE) | key);
-      keyPressed = !pressedKeys.isEmpty();
-      keyReleased(keyEvent);
-      break;
-    case KeyEvent.TYPE:
-      keyTyped(keyEvent);
-      break;
-    }
-
-    /*
-    if (keyEventMethods != null) {
-      keyEventMethods.handle(new Object[] { event.getNative() });
-    }
-    */
-
-    handleMethods("keyEvent", new Object[] { event });
-
-    // if someone else wants to intercept the key, they should
-    // set key to zero (or something besides the ESC).
-    if (event.getAction() == KeyEvent.PRESS) {
-      //if (key == java.awt.event.KeyEvent.VK_ESCAPE) {
-      if (key == ESC) {
-        exit();
-      }
-      // When running tethered to the Processing application, respond to
-      // Ctrl-W (or Cmd-W) events by closing the sketch. Not enabled when
-      // running independently, because this sketch may be one component
-      // embedded inside an application that has its own close behavior.
-      if (external &&
-          event.getKeyCode() == 'W' &&
-          ((event.isMetaDown() && platform == MACOSX) ||
-           (event.isControlDown() && platform != MACOSX))) {
-        // Can't use this native stuff b/c the native event might be NEWT
-//      if (external && event.getNative() instanceof java.awt.event.KeyEvent &&
-//          ((java.awt.event.KeyEvent) event.getNative()).getModifiers() ==
-//            Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() &&
-//          event.getKeyCode() == 'W') {
-        exit();
-      }
-    }
-  }
 
 
   /**
@@ -3033,11 +2748,6 @@ public class PApplet implements PConstants {
   public void keyPressed() { }
 
 
-  public void keyPressed(KeyEvent event) {
-    keyPressed();
-  }
-
-
   /**
    * ( begin auto-generated from keyReleased.xml )
    *
@@ -3053,11 +2763,6 @@ public class PApplet implements PConstants {
    * @see PApplet#keyPressed()
    */
   public void keyReleased() { }
-
-
-  public void keyReleased(KeyEvent event) {
-    keyReleased();
-  }
 
 
   /**
@@ -3077,12 +2782,6 @@ public class PApplet implements PConstants {
    * @see PApplet#keyReleased()
    */
   public void keyTyped() { }
-
-
-  public void keyTyped(KeyEvent event) {
-    keyTyped();
-  }
-
 
 
   //////////////////////////////////////////////////////////////
@@ -13443,10 +13142,7 @@ public class PApplet implements PConstants {
    * @see PGraphics#endCamera()
    * @see PGraphics#frustum(float, float, float, float, float, float)
    */
-  public void camera() {
-    if (recorder != null) recorder.camera();
-    g.camera();
-  }
+  public native void camera();
 
 
 /**
@@ -13460,12 +13156,9 @@ public class PApplet implements PConstants {
  * @param upY usually 0.0, 1.0, or -1.0
  * @param upZ usually 0.0, 1.0, or -1.0
  */
-  public void camera(float eyeX, float eyeY, float eyeZ,
+  public native void camera(float eyeX, float eyeY, float eyeZ,
                      float centerX, float centerY, float centerZ,
-                     float upX, float upY, float upZ) {
-    if (recorder != null) recorder.camera(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
-    g.camera(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
-  }
+                     float upX, float upY, float upZ) ;
 
 
 /**
@@ -14397,10 +14090,7 @@ public class PApplet implements PConstants {
    * @see PGraphics#spotLight(float, float, float, float, float, float, float, float, float, float, float)
    * @see PGraphics#noLights()
    */
-  public void lights() {
-    if (recorder != null) recorder.lights();
-    g.lights();
-  }
+  public native void lights();
 
 
   /**
@@ -14636,10 +14326,7 @@ public class PApplet implements PConstants {
    * @see PGraphics#pointLight(float, float, float, float, float, float)
    * @see PGraphics#spotLight(float, float, float, float, float, float, float, float, float, float, float)
    */
-  public void lightSpecular(float v1, float v2, float v3) {
-    if (recorder != null) recorder.lightSpecular(v1, v2, v3);
-    g.lightSpecular(v1, v2, v3);
-  }
+  public native void lightSpecular(float v1, float v2, float v3);
 
 
   /**

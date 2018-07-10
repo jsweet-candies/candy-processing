@@ -168,21 +168,6 @@ declare class PShapeSVG extends PShape {
     static parseFloatOrPercent(text : string) : number;
 
     /**
-     * Get a particular element based on its SVG ID. When editing SVG by hand,
-     * this is the id="" tag on any SVG element. When editing from Illustrator,
-     * these IDs can be edited by expanding the layers palette. The names used
-     * in the layers palette, both for the layers or the shapes and groups
-     * beneath them can be used here.
-     * <PRE>
-     * // This code grabs "Layer 3" and the shapes beneath it.
-     * PShape layer3 = svg.getChild("Layer 3");
-     * </PRE>
-     * @param {string} name
-     * @return {PShape}
-     */
-    public getChild(name : string) : PShape;
-
-    /**
      * Prints out the SVG document. Useful for parsing.
      */
     public print();
@@ -285,8 +270,6 @@ declare namespace PShapeSVG {
         public x2 : number;
 
         public y2 : number;
-
-        public constructor(__parent: any, parent : PShapeSVG, properties : XML);
     }
 
     export class RadialGradient extends PShapeSVG.Gradient {
@@ -296,8 +279,6 @@ declare namespace PShapeSVG {
         public cy : number;
 
         public r : number;
-
-        public constructor(__parent: any, parent : PShapeSVG, properties : XML);
     }
 }
 

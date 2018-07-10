@@ -11,7 +11,7 @@ declare class XML {
     /**
      * The internal representation, a DOM node.
      */
-    node : org.w3c.dom.Node;
+    node : any;
 
     /**
      * The parent element.
@@ -39,7 +39,7 @@ declare class XML {
 
     public constructor(name : string);
 
-    constructor(parent : XML, node : org.w3c.dom.Node);
+    constructor(parent : XML, node : any);
 
     /**
      * @webref xml:method
@@ -207,7 +207,7 @@ declare class XML {
      * @param {*} newNode
      * @return {XML}
      */
-    appendChild(newNode : org.w3c.dom.Node) : XML;
+    appendChild(newNode : any) : XML;
 
     /**
      * @webref xml:method

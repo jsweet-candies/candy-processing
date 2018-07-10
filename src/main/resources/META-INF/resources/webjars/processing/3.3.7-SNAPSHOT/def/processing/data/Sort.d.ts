@@ -4,7 +4,7 @@
  * Advanced users only, not official API.
  * @class
  */
-declare abstract class Sort {
+declare class Sort {
     public constructor();
 
     public run();
@@ -13,11 +13,11 @@ declare abstract class Sort {
 
     partition(left : number, right : number) : number;
 
-    public abstract size() : number;
+    public size() : number;
 
-    public abstract compare(a : number, b : number) : number;
+    public compare(a : number, b : number) : number;
 
-    public abstract swap(a : number, b : number);
+    public swap(a : number, b : number);
 }
 
 

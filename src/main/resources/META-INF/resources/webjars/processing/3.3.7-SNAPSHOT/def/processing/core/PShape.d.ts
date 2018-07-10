@@ -505,10 +505,6 @@ declare class PShape implements PConstants {
 
     post(g : PGraphics);
 
-    static createShape(parent : PApplet, src : PShape) : PShape;
-
-    static copyGroup(parent : PApplet, src : PShape, dest : PShape);
-
     static copyPrimitive(src : PShape, dest : PShape);
 
     static copyGeometry(src : PShape, dest : PShape);

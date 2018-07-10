@@ -448,11 +448,6 @@ declare class PApplet implements PConstants {
     public mousePressed : any;
 
     /**
-     * @deprecated Use a mouse event handler that passes an event instead.
-     */
-    public mouseEvent : MouseEvent;
-
-    /**
      * ( begin auto-generated from key.xml )
      * 
      * The system variable <b>key</b> always contains the value of the most
@@ -539,12 +534,6 @@ declare class PApplet implements PConstants {
     public keyPressed : any;
 
     pressedKeys : Array<number>;
-
-    /**
-     * The last KeyEvent object passed into a mouse function.
-     * @deprecated Use a key event handler that passes an event instead.
-     */
-    public keyEvent : KeyEvent;
 
     /**
      * ( begin auto-generated from focused.xml )
@@ -1202,28 +1191,12 @@ declare class PApplet implements PConstants {
 
     public isLooping() : boolean;
 
-    eventQueue : any;
-
-    /*private*/ eventQueueDequeueLock : any;
-
     /**
      * Add an event to the internal event queue, or process it immediately if
      * the sketch is not currently looping.
-     * @param {Event} pe
+     * @param {*} pe
      */
-    public postEvent(pe : Event);
-
-    dequeueEvents();
-
-    /**
-     * Actually take action based on a mouse event.
-     * Internally updates mouseX, mouseY, mousePressed, and mouseEvent.
-     * Then it calls the event type with no params,
-     * i.e. mousePressed() or mouseReleased() that the user may have
-     * overloaded to do something more useful.
-     * @param {MouseEvent} event
-     */
-    handleMouseEvent(event : MouseEvent);
+    public postEvent(pe : any);
 
     /**
      * ( begin auto-generated from mouseReleased.xml )
@@ -1246,8 +1219,6 @@ declare class PApplet implements PConstants {
      * @see PApplet#mouseWheel(MouseEvent)
      */
     public mouseReleased();
-
-    public mouseReleased(event : MouseEvent);
 
     /**
      * ( begin auto-generated from mouseClicked.xml )
@@ -1275,8 +1246,6 @@ declare class PApplet implements PConstants {
      */
     public mouseClicked();
 
-    public mouseClicked(event : MouseEvent);
-
     /**
      * ( begin auto-generated from mouseDragged.xml )
      * 
@@ -1298,8 +1267,6 @@ declare class PApplet implements PConstants {
      * @see PApplet#mouseWheel(MouseEvent)
      */
     public mouseDragged();
-
-    public mouseDragged(event : MouseEvent);
 
     /**
      * ( begin auto-generated from mouseMoved.xml )
@@ -1323,43 +1290,14 @@ declare class PApplet implements PConstants {
      */
     public mouseMoved();
 
-    public mouseMoved(event : MouseEvent);
-
     public mouseEntered();
 
-    public mouseEntered(event : MouseEvent);
-
     public mouseExited();
-
-    public mouseExited(event : MouseEvent);
 
     /**
      * @nowebref
      */
     public mouseWheel();
-
-    /**
-     * The event.getAmount() method returns negative values if the mouse wheel
-     * if rotated up or away from the user and positive in the other direction.
-     * On OS X with "natural" scrolling enabled, the values are opposite.
-     * 
-     * @webref input:mouse
-     * @param {MouseEvent} event the MouseEvent
-     * @see PApplet#mouseX
-     * @see PApplet#mouseY
-     * @see PApplet#pmouseX
-     * @see PApplet#pmouseY
-     * @see PApplet#mousePressed
-     * @see PApplet#mousePressed()
-     * @see PApplet#mouseReleased()
-     * @see PApplet#mouseClicked()
-     * @see PApplet#mouseMoved()
-     * @see PApplet#mouseDragged()
-     * @see PApplet#mouseButton
-     */
-    public mouseWheel(event : MouseEvent);
-
-    handleKeyEvent(event : KeyEvent);
 
     /**
      * ( begin auto-generated from keyReleased.xml )
@@ -1376,8 +1314,6 @@ declare class PApplet implements PConstants {
      * @see PApplet#keyPressed()
      */
     public keyReleased();
-
-    public keyReleased(event : KeyEvent);
 
     /**
      * ( begin auto-generated from keyTyped.xml )
@@ -1396,8 +1332,6 @@ declare class PApplet implements PConstants {
      * @see PApplet#keyReleased()
      */
     public keyTyped();
-
-    public keyTyped(event : KeyEvent);
 
     public focusGained();
 
@@ -8882,11 +8816,6 @@ declare namespace PApplet {
         vessel : PImage;
 
         public constructor(__parent: any, filename : string, extension : string, vessel : PImage);
-
-        /**
-         * 
-         */
-        public run();
     }
 }
 

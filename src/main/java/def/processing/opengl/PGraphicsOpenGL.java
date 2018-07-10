@@ -276,12 +276,12 @@ public class PGraphicsOpenGL extends PGraphics {
   // ........................................................
 
   // All the matrices required for camera and geometry transformations.
-  public PMatrix3D projection;
-  public PMatrix3D camera;
-  public PMatrix3D cameraInv;
-  public PMatrix3D modelview;
-  public PMatrix3D modelviewInv;
-  public PMatrix3D projmodelview;
+  protected PMatrix3D projection;
+  protected PMatrix3D ___camera;
+  protected PMatrix3D cameraInv;
+  protected PMatrix3D modelview;
+  protected PMatrix3D modelviewInv;
+  protected PMatrix3D projmodelview;
 
   // To pass to shaders
   protected float[] glProjection;
@@ -369,14 +369,14 @@ public class PGraphicsOpenGL extends PGraphics {
 
   // Texturing:
 
-  protected int textureWrap     = CLAMP;
+  protected int ___textureWrap     = CLAMP;
   protected int textureSampling = Texture.TRILINEAR;
 
   // ........................................................
 
   // Clipping
 
-  protected boolean clip = false;
+  protected boolean ___clip = false;
 
   /** Clipping rectangle. */
   protected int[] clipRect = {0, 0, 0, 0};
@@ -416,7 +416,7 @@ public class PGraphicsOpenGL extends PGraphics {
   // Screen surface:
 
   /** Texture containing the current frame */
-  protected Texture texture = null;
+  protected Texture ___texture = null;
 
   /** Texture containing the previous frame */
   protected Texture ptexture = null;
@@ -580,7 +580,7 @@ public class PGraphicsOpenGL extends PGraphics {
     texCache = newTexCache(this);
 
     projection = new PMatrix3D();
-    camera = new PMatrix3D();
+    ___camera = new PMatrix3D();
     cameraInv = new PMatrix3D();
     modelview = new PMatrix3D();
     modelviewInv = new PMatrix3D();
@@ -636,7 +636,7 @@ public class PGraphicsOpenGL extends PGraphics {
     height = iheight;
     updatePixelSize();
 
-    texture = null;
+    ___texture = null;
     ptexture = null;
 
     // init perspective projection based on new dimensions
@@ -1572,7 +1572,7 @@ public class PGraphicsOpenGL extends PGraphics {
 
     pgl.viewport(viewport.get(0), viewport.get(1),
                  viewport.get(2), viewport.get(3));
-    if (clip) {
+    if (___clip) {
       pgl.enable(PGL.SCISSOR_TEST);
       pgl.scissor(clipRect[0], clipRect[1], clipRect[2], clipRect[3]);
     } else {
@@ -1972,30 +1972,12 @@ public class PGraphicsOpenGL extends PGraphics {
   }
 
 
-  protected void endShape(int[] indices) {
-    if (shape != TRIANGLE && shape != TRIANGLES) {
-      throw new RuntimeException("Indices and edges can only be set for " +
-                                 "TRIANGLE shapes");
-    }
-
-    tessellate(indices);
-
-    if (flushMode == FLUSH_CONTINUOUSLY ||
-        (flushMode == FLUSH_WHEN_FULL && tessGeo.isFull())) {
-      flush();
-    } else {
-      // pixels array is not up-to-date anymore
-      loaded = false;
-    }
-  }
-
-
   @Override
   public void textureWrap(int wrap) {
-    if (this.textureWrap != wrap) {
+    if (this.___textureWrap != wrap) {
       flush();
     }
-    this.textureWrap = wrap;
+    this.___textureWrap = wrap;
   }
 
 
@@ -2184,16 +2166,16 @@ public class PGraphicsOpenGL extends PGraphics {
     clipRect[3] = (int)h;
     pgl.scissor(clipRect[0], clipRect[1], clipRect[2], clipRect[3]);
 
-    clip = true;
+    ___clip = true;
   }
 
 
   @Override
   public void noClip() {
-    if (clip) {
+    if (___clip) {
       flush();
       pgl.disable(PGL.SCISSOR_TEST);
-      clip = false;
+      ___clip = false;
     }
   }
 
@@ -2547,7 +2529,6 @@ public class PGraphicsOpenGL extends PGraphics {
                       ambientColor, specularColor, emissiveColor, shininess);
     int[] indices = inGeo.addSphere(r, sphereDetailU, sphereDetailV,
                                     fill, stroke);
-    endShape(indices);
   }
 
   //////////////////////////////////////////////////////////////
@@ -2949,24 +2930,10 @@ public class PGraphicsOpenGL extends PGraphics {
         float x2 = x1 + bwidth * textSize;
         float y2 = y1 + high * textSize;
 
-        textCharModelImpl(tinfo, x1, y1, x2, y2);
       } else if (textMode == SHAPE) {
         textCharShapeImpl(ch, x, y);
       }
     }
-  }
-
-
-  protected void textCharModelImpl(FontTexture.TextureInfo info,
-                                   float x0, float y0,
-                                   float x1, float y1) {
-    beginShape(QUADS);
-    texture(textTex.getTexture(info));
-    vertex(x0, y0, info.u0, info.v0);
-    vertex(x1, y0, info.u1, info.v0);
-    vertex(x1, y1, info.u1, info.v1);
-    vertex(x0, y1, info.u0, info.v1);
-    endShape();
   }
 
 
@@ -3073,7 +3040,7 @@ public class PGraphicsOpenGL extends PGraphics {
     }
     modelview.get(modelviewStack[modelviewStackDepth]);
     modelviewInv.get(modelviewInvStack[modelviewStackDepth]);
-    camera.get(cameraStack[modelviewStackDepth]);
+    ___camera.get(cameraStack[modelviewStackDepth]);
     cameraInv.get(cameraInvStack[modelviewStackDepth]);
     modelviewStackDepth++;
   }
@@ -3087,7 +3054,7 @@ public class PGraphicsOpenGL extends PGraphics {
     modelviewStackDepth--;
     modelview.set(modelviewStack[modelviewStackDepth]);
     modelviewInv.set(modelviewInvStack[modelviewStackDepth]);
-    camera.set(cameraStack[modelviewStackDepth]);
+    ___camera.set(cameraStack[modelviewStackDepth]);
     cameraInv.set(cameraInvStack[modelviewStackDepth]);
     updateProjmodelview();
   }
@@ -3298,7 +3265,7 @@ public class PGraphicsOpenGL extends PGraphics {
 
     // For consistency, since modelview = camera * [all other transformations]
     // the camera matrix should be set to the identity as well:
-    camera.reset();
+    ___camera.reset();
     cameraInv.reset();
   }
 
@@ -3611,7 +3578,7 @@ public class PGraphicsOpenGL extends PGraphics {
           + "without first calling beginCamera()");
     }
 
-    camera.set(modelview);
+    ___camera.set(modelview);
     cameraInv.set(modelviewInv);
 
     // all done
@@ -3674,7 +3641,6 @@ public class PGraphicsOpenGL extends PGraphics {
    * cz, ux, uy, uz) as naked calls because they do all the matrix resetting
    * automatically.
    */
-  @Override
   public void camera(float eyeX, float eyeY, float eyeZ,
                      float centerX, float centerY, float centerZ,
                      float upX, float upY, float upZ) {
@@ -3737,7 +3703,7 @@ public class PGraphicsOpenGL extends PGraphics {
     modelviewInv.set(modelview);
     modelviewInv.invert();
 
-    camera.set(modelview);
+    ___camera.set(modelview);
     cameraInv.set(modelviewInv);
 
     updateProjmodelview();
@@ -3748,15 +3714,7 @@ public class PGraphicsOpenGL extends PGraphics {
    * Print the current camera matrix.
    */
   @Override
-  public void printCamera() {
-    camera.print();
-  }
-
-
-  protected void defaultCamera() {
-    camera();
-  }
-
+  public native void printCamera();
 
   //////////////////////////////////////////////////////////////
 
@@ -4148,27 +4106,7 @@ public class PGraphicsOpenGL extends PGraphics {
    * Simon Greenwold, April 2005
    * </PRE>
    */
-  @Override
-  public void lights() {
-    enableLighting();
-
-    // reset number of lights
-    lightCount = 0;
-
-    // need to make sure colorMode is RGB 255 here
-    int colorModeSaved = colorMode;
-    colorMode = RGB;
-
-    lightFalloff(1, 0, 0);
-    lightSpecular(0, 0, 0);
-
-    ambientLight(colorModeX * 0.5f, colorModeY * 0.5f, colorModeZ * 0.5f);
-    directionalLight(colorModeX * 0.5f, colorModeY * 0.5f, colorModeZ * 0.5f,
-                     0, 0, -1);
-
-    colorMode = colorModeSaved;
-  }
-
+  public native void lights();
 
   /**
    * Disables lighting.
@@ -4211,10 +4149,6 @@ public class PGraphicsOpenGL extends PGraphics {
     noLightDiffuse(lightCount);
     noLightSpecular(lightCount);
     noLightSpot(lightCount);
-    lightFalloff(lightCount, currentLightFalloffConstant,
-                             currentLightFalloffLinear,
-                             currentLightFalloffQuadratic);
-
     lightCount++;
   }
 
@@ -4265,10 +4199,6 @@ public class PGraphicsOpenGL extends PGraphics {
                               currentLightSpecular[1],
                               currentLightSpecular[2]);
     noLightSpot(lightCount);
-    lightFalloff(lightCount, currentLightFalloffConstant,
-                             currentLightFalloffLinear,
-                             currentLightFalloffQuadratic);
-
     lightCount++;
   }
 
@@ -4295,10 +4225,6 @@ public class PGraphicsOpenGL extends PGraphics {
                               currentLightSpecular[1],
                               currentLightSpecular[2]);
     lightSpot(lightCount, angle, concentration);
-    lightFalloff(lightCount, currentLightFalloffConstant,
-                             currentLightFalloffLinear,
-                             currentLightFalloffQuadratic);
-
     lightCount++;
   }
 
@@ -4318,7 +4244,6 @@ public class PGraphicsOpenGL extends PGraphics {
   /**
    * Set the specular color of the last light created.
    */
-  @Override
   public void lightSpecular(float x, float y, float z) {
     colorCalc(x, y, z);
     currentLightSpecular[0] = calcR;
@@ -4418,13 +4343,6 @@ public class PGraphicsOpenGL extends PGraphics {
     lightSpecular[3 * num + 0] = 0;
     lightSpecular[3 * num + 1] = 0;
     lightSpecular[3 * num + 2] = 0;
-  }
-
-
-  protected void lightFalloff(int num, float c0, float c1, float c2) {
-    lightFalloffCoefficients[3 * num + 0] = c0;
-    lightFalloffCoefficients[3 * num + 1] = c1;
-    lightFalloffCoefficients[3 * num + 2] = c2;
   }
 
 
@@ -4658,7 +4576,7 @@ public class PGraphicsOpenGL extends PGraphics {
     boolean needToDrawTex = primaryGraphics && (!pgl.isFBOBacked() ||
                             (pgl.isFBOBacked() && pgl.isMultisampled())) ||
                             offscreenMultisample;
-    if (texture == null) return;
+    if (___texture == null) return;
     if (needToDrawTex) {
       // The texture to screen needs to be drawn only if we are on the primary
       // surface w/out FBO-layer, or with FBO-layer and multisampling. Or, we
@@ -4668,9 +4586,9 @@ public class PGraphicsOpenGL extends PGraphics {
       // (off)screen buffer.
       // First, copy the pixels to the texture. We don't need to invert the
       // pixel copy because the texture will be drawn inverted.
-      int tw = PApplet.min(texture.glWidth - x, w);
-      int th = PApplet.min(texture.glHeight - y, h);
-      pgl.copyToTexture(texture.glTarget, texture.glFormat, texture.glName,
+      int tw = PApplet.min(___texture.glWidth - x, w);
+      int th = PApplet.min(___texture.glHeight - y, h);
+      pgl.copyToTexture(___texture.glTarget, ___texture.glFormat, ___texture.glName,
                         x, y, tw, th, nativePixelBuffer);
       beginPixelsOp(OP_WRITE);
       drawTexture(x, y, w, h);
@@ -4679,7 +4597,7 @@ public class PGraphicsOpenGL extends PGraphics {
       // We only need to copy the pixels to the back texture where we are
       // currently drawing to. Because the texture is inverted along Y, we
       // need to reflect that in the vertical arguments.
-      pgl.copyToTexture(texture.glTarget, texture.glFormat, texture.glName,
+      pgl.copyToTexture(___texture.glTarget, ___texture.glFormat, ___texture.glName,
                         x, pixelHeight - (y + h), w, h, nativePixelBuffer);
     }
   }
@@ -5063,8 +4981,8 @@ public class PGraphicsOpenGL extends PGraphics {
         }
         endPixelsOp();
 
-        if (texture != null) {
-          texture.setNative(nativePixelBuffer, 0, 0, pixelWidth, pixelHeight);
+        if (___texture != null) {
+          ___texture.setNative(nativePixelBuffer, 0, 0, pixelWidth, pixelHeight);
         }
       }
     } else if (offscreenMultisample) {
@@ -5085,8 +5003,8 @@ public class PGraphicsOpenGL extends PGraphics {
 
   // Just marks the whole texture as updated
   public void updateTexture() {
-    if (texture != null) {
-      texture.updateTexels();
+    if (___texture != null) {
+      ___texture.updateTexels();
     }
   }
 
@@ -5094,8 +5012,8 @@ public class PGraphicsOpenGL extends PGraphics {
   // Marks the specified rectanglular subregion in the texture as
   // updated.
   public void updateTexture(int x, int y, int w, int h) {
-    if (texture != null) {
-      texture.updateTexels(x, y, w, h);
+    if (___texture != null) {
+      ___texture.updateTexels(x, y, w, h);
     }
   }
 
@@ -5112,21 +5030,21 @@ public class PGraphicsOpenGL extends PGraphics {
   protected void loadTextureImpl(int sampling, boolean mipmap) {
     updatePixelSize();
     if (pixelWidth == 0 || pixelHeight == 0) return;
-    if (texture == null || texture.contextIsOutdated()) {
+    if (___texture == null || ___texture.contextIsOutdated()) {
       Texture.Parameters params = new Texture.Parameters(ARGB,
                                                          sampling, mipmap);
-      texture = new Texture(this, pixelWidth, pixelHeight, params);
-      texture.invertedY(true);
-      texture.colorBuffer(true);
-      setCache(this, texture);
+      ___texture = new Texture(this, pixelWidth, pixelHeight, params);
+      ___texture.invertedY(true);
+      ___texture.colorBuffer(true);
+      setCache(this, ___texture);
     }
   }
 
 
   protected void createPTexture() {
     updatePixelSize();
-    if (texture != null) {
-      ptexture = new Texture(this, pixelWidth, pixelHeight, texture.getParameters());
+    if (___texture != null) {
+      ptexture = new Texture(this, pixelWidth, pixelHeight, ___texture.getParameters());
       ptexture.invertedY(true);
       ptexture.colorBuffer(true);
     }
@@ -5135,22 +5053,22 @@ public class PGraphicsOpenGL extends PGraphics {
 
   protected void swapOffscreenTextures() {
     FrameBuffer ofb = offscreenFramebuffer;
-    if (texture != null && ptexture != null && ofb != null) {
-      int temp = texture.glName;
-      texture.glName = ptexture.glName;
+    if (___texture != null && ptexture != null && ofb != null) {
+      int temp = ___texture.glName;
+      ___texture.glName = ptexture.glName;
       ptexture.glName = temp;
-      ofb.setColorBuffer(texture);
+      ofb.setColorBuffer(___texture);
     }
   }
 
 
   protected void drawTexture() {
-    if (texture != null) {
+    if (___texture != null) {
       // No blend so the texure replaces wherever is on the screen,
       // irrespective of the alpha
       pgl.disable(PGL.BLEND);
-      pgl.drawTexture(texture.glTarget, texture.glName,
-                      texture.glWidth, texture.glHeight,
+      pgl.drawTexture(___texture.glTarget, ___texture.glName,
+                      ___texture.glWidth, ___texture.glHeight,
                       0, 0, width, height);
       pgl.enable(PGL.BLEND);
     }
@@ -5158,12 +5076,12 @@ public class PGraphicsOpenGL extends PGraphics {
 
 
   protected void drawTexture(int x, int y, int w, int h) {
-    if (texture != null) {
+    if (___texture != null) {
       // Processing Y axis is inverted with respect to OpenGL, so we need to
       // invert the y coordinates of the screen rectangle.
       pgl.disable(PGL.BLEND);
-      pgl.drawTexture(texture.glTarget, texture.glName,
-                      texture.glWidth, texture.glHeight,
+      pgl.drawTexture(___texture.glTarget, ___texture.glName,
+                      ___texture.glWidth, ___texture.glHeight,
                       0, 0, pixelWidth, pixelHeight, 1,
                       x, y, x + w, y + h,
                       x, pixelHeight - (y + h), x + w, pixelHeight - y);
@@ -5243,11 +5161,11 @@ public class PGraphicsOpenGL extends PGraphics {
     if (primaryGraphics) pgl.enableFBOLayer();
     loadTexture();
     if (filterTexture == null || filterTexture.contextIsOutdated()) {
-      filterTexture = new Texture(this, texture.width, texture.height, texture.getParameters());
+      filterTexture = new Texture(this, ___texture.width, ___texture.height, ___texture.getParameters());
       filterTexture.invertedY(true);
       filterImage = wrapTexture(filterTexture);
     }
-    filterTexture.put(texture, sx, height - (sy + sh), sw, height - sy);
+    filterTexture.put(___texture, sx, height - (sy + sh), sw, height - sy);
     copy(filterImage, sx, sy, sw, sh, dx, dy, dw, dh);
   }
 
@@ -5453,7 +5371,7 @@ public class PGraphicsOpenGL extends PGraphics {
    */
   public Texture getTexture(boolean load) {
     if (load) loadTexture();
-    return texture;
+    return ___texture;
   }
 
 
@@ -5550,7 +5468,7 @@ public class PGraphicsOpenGL extends PGraphics {
   protected Texture addTexture(PImage img) {
     Texture.Parameters params =
       new Texture.Parameters(ARGB, textureSampling,
-                             getHint(ENABLE_TEXTURE_MIPMAPS), textureWrap);
+                             getHint(ENABLE_TEXTURE_MIPMAPS), ___textureWrap);
     return addTexture(img, params);
   }
 
@@ -5580,9 +5498,9 @@ public class PGraphicsOpenGL extends PGraphics {
       }
     }
 
-    if ((tex.usingRepeat && textureWrap == CLAMP) ||
-        (!tex.usingRepeat && textureWrap == REPEAT)) {
-      if (textureWrap == CLAMP) {
+    if ((tex.usingRepeat && ___textureWrap == CLAMP) ||
+        (!tex.usingRepeat && ___textureWrap == REPEAT)) {
+      if (___textureWrap == CLAMP) {
         tex.usingRepeat(false);
       } else {
         tex.usingRepeat(true);
@@ -5619,8 +5537,8 @@ public class PGraphicsOpenGL extends PGraphics {
 
 
   protected void deleteSurfaceTextures() {
-    if (texture != null) {
-      texture.dispose();
+    if (___texture != null) {
+      ___texture.dispose();
     }
 
     if (ptexture != null) {
@@ -5663,9 +5581,9 @@ public class PGraphicsOpenGL extends PGraphics {
 
   protected void initPrimary() {
     pgl.initSurface(smooth);
-    if (texture != null) {
+    if (___texture != null) {
       removeCache(this);
-      texture = null;
+      ___texture = null;
       ptexture = null;
     }
     initialized = true;
@@ -5690,7 +5608,7 @@ public class PGraphicsOpenGL extends PGraphics {
     }
 
     if (pgl.isFBOBacked()) {
-      texture = pgl.wrapBackTexture(texture);
+      ___texture = pgl.wrapBackTexture(___texture);
       ptexture = pgl.wrapFrontTexture(ptexture);
     }
   }
@@ -5723,7 +5641,7 @@ public class PGraphicsOpenGL extends PGraphics {
     boolean packed = depthBits == 24 && stencilBits == 8 &&
                      packedDepthStencilSupported;
     if (PGraphicsOpenGL.fboMultisampleSupported && 1 < PGL.smoothToSamples(smooth)) {
-      mfb = new FrameBuffer(this, texture.glWidth, texture.glHeight, PGL.smoothToSamples(smooth), 0,
+      mfb = new FrameBuffer(this, ___texture.glWidth, ___texture.glHeight, PGL.smoothToSamples(smooth), 0,
                             depthBits, stencilBits, packed, false);
       mfb.clear();
       multisampleFramebuffer = mfb;
@@ -5733,19 +5651,19 @@ public class PGraphicsOpenGL extends PGraphics {
       // to. If depth reading is disabled it doesn't need depth and stencil buffers
       // since they are part of the multisampled framebuffer.
       if (hints[ENABLE_BUFFER_READING]) {
-        ofb = new FrameBuffer(this, texture.glWidth, texture.glHeight, 1, 1,
+        ofb = new FrameBuffer(this, ___texture.glWidth, ___texture.glHeight, 1, 1,
                               depthBits, stencilBits, packed, false);
       } else {
-        ofb = new FrameBuffer(this, texture.glWidth, texture.glHeight, 1, 1,
+        ofb = new FrameBuffer(this, ___texture.glWidth, ___texture.glHeight, 1, 1,
                           0, 0, false, false);
       }
     } else {
       smooth = 0;
-      ofb = new FrameBuffer(this, texture.glWidth, texture.glHeight, 1, 1,
+      ofb = new FrameBuffer(this, ___texture.glWidth, ___texture.glHeight, 1, 1,
                             depthBits, stencilBits, packed, false);
       offscreenMultisample = false;
     }
-    ofb.setColorBuffer(texture);
+    ofb.setColorBuffer(___texture);
     ofb.clear();
     offscreenFramebuffer = ofb;
 
@@ -5789,7 +5707,7 @@ public class PGraphicsOpenGL extends PGraphics {
     drawPTexture();
 
     // Restoring the clipping configuration of the offscreen surface.
-    if (clip) {
+    if (___clip) {
       pgl.enable(PGL.SCISSOR_TEST);
       pgl.scissor(clipRect[0], clipRect[1], clipRect[2], clipRect[3]);
     } else {
@@ -5819,8 +5737,8 @@ public class PGraphicsOpenGL extends PGraphics {
       pgl.colorMask(true, true, true, true);
     }
 
-    if (texture != null) {
-      texture.updateTexels(); // Mark all texels in screen texture as modified.
+    if (___texture != null) {
+      ___texture.updateTexels(); // Mark all texels in screen texture as modified.
     }
 
     getPrimaryPG().restoreGL();
@@ -5836,123 +5754,7 @@ public class PGraphicsOpenGL extends PGraphics {
 
 
   @Override
-  protected void checkSettings() {
-    super.checkSettings();
-    setGLSettings();
-  }
-
-
-  protected void setGLSettings() {
-    inGeo.clear();
-    tessGeo.clear();
-    texCache.clear();
-
-    // Each frame starts with textures disabled.
-    super.noTexture();
-
-    // Making sure that OpenGL is using the last blend mode set by the user.
-    blendModeImpl();
-
-    // this is necessary for 3D drawing
-    if (hints[DISABLE_DEPTH_TEST]) {
-      pgl.disable(PGL.DEPTH_TEST);
-    } else {
-      pgl.enable(PGL.DEPTH_TEST);
-    }
-    // use <= since that's what processing.core does
-    pgl.depthFunc(PGL.LEQUAL);
-
-    if (hints[DISABLE_OPTIMIZED_STROKE]) {
-      flushMode = FLUSH_CONTINUOUSLY;
-    } else {
-      flushMode = FLUSH_WHEN_FULL;
-    }
-
-    if (primaryGraphics) {
-//      pgl.getIntegerv(PGL.SAMPLES, intBuffer);
-//      int temp = intBuffer.get(0);
-//      if (smooth != temp && 1 < temp && 1 < smooth) {
-        // TODO check why the samples is higher that initialized smooth level.
-//        quality = temp;
-//      }
-    }
-    if (OPENGL_RENDERER.equals("VideoCore IV HW")) {
-      // Broadcom's VC IV driver is unhappy with either of these
-      // ignore for now
-    } else if (smooth < 1) {
-      pgl.disable(PGL.MULTISAMPLE);
-    } else if (1 <= smooth) {
-      pgl.enable(PGL.MULTISAMPLE);
-    }
-    // work around runtime exceptions in Broadcom's VC IV driver
-    if (false == OPENGL_RENDERER.equals("VideoCore IV HW")) {
-      pgl.disable(PGL.POLYGON_SMOOTH);
-    }
-
-    if (sized) {
-//      reapplySettings();
-
-      // To avoid having garbage in the screen after a resize,
-      // in the case background is not called in draw().
-      if (primaryGraphics) {
-        background(backgroundColor);
-      } else {
-        // offscreen surfaces are transparent by default.
-        background(0x00 << 24 | (backgroundColor & 0xFFFFFF));
-      }
-
-      // Sets the default projection and camera (initializes modelview).
-      // If the user has setup up their own projection, they'll need
-      // to fix it after resize anyway. This helps the people who haven't
-      // set up their own projection.
-      defaultPerspective();
-      defaultCamera();
-
-      // clear the flag
-      sized = false;
-    } else {
-      // Eliminating any user's transformations by going back to the
-      // original camera setup.
-      modelview.set(camera);
-      modelviewInv.set(cameraInv);
-      updateProjmodelview();
-    }
-
-    if (is3D()) {
-      noLights();
-      lightFalloff(1, 0, 0);
-      lightSpecular(0, 0, 0);
-    }
-
-    // Vertices should be specified by user in CW order (left-handed)
-    // That is CCW order (right-handed). Vertex shader inverts
-    // Y-axis and outputs vertices in CW order (right-handed).
-    // Culling occurs after the vertex shader, so FRONT FACE
-    // has to be set to CW (right-handed) for OpenGL to correctly
-    // recognize FRONT and BACK faces.
-    pgl.frontFace(PGL.CW);
-    pgl.disable(PGL.CULL_FACE);
-
-    // Processing uses only one texture unit.
-    pgl.activeTexture(PGL.TEXTURE0);
-
-    // The current normal vector is set to be parallel to the Z axis.
-    normalX = normalY = 0;
-    normalZ = 1;
-
-    pgl.clearDepthStencil();
-
-    if (hints[DISABLE_DEPTH_MASK]) {
-      pgl.depthMask(false);
-    } else {
-      pgl.depthMask(true);
-    }
-
-    pixelsOp = OP_NONE;
-
-    modified = false;
-    loaded = false;
-  }
+  protected native void checkSettings();
 
 
   protected void getGLParameters() {

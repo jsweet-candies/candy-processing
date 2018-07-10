@@ -7,7 +7,7 @@
  * @param {PGraphicsOpenGL} pg
  * @class
  */
-declare abstract class PGL {
+declare class PGL {
     /**
      * The PGraphics and PApplet objects using this interface
      */
@@ -18,7 +18,7 @@ declare abstract class PGL {
     /**
      * OpenGL thread
      */
-    glThread : java.lang.Thread;
+    glThread : any;
 
     /**
      * ID of the GL context associated to the surface
@@ -346,15 +346,15 @@ declare abstract class PGL {
 
     public static smoothToSamples(smooth : number) : number;
 
-    public abstract getNative() : any;
+    public getNative() : any;
 
-    abstract setFrameRate(fps : number);
+    setFrameRate(fps : number);
 
-    abstract initSurface(antialias : number);
+    initSurface(antialias : number);
 
-    abstract reinitSurface();
+    reinitSurface();
 
-    abstract registerListeners();
+    registerListeners();
 
     getReadFramebuffer() : number;
 
@@ -376,9 +376,9 @@ declare abstract class PGL {
 
     isMultisampled() : boolean;
 
-    abstract getDepthBits() : number;
+    getDepthBits() : number;
 
-    abstract getStencilBits() : number;
+    getStencilBits() : number;
 
     getDepthTest() : boolean;
 
@@ -394,7 +394,7 @@ declare abstract class PGL {
 
     syncBackTexture();
 
-    abstract getPixelScale() : number;
+    getPixelScale() : number;
 
     public initPresentMode(x : number, y : number, stopColor : number);
 
@@ -408,19 +408,19 @@ declare abstract class PGL {
 
     endRender(windowColor : number);
 
-    abstract getGL(pgl : PGL);
+    getGL(pgl : PGL);
 
-    abstract canDraw() : boolean;
+    canDraw() : boolean;
 
-    abstract requestFocus();
+    requestFocus();
 
-    abstract requestDraw();
+    requestDraw();
 
-    abstract swapBuffers();
+    swapBuffers();
 
     public threadIsCurrent() : boolean;
 
-    public setThread(thread : java.lang.Thread);
+    public setThread(thread : any);
 
     beginGL();
 
@@ -428,7 +428,7 @@ declare abstract class PGL {
 
     createFBOLayer();
 
-    abstract initFBOLayer();
+    initFBOLayer();
 
     saveFirstFrame();
 
@@ -595,7 +595,7 @@ declare abstract class PGL {
 
     static qualityToSamples(quality : number) : number;
 
-    abstract getGLSLVersion() : number;
+    getGLSLVersion() : number;
 
     loadVertexShader(filename : string) : string[];
 
@@ -621,7 +621,7 @@ declare abstract class PGL {
 
     static GLSL_FN_REGEX : string;
 
-    static preprocessShaderSource(src0 : string[], search : java.util.regex.Pattern[], replace : string[], offset : number) : string[];
+    static preprocessShaderSource(src0 : string[], search : RegExp[], replace : string[], offset : number) : string[];
 
     static containsVersionDirective(shSrc : string[]) : boolean;
 
@@ -729,15 +729,15 @@ declare abstract class PGL {
 
     static fillFloatBuffer(buf : any, i0 : number, i1 : number, val : number);
 
-    abstract getFontAscent(font : any) : number;
+    getFontAscent(font : any) : number;
 
-    abstract getFontDescent(font : any) : number;
+    getFontDescent(font : any) : number;
 
-    abstract getTextWidth(font : any, buffer : string[], start : number, stop : number) : number;
+    getTextWidth(font : any, buffer : string[], start : number, stop : number) : number;
 
-    abstract getDerivedFont(font : any, size : number) : any;
+    getDerivedFont(font : any, size : number) : any;
 
-    abstract createTessellator(callback : PGL.TessellatorCallback) : PGL.Tessellator;
+    createTessellator(callback : PGL.TessellatorCallback) : PGL.Tessellator;
 
     tessError(err : number) : string;
 
@@ -753,7 +753,7 @@ declare abstract class PGL {
 
     static SEG_CLOSE : number;
 
-    abstract createFontOutline(ch : string, font : any) : PGL.FontOutline;
+    createFontOutline(ch : string, font : any) : PGL.FontOutline;
 
     public static FALSE : number;
 
@@ -1231,323 +1231,323 @@ declare abstract class PGL {
 
     public static CONDITION_SATISFIED : number;
 
-    public abstract flush();
+    public flush();
 
-    public abstract finish();
+    public finish();
 
-    public abstract hint(target : number, hint : number);
+    public hint(target : number, hint : number);
 
-    public abstract enable(value : number);
+    public enable(value : number);
 
-    public abstract disable(value : number);
+    public disable(value : number);
 
-    public abstract getBooleanv(value : number, data : any);
+    public getBooleanv(value : number, data : any);
 
-    public abstract getIntegerv(value : number, data : any);
+    public getIntegerv(value : number, data : any);
 
-    public abstract getFloatv(value : number, data : any);
+    public getFloatv(value : number, data : any);
 
-    public abstract isEnabled(value : number) : boolean;
+    public isEnabled(value : number) : boolean;
 
-    public abstract getString(name : number) : string;
+    public getString(name : number) : string;
 
-    public abstract getError() : number;
+    public getError() : number;
 
-    public abstract errorString(err : number) : string;
+    public errorString(err : number) : string;
 
-    public abstract genBuffers(n : number, buffers : any);
+    public genBuffers(n : number, buffers : any);
 
-    public abstract deleteBuffers(n : number, buffers : any);
+    public deleteBuffers(n : number, buffers : any);
 
-    public abstract bindBuffer(target : number, buffer : number);
+    public bindBuffer(target : number, buffer : number);
 
-    public abstract bufferData(target : number, size : number, data : any, usage : number);
+    public bufferData(target : number, size : number, data : any, usage : number);
 
-    public abstract bufferSubData(target : number, offset : number, size : number, data : any);
+    public bufferSubData(target : number, offset : number, size : number, data : any);
 
-    public abstract isBuffer(buffer : number);
+    public isBuffer(buffer : number);
 
-    public abstract getBufferParameteriv(target : number, value : number, data : any);
+    public getBufferParameteriv(target : number, value : number, data : any);
 
-    public abstract mapBuffer(target : number, access : number) : any;
+    public mapBuffer(target : number, access : number) : any;
 
-    public abstract mapBufferRange(target : number, offset : number, length : number, access : number) : any;
+    public mapBufferRange(target : number, offset : number, length : number, access : number) : any;
 
-    public abstract unmapBuffer(target : number);
+    public unmapBuffer(target : number);
 
-    public abstract fenceSync(condition : number, flags : number) : number;
+    public fenceSync(condition : number, flags : number) : number;
 
-    public abstract deleteSync(sync : number);
+    public deleteSync(sync : number);
 
-    public abstract clientWaitSync(sync : number, flags : number, timeout : number) : number;
+    public clientWaitSync(sync : number, flags : number, timeout : number) : number;
 
-    public abstract depthRangef(n : number, f : number);
+    public depthRangef(n : number, f : number);
 
-    public abstract viewport(x : number, y : number, w : number, h : number);
+    public viewport(x : number, y : number, w : number, h : number);
 
-    abstract viewportImpl(x : number, y : number, w : number, h : number);
+    viewportImpl(x : number, y : number, w : number, h : number);
 
     public readPixels(x : number, y : number, width : number, height : number, format : number, type : number, buffer : any);
 
     public readPixels(x : number, y : number, width : number, height : number, format : number, type : number, offset : number);
 
-    abstract readPixelsImpl(x : number, y : number, width : number, height : number, format : number, type : number, buffer : any);
+    readPixelsImpl(x : number, y : number, width : number, height : number, format : number, type : number, buffer : any);
 
-    abstract readPixelsImpl(x : number, y : number, width : number, height : number, format : number, type : number, offset : number);
+    readPixelsImpl(x : number, y : number, width : number, height : number, format : number, type : number, offset : number);
 
-    public abstract vertexAttrib1f(index : number, value : number);
+    public vertexAttrib1f(index : number, value : number);
 
-    public abstract vertexAttrib2f(index : number, value0 : number, value1 : number);
+    public vertexAttrib2f(index : number, value0 : number, value1 : number);
 
-    public abstract vertexAttrib3f(index : number, value0 : number, value1 : number, value2 : number);
+    public vertexAttrib3f(index : number, value0 : number, value1 : number, value2 : number);
 
-    public abstract vertexAttrib4f(index : number, value0 : number, value1 : number, value2 : number, value3 : number);
+    public vertexAttrib4f(index : number, value0 : number, value1 : number, value2 : number, value3 : number);
 
-    public abstract vertexAttrib1fv(index : number, values : any);
+    public vertexAttrib1fv(index : number, values : any);
 
-    public abstract vertexAttrib2fv(index : number, values : any);
+    public vertexAttrib2fv(index : number, values : any);
 
-    public abstract vertexAttrib3fv(index : number, values : any);
+    public vertexAttrib3fv(index : number, values : any);
 
-    public abstract vertexAttrib4fv(index : number, values : any);
+    public vertexAttrib4fv(index : number, values : any);
 
-    public abstract vertexAttribPointer(index : number, size : number, type : number, normalized : boolean, stride : number, offset : number);
+    public vertexAttribPointer(index : number, size : number, type : number, normalized : boolean, stride : number, offset : number);
 
-    public abstract enableVertexAttribArray(index : number);
+    public enableVertexAttribArray(index : number);
 
-    public abstract disableVertexAttribArray(index : number);
+    public disableVertexAttribArray(index : number);
 
     public drawArrays(mode : number, first : number, count : number);
 
-    public abstract drawArraysImpl(mode : number, first : number, count : number);
+    public drawArraysImpl(mode : number, first : number, count : number);
 
     public drawElements(mode : number, count : number, type : number, offset : number);
 
-    public abstract drawElementsImpl(mode : number, count : number, type : number, offset : number);
+    public drawElementsImpl(mode : number, count : number, type : number, offset : number);
 
-    public abstract lineWidth(width : number);
+    public lineWidth(width : number);
 
-    public abstract frontFace(dir : number);
+    public frontFace(dir : number);
 
-    public abstract cullFace(mode : number);
+    public cullFace(mode : number);
 
-    public abstract polygonOffset(factor : number, units : number);
+    public polygonOffset(factor : number, units : number);
 
-    public abstract pixelStorei(pname : number, param : number);
+    public pixelStorei(pname : number, param : number);
 
-    public abstract texImage2D(target : number, level : number, internalFormat : number, width : number, height : number, border : number, format : number, type : number, data : any);
+    public texImage2D(target : number, level : number, internalFormat : number, width : number, height : number, border : number, format : number, type : number, data : any);
 
-    public abstract copyTexImage2D(target : number, level : number, internalFormat : number, x : number, y : number, width : number, height : number, border : number);
+    public copyTexImage2D(target : number, level : number, internalFormat : number, x : number, y : number, width : number, height : number, border : number);
 
-    public abstract texSubImage2D(target : number, level : number, xOffset : number, yOffset : number, width : number, height : number, format : number, type : number, data : any);
+    public texSubImage2D(target : number, level : number, xOffset : number, yOffset : number, width : number, height : number, format : number, type : number, data : any);
 
-    public abstract copyTexSubImage2D(target : number, level : number, xOffset : number, yOffset : number, x : number, y : number, width : number, height : number);
+    public copyTexSubImage2D(target : number, level : number, xOffset : number, yOffset : number, x : number, y : number, width : number, height : number);
 
-    public abstract compressedTexImage2D(target : number, level : number, internalFormat : number, width : number, height : number, border : number, imageSize : number, data : any);
+    public compressedTexImage2D(target : number, level : number, internalFormat : number, width : number, height : number, border : number, imageSize : number, data : any);
 
-    public abstract compressedTexSubImage2D(target : number, level : number, xOffset : number, yOffset : number, width : number, height : number, format : number, imageSize : number, data : any);
+    public compressedTexSubImage2D(target : number, level : number, xOffset : number, yOffset : number, width : number, height : number, format : number, imageSize : number, data : any);
 
-    public abstract texParameteri(target : number, pname : number, param : number);
+    public texParameteri(target : number, pname : number, param : number);
 
-    public abstract texParameterf(target : number, pname : number, param : number);
+    public texParameterf(target : number, pname : number, param : number);
 
-    public abstract texParameteriv(target : number, pname : number, params : any);
+    public texParameteriv(target : number, pname : number, params : any);
 
-    public abstract texParameterfv(target : number, pname : number, params : any);
+    public texParameterfv(target : number, pname : number, params : any);
 
-    public abstract generateMipmap(target : number);
+    public generateMipmap(target : number);
 
-    public abstract genTextures(n : number, textures : any);
+    public genTextures(n : number, textures : any);
 
-    public abstract deleteTextures(n : number, textures : any);
+    public deleteTextures(n : number, textures : any);
 
-    public abstract getTexParameteriv(target : number, pname : number, params : any);
+    public getTexParameteriv(target : number, pname : number, params : any);
 
-    public abstract getTexParameterfv(target : number, pname : number, params : any);
+    public getTexParameterfv(target : number, pname : number, params : any);
 
-    public abstract isTexture(texture : number) : boolean;
+    public isTexture(texture : number) : boolean;
 
     public activeTexture(texture : number);
 
-    abstract activeTextureImpl(texture : number);
+    activeTextureImpl(texture : number);
 
     public bindTexture(target : number, texture : number);
 
-    abstract bindTextureImpl(target : number, texture : number);
+    bindTextureImpl(target : number, texture : number);
 
-    public abstract createShader(type : number) : number;
+    public createShader(type : number) : number;
 
-    public abstract shaderSource(shader : number, source : string);
+    public shaderSource(shader : number, source : string);
 
-    public abstract compileShader(shader : number);
+    public compileShader(shader : number);
 
-    public abstract releaseShaderCompiler();
+    public releaseShaderCompiler();
 
-    public abstract deleteShader(shader : number);
+    public deleteShader(shader : number);
 
-    public abstract shaderBinary(count : number, shaders : any, binaryFormat : number, binary : any, length : number);
+    public shaderBinary(count : number, shaders : any, binaryFormat : number, binary : any, length : number);
 
-    public abstract createProgram() : number;
+    public createProgram() : number;
 
-    public abstract attachShader(program : number, shader : number);
+    public attachShader(program : number, shader : number);
 
-    public abstract detachShader(program : number, shader : number);
+    public detachShader(program : number, shader : number);
 
-    public abstract linkProgram(program : number);
+    public linkProgram(program : number);
 
-    public abstract useProgram(program : number);
+    public useProgram(program : number);
 
-    public abstract deleteProgram(program : number);
+    public deleteProgram(program : number);
 
-    public abstract getActiveAttrib(program : number, index : number, size : any, type : any) : string;
+    public getActiveAttrib(program : number, index : number, size : any, type : any) : string;
 
-    public abstract getAttribLocation(program : number, name : string) : number;
+    public getAttribLocation(program : number, name : string) : number;
 
-    public abstract bindAttribLocation(program : number, index : number, name : string);
+    public bindAttribLocation(program : number, index : number, name : string);
 
-    public abstract getUniformLocation(program : number, name : string) : number;
+    public getUniformLocation(program : number, name : string) : number;
 
-    public abstract getActiveUniform(program : number, index : number, size : any, type : any) : string;
+    public getActiveUniform(program : number, index : number, size : any, type : any) : string;
 
-    public abstract uniform1i(location : number, value : number);
+    public uniform1i(location : number, value : number);
 
-    public abstract uniform2i(location : number, value0 : number, value1 : number);
+    public uniform2i(location : number, value0 : number, value1 : number);
 
-    public abstract uniform3i(location : number, value0 : number, value1 : number, value2 : number);
+    public uniform3i(location : number, value0 : number, value1 : number, value2 : number);
 
-    public abstract uniform4i(location : number, value0 : number, value1 : number, value2 : number, value3 : number);
+    public uniform4i(location : number, value0 : number, value1 : number, value2 : number, value3 : number);
 
-    public abstract uniform1f(location : number, value : number);
+    public uniform1f(location : number, value : number);
 
-    public abstract uniform2f(location : number, value0 : number, value1 : number);
+    public uniform2f(location : number, value0 : number, value1 : number);
 
-    public abstract uniform3f(location : number, value0 : number, value1 : number, value2 : number);
+    public uniform3f(location : number, value0 : number, value1 : number, value2 : number);
 
-    public abstract uniform4f(location : number, value0 : number, value1 : number, value2 : number, value3 : number);
+    public uniform4f(location : number, value0 : number, value1 : number, value2 : number, value3 : number);
 
-    public abstract uniform1iv(location : number, count : number, v : any);
+    public uniform1iv(location : number, count : number, v : any);
 
-    public abstract uniform2iv(location : number, count : number, v : any);
+    public uniform2iv(location : number, count : number, v : any);
 
-    public abstract uniform3iv(location : number, count : number, v : any);
+    public uniform3iv(location : number, count : number, v : any);
 
-    public abstract uniform4iv(location : number, count : number, v : any);
+    public uniform4iv(location : number, count : number, v : any);
 
-    public abstract uniform1fv(location : number, count : number, v : any);
+    public uniform1fv(location : number, count : number, v : any);
 
-    public abstract uniform2fv(location : number, count : number, v : any);
+    public uniform2fv(location : number, count : number, v : any);
 
-    public abstract uniform3fv(location : number, count : number, v : any);
+    public uniform3fv(location : number, count : number, v : any);
 
-    public abstract uniform4fv(location : number, count : number, v : any);
+    public uniform4fv(location : number, count : number, v : any);
 
-    public abstract uniformMatrix2fv(location : number, count : number, transpose : boolean, mat : any);
+    public uniformMatrix2fv(location : number, count : number, transpose : boolean, mat : any);
 
-    public abstract uniformMatrix3fv(location : number, count : number, transpose : boolean, mat : any);
+    public uniformMatrix3fv(location : number, count : number, transpose : boolean, mat : any);
 
-    public abstract uniformMatrix4fv(location : number, count : number, transpose : boolean, mat : any);
+    public uniformMatrix4fv(location : number, count : number, transpose : boolean, mat : any);
 
-    public abstract validateProgram(program : number);
+    public validateProgram(program : number);
 
-    public abstract isShader(shader : number) : boolean;
+    public isShader(shader : number) : boolean;
 
-    public abstract getShaderiv(shader : number, pname : number, params : any);
+    public getShaderiv(shader : number, pname : number, params : any);
 
-    public abstract getAttachedShaders(program : number, maxCount : number, count : any, shaders : any);
+    public getAttachedShaders(program : number, maxCount : number, count : any, shaders : any);
 
-    public abstract getShaderInfoLog(shader : number) : string;
+    public getShaderInfoLog(shader : number) : string;
 
-    public abstract getShaderSource(shader : number) : string;
+    public getShaderSource(shader : number) : string;
 
-    public abstract getShaderPrecisionFormat(shaderType : number, precisionType : number, range : any, precision : any);
+    public getShaderPrecisionFormat(shaderType : number, precisionType : number, range : any, precision : any);
 
-    public abstract getVertexAttribfv(index : number, pname : number, params : any);
+    public getVertexAttribfv(index : number, pname : number, params : any);
 
-    public abstract getVertexAttribiv(index : number, pname : number, params : any);
+    public getVertexAttribiv(index : number, pname : number, params : any);
 
-    public abstract getVertexAttribPointerv(index : number, pname : number, data : any);
+    public getVertexAttribPointerv(index : number, pname : number, data : any);
 
-    public abstract getUniformfv(program : number, location : number, params : any);
+    public getUniformfv(program : number, location : number, params : any);
 
-    public abstract getUniformiv(program : number, location : number, params : any);
+    public getUniformiv(program : number, location : number, params : any);
 
-    public abstract isProgram(program : number) : boolean;
+    public isProgram(program : number) : boolean;
 
-    public abstract getProgramiv(program : number, pname : number, params : any);
+    public getProgramiv(program : number, pname : number, params : any);
 
-    public abstract getProgramInfoLog(program : number) : string;
+    public getProgramInfoLog(program : number) : string;
 
-    public abstract scissor(x : number, y : number, w : number, h : number);
+    public scissor(x : number, y : number, w : number, h : number);
 
-    public abstract sampleCoverage(value : number, invert : boolean);
+    public sampleCoverage(value : number, invert : boolean);
 
-    public abstract stencilFunc(func : number, ref : number, mask : number);
+    public stencilFunc(func : number, ref : number, mask : number);
 
-    public abstract stencilFuncSeparate(face : number, func : number, ref : number, mask : number);
+    public stencilFuncSeparate(face : number, func : number, ref : number, mask : number);
 
-    public abstract stencilOp(sfail : number, dpfail : number, dppass : number);
+    public stencilOp(sfail : number, dpfail : number, dppass : number);
 
-    public abstract stencilOpSeparate(face : number, sfail : number, dpfail : number, dppass : number);
+    public stencilOpSeparate(face : number, sfail : number, dpfail : number, dppass : number);
 
-    public abstract depthFunc(func : number);
+    public depthFunc(func : number);
 
-    public abstract blendEquation(mode : number);
+    public blendEquation(mode : number);
 
-    public abstract blendEquationSeparate(modeRGB : number, modeAlpha : number);
+    public blendEquationSeparate(modeRGB : number, modeAlpha : number);
 
-    public abstract blendFunc(src : number, dst : number);
+    public blendFunc(src : number, dst : number);
 
-    public abstract blendFuncSeparate(srcRGB : number, dstRGB : number, srcAlpha : number, dstAlpha : number);
+    public blendFuncSeparate(srcRGB : number, dstRGB : number, srcAlpha : number, dstAlpha : number);
 
-    public abstract blendColor(red : number, green : number, blue : number, alpha : number);
+    public blendColor(red : number, green : number, blue : number, alpha : number);
 
-    public abstract colorMask(r : boolean, g : boolean, b : boolean, a : boolean);
+    public colorMask(r : boolean, g : boolean, b : boolean, a : boolean);
 
-    public abstract depthMask(mask : boolean);
+    public depthMask(mask : boolean);
 
-    public abstract stencilMask(mask : number);
+    public stencilMask(mask : number);
 
-    public abstract stencilMaskSeparate(face : number, mask : number);
+    public stencilMaskSeparate(face : number, mask : number);
 
-    public abstract clear(buf : number);
+    public clear(buf : number);
 
     public bindFramebuffer(target : number, framebuffer : number);
 
-    abstract bindFramebufferImpl(target : number, framebuffer : number);
+    bindFramebufferImpl(target : number, framebuffer : number);
 
-    public abstract deleteFramebuffers(n : number, framebuffers : any);
+    public deleteFramebuffers(n : number, framebuffers : any);
 
-    public abstract genFramebuffers(n : number, framebuffers : any);
+    public genFramebuffers(n : number, framebuffers : any);
 
-    public abstract bindRenderbuffer(target : number, renderbuffer : number);
+    public bindRenderbuffer(target : number, renderbuffer : number);
 
-    public abstract deleteRenderbuffers(n : number, renderbuffers : any);
+    public deleteRenderbuffers(n : number, renderbuffers : any);
 
-    public abstract genRenderbuffers(n : number, renderbuffers : any);
+    public genRenderbuffers(n : number, renderbuffers : any);
 
-    public abstract renderbufferStorage(target : number, internalFormat : number, width : number, height : number);
+    public renderbufferStorage(target : number, internalFormat : number, width : number, height : number);
 
-    public abstract framebufferRenderbuffer(target : number, attachment : number, rendbuferfTarget : number, renderbuffer : number);
+    public framebufferRenderbuffer(target : number, attachment : number, rendbuferfTarget : number, renderbuffer : number);
 
-    public abstract framebufferTexture2D(target : number, attachment : number, texTarget : number, texture : number, level : number);
+    public framebufferTexture2D(target : number, attachment : number, texTarget : number, texture : number, level : number);
 
-    public abstract checkFramebufferStatus(target : number) : number;
+    public checkFramebufferStatus(target : number) : number;
 
-    public abstract isFramebuffer(framebuffer : number) : boolean;
+    public isFramebuffer(framebuffer : number) : boolean;
 
-    public abstract getFramebufferAttachmentParameteriv(target : number, attachment : number, pname : number, params : any);
+    public getFramebufferAttachmentParameteriv(target : number, attachment : number, pname : number, params : any);
 
-    public abstract isRenderbuffer(renderbuffer : number) : boolean;
+    public isRenderbuffer(renderbuffer : number) : boolean;
 
-    public abstract getRenderbufferParameteriv(target : number, pname : number, params : any);
+    public getRenderbufferParameteriv(target : number, pname : number, params : any);
 
-    public abstract blitFramebuffer(srcX0 : number, srcY0 : number, srcX1 : number, srcY1 : number, dstX0 : number, dstY0 : number, dstX1 : number, dstY1 : number, mask : number, filter : number);
+    public blitFramebuffer(srcX0 : number, srcY0 : number, srcX1 : number, srcY1 : number, dstX0 : number, dstY0 : number, dstX1 : number, dstY1 : number, mask : number, filter : number);
 
-    public abstract renderbufferStorageMultisample(target : number, samples : number, format : number, width : number, height : number);
+    public renderbufferStorageMultisample(target : number, samples : number, format : number, width : number, height : number);
 
-    public abstract readBuffer(buf : number);
+    public readBuffer(buf : number);
 
-    public abstract drawBuffer(buf : number);
+    public drawBuffer(buf : number);
 }
 
 declare namespace PGL {

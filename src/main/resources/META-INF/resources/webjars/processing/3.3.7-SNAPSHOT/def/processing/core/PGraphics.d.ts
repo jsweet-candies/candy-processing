@@ -674,8 +674,6 @@ declare class PGraphics extends PImage implements PConstants {
 
     public sphereDetailV : number;
 
-    public constructor();
-
     public setParent(parent : PApplet);
 
     /**
@@ -2712,41 +2710,6 @@ declare class PGraphics extends PImage implements PConstants {
     public endCamera();
 
     /**
-     * ( begin auto-generated from camera.xml )
-     * 
-     * Sets the position of the camera through setting the eye position, the
-     * center of the scene, and which axis is facing upward. Moving the eye
-     * position and the direction it is pointing (the center of the scene)
-     * allows the images to be seen from different angles. The version without
-     * any parameters sets the camera to the default position, pointing to the
-     * center of the display window with the Y axis as up. The default values
-     * are <b>camera(width/2.0, height/2.0, (height/2.0) / tan(PI*30.0 /
-     * 180.0), width/2.0, height/2.0, 0, 0, 1, 0)</b>. This function is similar
-     * to <b>gluLookAt()</b> in OpenGL, but it first clears the current camera settings.
-     * 
-     * ( end auto-generated )
-     * 
-     * @webref lights_camera:camera
-     * @see PGraphics#beginCamera()
-     * @see PGraphics#endCamera()
-     * @see PGraphics#frustum(float, float, float, float, float, float)
-     */
-    public camera();
-
-    /**
-     * @param {number} eyeX x-coordinate for the eye
-     * @param {number} eyeY y-coordinate for the eye
-     * @param {number} eyeZ z-coordinate for the eye
-     * @param {number} centerX x-coordinate for the center of the scene
-     * @param {number} centerY y-coordinate for the center of the scene
-     * @param {number} centerZ z-coordinate for the center of the scene
-     * @param {number} upX usually 0.0, 1.0, or -1.0
-     * @param {number} upY usually 0.0, 1.0, or -1.0
-     * @param {number} upZ usually 0.0, 1.0, or -1.0
-     */
-    public camera(eyeX : number, eyeY : number, eyeZ : number, centerX : number, centerY : number, centerZ : number, upX : number, upY : number, upZ : number);
-
-    /**
      * ( begin auto-generated from printCamera.xml )
      * 
      * Prints the current camera matrix to the Console (the text window at the
@@ -3219,29 +3182,6 @@ declare class PGraphics extends PImage implements PConstants {
     emissiveFromCalc();
 
     /**
-     * ( begin auto-generated from lights.xml )
-     * 
-     * Sets the default ambient light, directional light, falloff, and specular
-     * values. The defaults are ambientLight(128, 128, 128) and
-     * directionalLight(128, 128, 128, 0, 0, -1), lightFalloff(1, 0, 0), and
-     * lightSpecular(0, 0, 0). Lights need to be included in the draw() to
-     * remain persistent in a looping program. Placing them in the setup() of a
-     * looping program will cause them to only have an effect the first time
-     * through the loop.
-     * 
-     * ( end auto-generated )
-     * 
-     * @webref lights_camera:lights
-     * @usage web_application
-     * @see PGraphics#ambientLight(float, float, float, float, float, float)
-     * @see PGraphics#directionalLight(float, float, float, float, float, float)
-     * @see PGraphics#pointLight(float, float, float, float, float, float)
-     * @see PGraphics#spotLight(float, float, float, float, float, float, float, float, float, float, float)
-     * @see PGraphics#noLights()
-     */
-    public lights();
-
-    /**
      * ( begin auto-generated from noLights.xml )
      * 
      * Disable all lighting. Lighting is turned off by default and enabled with
@@ -3418,32 +3358,6 @@ declare class PGraphics extends PImage implements PConstants {
      * @see PGraphics#lightSpecular(float, float, float)
      */
     public lightFalloff(constant : number, linear : number, quadratic : number);
-
-    /**
-     * ( begin auto-generated from lightSpecular.xml )
-     * 
-     * Sets the specular color for lights. Like <b>fill()</b>, it affects only
-     * the elements which are created after it in the code. Specular refers to
-     * light which bounces off a surface in a perferred direction (rather than
-     * bouncing in all directions like a diffuse light) and is used for
-     * creating highlights. The specular quality of a light interacts with the
-     * specular material qualities set through the <b>specular()</b> and
-     * <b>shininess()</b> functions.
-     * 
-     * ( end auto-generated )
-     * 
-     * @webref lights_camera:lights
-     * @usage web_application
-     * @param {number} v1 red or hue value (depending on current color mode)
-     * @param {number} v2 green or saturation value (depending on current color mode)
-     * @param {number} v3 blue or brightness value (depending on current color mode)
-     * @see PGraphics#specular(float, float, float)
-     * @see PGraphics#lights()
-     * @see PGraphics#ambientLight(float, float, float, float, float, float)
-     * @see PGraphics#pointLight(float, float, float, float, float, float)
-     * @see PGraphics#spotLight(float, float, float, float, float, float, float, float, float, float, float)
-     */
-    public lightSpecular(v1 : number, v2 : number, v3 : number);
 
     /**
      * ( begin auto-generated from background.xml )
@@ -3938,13 +3852,6 @@ declare class PGraphics extends PImage implements PConstants {
     public isGL() : boolean;
 
     public is2X() : boolean;
-
-    /**
-     * 
-     * @param {string} filename
-     * @return {boolean}
-     */
-    public save(filename : string) : boolean;
 
     processImageBeforeAsyncSave(image : PImage);
 

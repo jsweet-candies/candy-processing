@@ -181,7 +181,7 @@ public class PShapeOpenGL extends PShape {
   protected boolean needBufferInit = false;
 
   // Flag to indicate if the shape can have holes or not.
-  protected boolean solid = true;
+  protected boolean ___solid = true;
 
   protected boolean breakShape = false;
   protected boolean shapeCreated = false;
@@ -201,9 +201,9 @@ public class PShapeOpenGL extends PShape {
 
   // Bezier and Catmull-Rom curves
 
-  protected int bezierDetail;
-  protected int curveDetail;
-  protected float curveTightness;
+  protected int __bezierDetail;
+  protected int __curveDetail;
+  protected float __curveTightness;
 
   protected int savedBezierDetail;
   protected int savedCurveDetail;
@@ -377,9 +377,9 @@ public class PShapeOpenGL extends PShape {
     sphereDetailU = pg.sphereDetailU;
     sphereDetailV = pg.sphereDetailV;
 
-    bezierDetail = pg.bezierDetail;
-    curveDetail = pg.curveDetail;
-    curveTightness = pg.curveTightness;
+    __bezierDetail = pg.bezierDetail;
+    __curveDetail = pg.curveDetail;
+    __curveTightness = pg.curveTightness;
 
     rectMode = pg.rectMode;
     ellipseMode = pg.ellipseMode;
@@ -981,7 +981,7 @@ public class PShapeOpenGL extends PShape {
         child.solid(solid);
       }
     } else {
-      this.solid = solid;
+      this.___solid = solid;
     }
   }
 
@@ -1474,7 +1474,7 @@ public class PShapeOpenGL extends PShape {
 
   @Override
   public void bezierDetail(int detail) {
-    bezierDetail = detail;
+    __bezierDetail = detail;
     if (0 < inGeo.codeCount) {
       markForTessellation();
     }
@@ -1549,7 +1549,7 @@ public class PShapeOpenGL extends PShape {
 
   @Override
   public void curveDetail(int detail) {
-    curveDetail = detail;
+    __curveDetail = detail;
 //    pg.curveDetail(detail);
     if (0 < inGeo.codeCount) {
       markForTessellation();
@@ -1559,7 +1559,7 @@ public class PShapeOpenGL extends PShape {
 
   @Override
   public void curveTightness(float tightness) {
-    curveTightness = tightness;
+    __curveTightness = tightness;
 //    pg.curveTightness(tightness);
     if (0 < inGeo.codeCount) {
       markForTessellation();
@@ -2648,75 +2648,6 @@ public class PShapeOpenGL extends PShape {
     return tess;
   }
 
-  // Testing this method, not use as it might go away...
-  public float[] getTessellation(int kind, int data) {
-    updateTessellation();
-
-    if (kind == TRIANGLES) {
-      if (data == POSITION) {
-        if (is3D()) {
-          root.setModifiedPolyVertices(firstPolyVertex, lastPolyVertex);
-        } else if (is2D()) {
-          int last1 = lastPolyVertex + 1;
-          if (-1 < firstLineVertex) last1 = firstLineVertex;
-          if (-1 < firstPointVertex) last1 = firstPointVertex;
-          root.setModifiedPolyVertices(firstPolyVertex, last1 - 1);
-        }
-        return tessGeo.polyVertices;
-      } else if (data == NORMAL) {
-        if (is3D()) {
-          root.setModifiedPolyNormals(firstPolyVertex, lastPolyVertex);
-        } else if (is2D()) {
-          int last1 = lastPolyVertex + 1;
-          if (-1 < firstLineVertex) last1 = firstLineVertex;
-          if (-1 < firstPointVertex) last1 = firstPointVertex;
-          root.setModifiedPolyNormals(firstPolyVertex, last1 - 1);
-        }
-        return tessGeo.polyNormals;
-      } else if (data == TEXCOORD) {
-        if (is3D()) {
-          root.setModifiedPolyTexCoords(firstPolyVertex, lastPolyVertex);
-        } else if (is2D()) {
-          int last1 = lastPolyVertex + 1;
-          if (-1 < firstLineVertex) last1 = firstLineVertex;
-          if (-1 < firstPointVertex) last1 = firstPointVertex;
-          root.setModifiedPolyTexCoords(firstPolyVertex, last1 - 1);
-        }
-        return tessGeo.polyTexCoords;
-      }
-    } else if (kind == LINES) {
-      if (data == POSITION) {
-        if (is3D()) {
-          root.setModifiedLineVertices(firstLineVertex, lastLineVertex);
-        } else if (is2D()) {
-          root.setModifiedPolyVertices(firstLineVertex, lastLineVertex);
-        }
-        return tessGeo.lineVertices;
-      } else if (data == DIRECTION) {
-        if (is2D()) {
-          root.setModifiedLineAttributes(firstLineVertex, lastLineVertex);
-        }
-        return tessGeo.lineDirections;
-      }
-    } else if (kind == POINTS) {
-      if (data == POSITION) {
-        if (is3D()) {
-          root.setModifiedPointVertices(firstPointVertex, lastPointVertex);
-        } else if (is2D()) {
-          root.setModifiedPolyVertices(firstPointVertex, lastPointVertex);
-        }
-        return tessGeo.pointVertices;
-      } else if (data == OFFSET) {
-        if (is2D()) {
-          root.setModifiedPointAttributes(firstPointVertex, lastPointVertex);
-        }
-        return tessGeo.pointOffsets;
-      }
-    }
-    return null;
-  }
-
-  ///////////////////////////////////////////////////////////
 
   //
 
@@ -2949,7 +2880,7 @@ public class PShapeOpenGL extends PShape {
               saveCurveVertexSettings();
               tessellator.resetCurveVertexCount();
             }
-            tessellator.tessellatePolygon(solid, close,
+            tessellator.tessellatePolygon(___solid, close,
                                           normalMode == NORMAL_MODE_AUTO);
             if (bez ||quad) restoreBezierVertexSettings();
             if (curv) restoreCurveVertexSettings();
@@ -3479,13 +3410,13 @@ public class PShapeOpenGL extends PShape {
 
   protected void saveBezierVertexSettings() {
     savedBezierDetail = pg.bezierDetail;
-    if (pg.bezierDetail != bezierDetail) {
-      pg.bezierDetail(bezierDetail);
+    if (pg.bezierDetail != __bezierDetail) {
+      pg.bezierDetail(__bezierDetail);
     }
   }
 
   protected void restoreBezierVertexSettings() {
-    if (savedBezierDetail != bezierDetail) {
+    if (savedBezierDetail != __bezierDetail) {
       pg.bezierDetail(savedBezierDetail);
     }
   }
@@ -3493,19 +3424,19 @@ public class PShapeOpenGL extends PShape {
   protected void saveCurveVertexSettings() {
     savedCurveDetail = pg.curveDetail;
     savedCurveTightness = pg.curveTightness;
-    if (pg.curveDetail != curveDetail) {
-      pg.curveDetail(curveDetail);
+    if (pg.curveDetail != __curveDetail) {
+      pg.curveDetail(__curveDetail);
     }
-    if (pg.curveTightness != curveTightness) {
-      pg.curveTightness(curveTightness);
+    if (pg.curveTightness != __curveTightness) {
+      pg.curveTightness(__curveTightness);
     }
   }
 
   protected void restoreCurveVertexSettings() {
-    if (savedCurveDetail != curveDetail) {
+    if (savedCurveDetail != __curveDetail) {
       pg.curveDetail(savedCurveDetail);
     }
-    if (savedCurveTightness != curveTightness) {
+    if (savedCurveTightness != __curveTightness) {
       pg.curveTightness(savedCurveTightness);
     }
   }

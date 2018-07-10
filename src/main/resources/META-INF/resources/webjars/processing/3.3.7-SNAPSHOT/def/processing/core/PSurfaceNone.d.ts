@@ -10,7 +10,7 @@ declare class PSurfaceNone implements PSurface {
 
     graphics : PGraphics;
 
-    thread : java.lang.Thread;
+    thread : any;
 
     paused : boolean;
 
@@ -106,7 +106,7 @@ declare class PSurfaceNone implements PSurface {
 
     public hideCursor();
 
-    public createThread() : java.lang.Thread;
+    public createThread() : any;
 
     public startThread();
 
@@ -127,15 +127,7 @@ declare namespace PSurfaceNone {
 
     export class AnimationThread {
         public __parent: any;
-        public constructor(__parent: any);
-
         public callDraw();
-
-        /**
-         * Main method for the primary animation thread.
-         * <A HREF="http://java.sun.com/products/jfc/tsc/articles/painting/">Painting in AWT and Swing</A>
-         */
-        public run();
     }
 }
 

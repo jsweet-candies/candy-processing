@@ -138,12 +138,6 @@ public class PGraphics2D extends PGraphicsOpenGL {
 
 
   @Override
-  public void camera() {
-    showMethodWarning("camera");
-  }
-
-
-  @Override
   public void camera(float eyeX, float eyeY, float eyeZ,
                      float centerX, float centerY, float centerZ,
                      float upX, float upY, float upZ) {
@@ -151,7 +145,6 @@ public class PGraphics2D extends PGraphicsOpenGL {
   }
 
 
-  @Override
   protected void defaultCamera() {
     eyeDist = 1;
     resetMatrix();

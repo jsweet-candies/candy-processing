@@ -24,11 +24,6 @@
 
 package def.processing.core;
 
-import java.io.Serializable;
-
-import def.processing.core.PApplet;
-import def.processing.core.PConstants;
-
 /**
  * ( begin auto-generated from PVector.xml )
  *
@@ -68,8 +63,9 @@ import def.processing.core.PConstants;
  *
  * @webref math
  */
-public class PVector implements Serializable {
-  /**
+public class PVector {
+
+/**
    * ( begin auto-generated from PVector_x.xml )
    *
    * The x component of the vector. This field (variable) can be used to both

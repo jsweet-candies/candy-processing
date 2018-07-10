@@ -277,17 +277,17 @@ declare class PGraphicsOpenGL extends PGraphics {
      */
     manipulatingCamera : boolean;
 
-    public projection : PMatrix3D;
+    projection : PMatrix3D;
 
-    public camera : any;
+    ___camera : PMatrix3D;
 
-    public cameraInv : PMatrix3D;
+    cameraInv : PMatrix3D;
 
-    public modelview : PMatrix3D;
+    modelview : PMatrix3D;
 
-    public modelviewInv : PMatrix3D;
+    modelviewInv : PMatrix3D;
 
-    public projmodelview : PMatrix3D;
+    projmodelview : PMatrix3D;
 
     glProjection : number[];
 
@@ -396,11 +396,11 @@ declare class PGraphicsOpenGL extends PGraphics {
 
     public currentLightFalloffQuadratic : number;
 
-    textureWrap : any;
+    ___textureWrap : number;
 
     textureSampling : any;
 
-    clip : any;
+    ___clip : boolean;
 
     /**
      * Clipping rectangle.
@@ -435,7 +435,7 @@ declare class PGraphicsOpenGL extends PGraphics {
     /**
      * Texture containing the current frame
      */
-    texture : any;
+    ___texture : Texture;
 
     /**
      * Texture containing the previous frame
@@ -596,65 +596,13 @@ declare class PGraphicsOpenGL extends PGraphics {
 
     static GL_THREAD_NOT_CURRENT : string;
 
-    public constructor();
-
-    /**
-     * 
-     * @param {PApplet} parent
-     */
-    public setParent(parent : PApplet);
-
-    /**
-     * 
-     * @param {boolean} primary
-     */
-    public setPrimary(primary : boolean);
-
-    /**
-     * 
-     * @param {number} iwidth
-     * @param {number} iheight
-     */
-    public setSize(iwidth : number, iheight : number);
-
-    /**
-     * 
-     */
-    public dispose();
-
     setFlushMode(mode : number);
 
     updatePixelSize();
 
     createPGL(pg : PGraphicsOpenGL) : PGL;
 
-    /**
-     * 
-     * @return {*}
-     */
-    public createSurface() : PSurface;
-
     public saveImpl(filename : string) : boolean;
-
-    /**
-     * 
-     * @param {PImage} image
-     * @param {*} storage
-     */
-    public setCache(image : PImage, storage : any);
-
-    /**
-     * 
-     * @param {PImage} image
-     * @return {*}
-     */
-    public getCache(image : PImage) : any;
-
-    /**
-     * 
-     * @param {PImage} image
-     */
-    public removeCache(image : PImage);
 
     setFontTexture(font : PFont, fontTexture : FontTexture);
 
@@ -694,16 +642,6 @@ declare class PGraphicsOpenGL extends PGraphics {
 
     pointBuffersContextIsOutdated() : boolean;
 
-    /**
-     * 
-     */
-    public beginDraw();
-
-    /**
-     * 
-     */
-    public endDraw();
-
     getPrimaryPG() : PGraphicsOpenGL;
 
     setCurrentPG(pg : PGraphicsOpenGL);
@@ -713,17 +651,6 @@ declare class PGraphicsOpenGL extends PGraphics {
     getCurrentPG() : PGraphicsOpenGL;
 
     getPrimaryPGL() : PGL;
-
-    /**
-     * 
-     * @return {PGL}
-     */
-    public beginPGL() : PGL;
-
-    /**
-     * 
-     */
-    public endPGL();
 
     public updateProjmodelview();
 
@@ -751,137 +678,7 @@ declare class PGraphicsOpenGL extends PGraphics {
 
     updateGLNormal();
 
-    /**
-     * 
-     */
-    defaultSettings();
-
-    /**
-     * 
-     * @param {number} which
-     */
-    public hint(which : number);
-
     getHint(which : number) : boolean;
-
-    /**
-     * 
-     * @param {number} type
-     * @return {PShape}
-     */
-    createShapeFamily(type : number) : PShape;
-
-    /**
-     * 
-     * @param {number} kind
-     * @param {Array} p
-     * @return {PShape}
-     */
-    createShapePrimitive(kind : number, ...p : number[]) : PShape;
-
-    /**
-     * 
-     * @param {number} kind
-     */
-    public beginShape(kind : number);
-
-    /**
-     * 
-     * @param {number} mode
-     */
-    public endShape(mode : number);
-
-    endShape(indices : number[]);
-
-    /**
-     * 
-     */
-    public beginContour();
-
-    /**
-     * 
-     */
-    public endContour();
-
-    /**
-     * 
-     * @param {number} x
-     * @param {number} y
-     */
-    public vertex(x : number, y : number);
-
-    /**
-     * 
-     * @param {number} x
-     * @param {number} y
-     * @param {number} u
-     * @param {number} v
-     */
-    public vertex(x : number, y : number, u : number, v : number);
-
-    /**
-     * 
-     * @param {number} x
-     * @param {number} y
-     * @param {number} z
-     */
-    public vertex(x : number, y : number, z : number);
-
-    /**
-     * 
-     * @param {number} x
-     * @param {number} y
-     * @param {number} z
-     * @param {number} u
-     * @param {number} v
-     */
-    public vertex(x : number, y : number, z : number, u : number, v : number);
-
-    /**
-     * 
-     * @param {string} name
-     * @param {number} x
-     * @param {number} y
-     * @param {number} z
-     */
-    public attribPosition(name : string, x : number, y : number, z : number);
-
-    /**
-     * 
-     * @param {string} name
-     * @param {number} nx
-     * @param {number} ny
-     * @param {number} nz
-     */
-    public attribNormal(name : string, nx : number, ny : number, nz : number);
-
-    /**
-     * 
-     * @param {string} name
-     * @param {number} color
-     */
-    public attribColor(name : string, color : number);
-
-    /**
-     * 
-     * @param {string} name
-     * @param {Array} values
-     */
-    public attrib(name : string, ...values : number[]);
-
-    /**
-     * 
-     * @param {string} name
-     * @param {Array} values
-     */
-    public attrib(name : string, ...values : number[]);
-
-    /**
-     * 
-     * @param {string} name
-     * @param {Array} values
-     */
-    public attrib(name : string, ...values : boolean[]);
 
     attribImpl(name : string, kind : number, type : number, size : number) : PGraphicsOpenGL.VertexAttribute;
 
@@ -889,268 +686,21 @@ declare class PGraphicsOpenGL extends PGraphics {
 
     vertexBreak() : boolean;
 
-    /**
-     * 
-     * @param {number} x1
-     * @param {number} y1
-     * @param {number} x2
-     * @param {number} y2
-     */
-    clipImpl(x1 : number, y1 : number, x2 : number, y2 : number);
-
-    /**
-     * 
-     */
-    public noClip();
-
     tessellate(mode : number);
 
     tessellate(indices : number[]);
 
-    /**
-     * 
-     */
-    public flush();
-
     flushPixels();
-
-    /**
-     * 
-     * @param {number} x2
-     * @param {number} y2
-     * @param {number} x3
-     * @param {number} y3
-     * @param {number} x4
-     * @param {number} y4
-     */
-    public bezierVertex(x2 : number, y2 : number, x3 : number, y3 : number, x4 : number, y4 : number);
-
-    /**
-     * 
-     * @param {number} x2
-     * @param {number} y2
-     * @param {number} z2
-     * @param {number} x3
-     * @param {number} y3
-     * @param {number} z3
-     * @param {number} x4
-     * @param {number} y4
-     * @param {number} z4
-     */
-    public bezierVertex(x2 : number, y2 : number, z2 : number, x3 : number, y3 : number, z3 : number, x4 : number, y4 : number, z4 : number);
 
     bezierVertexImpl(x2 : number, y2 : number, z2 : number, x3 : number, y3 : number, z3 : number, x4 : number, y4 : number, z4 : number);
 
-    /**
-     * 
-     * @param {number} cx
-     * @param {number} cy
-     * @param {number} x3
-     * @param {number} y3
-     */
-    public quadraticVertex(cx : number, cy : number, x3 : number, y3 : number);
-
-    /**
-     * 
-     * @param {number} cx
-     * @param {number} cy
-     * @param {number} cz
-     * @param {number} x3
-     * @param {number} y3
-     * @param {number} z3
-     */
-    public quadraticVertex(cx : number, cy : number, cz : number, x3 : number, y3 : number, z3 : number);
-
     quadraticVertexImpl(cx : number, cy : number, cz : number, x3 : number, y3 : number, z3 : number);
-
-    /**
-     * 
-     * @param {number} x
-     * @param {number} y
-     */
-    public curveVertex(x : number, y : number);
-
-    /**
-     * 
-     * @param {number} x
-     * @param {number} y
-     * @param {number} z
-     */
-    public curveVertex(x : number, y : number, z : number);
 
     curveVertexImpl(x : number, y : number, z : number);
 
-    /**
-     * 
-     * @param {number} x
-     * @param {number} y
-     */
-    public point(x : number, y : number);
-
-    /**
-     * 
-     * @param {number} x
-     * @param {number} y
-     * @param {number} z
-     */
-    public point(x : number, y : number, z : number);
-
     pointImpl(x : number, y : number, z : number);
 
-    /**
-     * 
-     * @param {number} x1
-     * @param {number} y1
-     * @param {number} x2
-     * @param {number} y2
-     */
-    public line(x1 : number, y1 : number, x2 : number, y2 : number);
-
-    /**
-     * 
-     * @param {number} x1
-     * @param {number} y1
-     * @param {number} z1
-     * @param {number} x2
-     * @param {number} y2
-     * @param {number} z2
-     */
-    public line(x1 : number, y1 : number, z1 : number, x2 : number, y2 : number, z2 : number);
-
     lineImpl(x1 : number, y1 : number, z1 : number, x2 : number, y2 : number, z2 : number);
-
-    /**
-     * 
-     * @param {number} x1
-     * @param {number} y1
-     * @param {number} x2
-     * @param {number} y2
-     * @param {number} x3
-     * @param {number} y3
-     */
-    public triangle(x1 : number, y1 : number, x2 : number, y2 : number, x3 : number, y3 : number);
-
-    /**
-     * 
-     * @param {number} x1
-     * @param {number} y1
-     * @param {number} x2
-     * @param {number} y2
-     * @param {number} x3
-     * @param {number} y3
-     * @param {number} x4
-     * @param {number} y4
-     */
-    public quad(x1 : number, y1 : number, x2 : number, y2 : number, x3 : number, y3 : number, x4 : number, y4 : number);
-
-    /**
-     * 
-     * @param {number} x1
-     * @param {number} y1
-     * @param {number} x2
-     * @param {number} y2
-     * @param {number} tl
-     * @param {number} tr
-     * @param {number} br
-     * @param {number} bl
-     */
-    rectImpl(x1 : number, y1 : number, x2 : number, y2 : number, tl : number, tr : number, br : number, bl : number);
-
-    /**
-     * 
-     * @param {number} a
-     * @param {number} b
-     * @param {number} c
-     * @param {number} d
-     */
-    public ellipseImpl(a : number, b : number, c : number, d : number);
-
-    /**
-     * 
-     * @param {number} x
-     * @param {number} y
-     * @param {number} w
-     * @param {number} h
-     * @param {number} start
-     * @param {number} stop
-     * @param {number} mode
-     */
-    arcImpl(x : number, y : number, w : number, h : number, start : number, stop : number, mode : number);
-
-    /**
-     * 
-     * @param {number} w
-     * @param {number} h
-     * @param {number} d
-     */
-    public box(w : number, h : number, d : number);
-
-    /**
-     * 
-     * @param {number} r
-     */
-    public sphere(r : number);
-
-    /**
-     * 
-     * @param {string} filename
-     * @return {PShape}
-     */
-    public loadShape(filename : string) : PShape;
-
-    /**
-     * 
-     * @param {number} mode
-     * @return {boolean}
-     */
-    textModeCheck(mode : number) : boolean;
-
-    /**
-     * 
-     * @return {number}
-     */
-    public textAscent() : number;
-
-    /**
-     * 
-     * @return {number}
-     */
-    public textDescent() : number;
-
-    /**
-     * 
-     * @param {Array} buffer
-     * @param {number} start
-     * @param {number} stop
-     * @return {number}
-     */
-    textWidthImpl(buffer : string[], start : number, stop : number) : number;
-
-    /**
-     * 
-     * @param {number} size
-     */
-    handleTextSize(size : number);
-
-    /**
-     * Implementation of actual drawing for a line of text.
-     * @param {Array} buffer
-     * @param {number} start
-     * @param {number} stop
-     * @param {number} x
-     * @param {number} y
-     */
-    textLineImpl(buffer : string[], start : number, stop : number, x : number, y : number);
-
-    /**
-     * 
-     * @param {string} ch
-     * @param {number} x
-     * @param {number} y
-     */
-    textCharImpl(ch : string, x : number, y : number);
-
-    textCharModelImpl(info : FontTexture.TextureInfo, x0 : number, y0 : number, x1 : number, y1 : number);
 
     /**
      * Ported from the implementation of textCharShapeImpl() in 1.5.1
@@ -1186,98 +736,15 @@ declare class PGraphicsOpenGL extends PGraphics {
      */
     textCharShapeImpl(ch : string, x : number, y : number);
 
-    /**
-     * 
-     */
-    public pushMatrix();
-
-    /**
-     * 
-     */
-    public popMatrix();
-
-    /**
-     * 
-     * @param {number} tx
-     * @param {number} ty
-     */
-    public translate(tx : number, ty : number);
-
-    /**
-     * 
-     * @param {number} tx
-     * @param {number} ty
-     * @param {number} tz
-     */
-    public translate(tx : number, ty : number, tz : number);
-
     translateImpl(tx : number, ty : number, tz : number);
 
     static invTranslate(matrix : PMatrix3D, tx : number, ty : number, tz : number);
 
     static matrixScale(matrix : PMatrix) : number;
 
-    /**
-     * Two dimensional rotation. Same as rotateZ (this is identical to a 3D
-     * rotation along the z-axis) but included for clarity -- it'd be weird for
-     * people drawing 2D graphics to be using rotateZ. And they might kick our a--
-     * for the confusion.
-     * @param {number} angle
-     */
-    public rotate(angle : number);
-
-    /**
-     * 
-     * @param {number} angle
-     */
-    public rotateX(angle : number);
-
-    /**
-     * 
-     * @param {number} angle
-     */
-    public rotateY(angle : number);
-
-    /**
-     * 
-     * @param {number} angle
-     */
-    public rotateZ(angle : number);
-
-    /**
-     * Rotate around an arbitrary vector, similar to glRotate(), except that it
-     * takes radians (instead of degrees).
-     * @param {number} angle
-     * @param {number} v0
-     * @param {number} v1
-     * @param {number} v2
-     */
-    public rotate(angle : number, v0 : number, v1 : number, v2 : number);
-
     rotateImpl(angle : number, v0 : number, v1 : number, v2 : number);
 
     static invRotate(matrix : PMatrix3D, angle : number, v0 : number, v1 : number, v2 : number);
-
-    /**
-     * Same as scale(s, s, s).
-     * @param {number} s
-     */
-    public scale(s : number);
-
-    /**
-     * Same as scale(sx, sy, 1).
-     * @param {number} sx
-     * @param {number} sy
-     */
-    public scale(sx : number, sy : number);
-
-    /**
-     * Scale in three dimensions.
-     * @param {number} sx
-     * @param {number} sy
-     * @param {number} sz
-     */
-    public scale(sx : number, sy : number, sz : number);
 
     /**
      * Scale in three dimensions.
@@ -1289,102 +756,11 @@ declare class PGraphicsOpenGL extends PGraphics {
 
     static invScale(matrix : PMatrix3D, x : number, y : number, z : number);
 
-    /**
-     * 
-     * @param {number} angle
-     */
-    public shearX(angle : number);
-
-    /**
-     * 
-     * @param {number} angle
-     */
-    public shearY(angle : number);
-
-    /**
-     * 
-     */
-    public resetMatrix();
-
-    /**
-     * 
-     * @param {PMatrix2D} source
-     */
-    public applyMatrix(source : PMatrix2D);
-
-    /**
-     * 
-     * @param {number} n00
-     * @param {number} n01
-     * @param {number} n02
-     * @param {number} n10
-     * @param {number} n11
-     * @param {number} n12
-     */
-    public applyMatrix(n00 : number, n01 : number, n02 : number, n10 : number, n11 : number, n12 : number);
-
-    /**
-     * 
-     * @param {PMatrix3D} source
-     */
-    public applyMatrix(source : PMatrix3D);
-
-    /**
-     * Apply a 4x4 transformation matrix to the modelview stack.
-     * @param {number} n00
-     * @param {number} n01
-     * @param {number} n02
-     * @param {number} n03
-     * @param {number} n10
-     * @param {number} n11
-     * @param {number} n12
-     * @param {number} n13
-     * @param {number} n20
-     * @param {number} n21
-     * @param {number} n22
-     * @param {number} n23
-     * @param {number} n30
-     * @param {number} n31
-     * @param {number} n32
-     * @param {number} n33
-     */
-    public applyMatrix(n00 : number, n01 : number, n02 : number, n03 : number, n10 : number, n11 : number, n12 : number, n13 : number, n20 : number, n21 : number, n22 : number, n23 : number, n30 : number, n31 : number, n32 : number, n33 : number);
-
     applyMatrixImpl(n00 : number, n01 : number, n02 : number, n03 : number, n10 : number, n11 : number, n12 : number, n13 : number, n20 : number, n21 : number, n22 : number, n23 : number, n30 : number, n31 : number, n32 : number, n33 : number);
 
     begin2D();
 
     end2D();
-
-    /**
-     * 
-     * @return {*}
-     */
-    public getMatrix() : PMatrix;
-
-    /**
-     * 
-     * @param {PMatrix3D} target
-     * @return {PMatrix3D}
-     */
-    public getMatrix(target : PMatrix3D) : PMatrix3D;
-
-    /**
-     * 
-     * @param {PMatrix2D} source
-     */
-    public setMatrix(source : PMatrix2D);
-
-    /**
-     * Set the current transformation to the contents of the specified source.
-     * @param {PMatrix3D} source
-     */
-    public setMatrix(source : PMatrix3D);
-
-    /**
-     * Print the current model (or "transformation") matrix.
-     */
-    public printMatrix();
 
     public pushProjection();
 
@@ -1411,259 +787,73 @@ declare class PGraphicsOpenGL extends PGraphics {
     static nonZero(a : number) : boolean;
 
     /**
-     * Set matrix mode to the camera matrix (instead of the current transformation
-     * matrix). This means applyMatrix, resetMatrix, etc. will affect the camera.
+     * More flexible method for dealing with camera().
      * <P>
-     * Note that the camera matrix is *not* the perspective matrix, it contains
-     * the values of the modelview matrix immediatly after the latter was
-     * initialized with ortho() or camera(), or the modelview matrix as result of
-     * the operations applied between beginCamera()/endCamera().
+     * The actual call is like gluLookat. Here's the real skinny on what does
+     * what:
+     * 
+     * <PRE>
+     * camera(); or
+     * camera(ex, ey, ez, cx, cy, cz, ux, uy, uz);
+     * </PRE>
+     * 
+     * do not need to be called from with beginCamera();/endCamera(); That's
+     * because they always apply to the camera transformation, and they always
+     * totally replace it. That means that any coordinate transforms done before
+     * camera(); in draw() will be wiped out. It also means that camera() always
+     * operates in untransformed world coordinates. Therefore it is always
+     * redundant to call resetMatrix(); before camera(); This isn't technically
+     * true of gluLookat, but it's pretty much how it's used.
      * <P>
-     * beginCamera() specifies that all coordinate transforms until endCamera()
-     * should be pre-applied in inverse to the camera transform matrix. Note that
-     * this is only challenging when a user specifies an arbitrary matrix with
-     * applyMatrix(). Then that matrix will need to be inverted, which may not be
-     * possible. But take heart, if a user is applying a non-invertible matrix to
-     * the camera transform, then he is clearly up to no good, and we can wash our
-     * hands of those bad intentions.
-     * <P>
-     * begin/endCamera clauses do not automatically reset the camera transform
-     * matrix. That's because we set up a nice default camera transform in
-     * setup(), and we expect it to hold through draw(). So we don't reset the
-     * camera transform matrix at the top of draw(). That means that an
-     * innocuous-looking clause like
+     * Now, beginCamera(); and endCamera(); are useful if you want to move the
+     * camera around using transforms like translate(), etc. They will wipe out
+     * any coordinate system transforms that occur before them in draw(), but they
+     * will not automatically wipe out the camera transform. This means that they
+     * should be at the top of draw(). It also means that the following:
      * 
      * <PRE>
      * beginCamera();
-     * translate(0, 0, 10);
-     * endCamera();
-     * </PRE>
-     * 
-     * at the top of draw(), will result in a runaway camera that shoots
-     * infinitely out of the screen over time. In order to prevent this, it is
-     * necessary to call some function that does a hard reset of the camera
-     * transform matrix inside of begin/endCamera. Two options are
-     * 
-     * <PRE>
-     * camera(); // sets up the nice default camera transform
-     * resetMatrix(); // sets up the identity camera transform
-     * </PRE>
-     * 
-     * So to rotate a camera a constant amount, you might try
-     * 
-     * <PRE>
-     * beginCamera();
-     * camera();
      * rotateY(PI / 8);
      * endCamera();
      * </PRE>
+     * 
+     * will result in a camera that spins without stopping. If you want to just
+     * rotate a small constant amount, try this:
+     * 
+     * <PRE>
+     * beginCamera();
+     * camera(); // sets up the default view
+     * rotateY(PI / 8);
+     * endCamera();
+     * </PRE>
+     * 
+     * That will rotate a little off of the default view. Note that this is
+     * entirely equivalent to
+     * 
+     * <PRE>
+     * camera(); // sets up the default view
+     * beginCamera();
+     * rotateY(PI / 8);
+     * endCamera();
+     * </PRE>
+     * 
+     * because camera() doesn't care whether or not it's inside a begin/end
+     * clause. Basically it's safe to use camera() or camera(ex, ey, ez, cx, cy,
+     * cz, ux, uy, uz) as naked calls because they do all the matrix resetting
+     * automatically.
+     * @param {number} eyeX
+     * @param {number} eyeY
+     * @param {number} eyeZ
+     * @param {number} centerX
+     * @param {number} centerY
+     * @param {number} centerZ
+     * @param {number} upX
+     * @param {number} upY
+     * @param {number} upZ
      */
-    public beginCamera();
-
-    /**
-     * Record the current settings into the camera matrix, and set the matrix mode
-     * back to the current transformation matrix.
-     * <P>
-     * Note that this will destroy any settings to scale(), translate(), or
-     * whatever, because the final camera matrix will be copied (not multiplied)
-     * into the modelview.
-     */
-    public endCamera();
-
-    /**
-     * Print the current camera matrix.
-     */
-    public printCamera();
-
-    defaultCamera();
-
-    /**
-     * Calls ortho() with the proper parameters for Processing's standard
-     * orthographic projection.
-     */
-    public ortho();
-
-    /**
-     * Calls ortho() with the specified size of the viewing volume along
-     * the X and Z directions.
-     * @param {number} left
-     * @param {number} right
-     * @param {number} bottom
-     * @param {number} top
-     */
-    public ortho(left : number, right : number, bottom : number, top : number);
-
-    /**
-     * Sets an orthographic projection.
-     * @param {number} left
-     * @param {number} right
-     * @param {number} bottom
-     * @param {number} top
-     * @param {number} near
-     * @param {number} far
-     */
-    public ortho(left : number, right : number, bottom : number, top : number, near : number, far : number);
-
-    /**
-     * Calls perspective() with Processing's standard coordinate projection.
-     * <P>
-     * Projection functions:
-     * <UL>
-     * <LI>frustrum()
-     * <LI>ortho()
-     * <LI>perspective()
-     * </UL>
-     * Each of these three functions completely replaces the projection matrix
-     * with a new one. They can be called inside setup(), and their effects will
-     * be felt inside draw(). At the top of draw(), the projection matrix is not
-     * reset. Therefore the last projection function to be called always
-     * dominates. On resize, the default projection is always established, which
-     * has perspective.
-     * <P>
-     * This behavior is pretty much familiar from OpenGL, except where functions
-     * replace matrices, rather than multiplying against the previous.
-     * <P>
-     */
-    public perspective();
-
-    /**
-     * Similar to gluPerspective(). Implementation based on Mesa's glu.c
-     * @param {number} fov
-     * @param {number} aspect
-     * @param {number} zNear
-     * @param {number} zFar
-     */
-    public perspective(fov : number, aspect : number, zNear : number, zFar : number);
-
-    /**
-     * Same as glFrustum(), except that it wipes out (rather than multiplies
-     * against) the current perspective matrix.
-     * <P>
-     * Implementation based on the explanation in the OpenGL blue book.
-     * @param {number} left
-     * @param {number} right
-     * @param {number} bottom
-     * @param {number} top
-     * @param {number} znear
-     * @param {number} zfar
-     */
-    public frustum(left : number, right : number, bottom : number, top : number, znear : number, zfar : number);
-
-    /**
-     * Print the current projection matrix.
-     */
-    public printProjection();
+    public camera(eyeX : number, eyeY : number, eyeZ : number, centerX : number, centerY : number, centerZ : number, upX : number, upY : number, upZ : number);
 
     defaultPerspective();
-
-    /**
-     * 
-     * @param {number} x
-     * @param {number} y
-     * @param {number} z
-     * @return {number}
-     */
-    public modelX(x : number, y : number, z : number) : number;
-
-    /**
-     * 
-     * @param {number} x
-     * @param {number} y
-     * @param {number} z
-     * @return {number}
-     */
-    public modelY(x : number, y : number, z : number) : number;
-
-    /**
-     * 
-     * @param {number} x
-     * @param {number} y
-     * @param {number} z
-     * @return {number}
-     */
-    public modelZ(x : number, y : number, z : number) : number;
-
-    /**
-     * 
-     */
-    public popStyle();
-
-    /**
-     * 
-     */
-    fillFromCalc();
-
-    /**
-     * Disables lighting.
-     */
-    public noLights();
-
-    /**
-     * Add an ambient light based on the current color mode.
-     * @param {number} r
-     * @param {number} g
-     * @param {number} b
-     */
-    public ambientLight(r : number, g : number, b : number);
-
-    /**
-     * Add an ambient light based on the current color mode. This version includes
-     * an (x, y, z) position for situations where the falloff distance is used.
-     * @param {number} r
-     * @param {number} g
-     * @param {number} b
-     * @param {number} x
-     * @param {number} y
-     * @param {number} z
-     */
-    public ambientLight(r : number, g : number, b : number, x : number, y : number, z : number);
-
-    /**
-     * 
-     * @param {number} r
-     * @param {number} g
-     * @param {number} b
-     * @param {number} dx
-     * @param {number} dy
-     * @param {number} dz
-     */
-    public directionalLight(r : number, g : number, b : number, dx : number, dy : number, dz : number);
-
-    /**
-     * 
-     * @param {number} r
-     * @param {number} g
-     * @param {number} b
-     * @param {number} x
-     * @param {number} y
-     * @param {number} z
-     */
-    public pointLight(r : number, g : number, b : number, x : number, y : number, z : number);
-
-    /**
-     * 
-     * @param {number} r
-     * @param {number} g
-     * @param {number} b
-     * @param {number} x
-     * @param {number} y
-     * @param {number} z
-     * @param {number} dx
-     * @param {number} dy
-     * @param {number} dz
-     * @param {number} angle
-     * @param {number} concentration
-     */
-    public spotLight(r : number, g : number, b : number, x : number, y : number, z : number, dx : number, dy : number, dz : number, angle : number, concentration : number);
-
-    /**
-     * Set the light falloff rates for the last light that was created. Default is
-     * lightFalloff(1, 0, 0).
-     * @param {number} constant
-     * @param {number} linear
-     * @param {number} quadratic
-     */
-    public lightFalloff(constant : number, linear : number, quadratic : number);
 
     enableLighting();
 
@@ -1675,24 +865,11 @@ declare class PGraphicsOpenGL extends PGraphics {
 
     noLightSpecular(num : number);
 
-    lightFalloff(num : number, c0 : number, c1 : number, c2 : number);
-
     noLightFalloff(num : number);
 
     lightSpot(num : number, angle : number, exponent : number);
 
     noLightSpot(num : number);
-
-    /**
-     * 
-     * @param {PImage} image
-     */
-    backgroundImpl(image : PImage);
-
-    /**
-     * 
-     */
-    backgroundImpl();
 
     /**
      * Report on anything from glError().
@@ -1702,85 +879,15 @@ declare class PGraphicsOpenGL extends PGraphics {
      */
     report(where : string);
 
-    /**
-     * 
-     * @return {boolean}
-     */
-    public isGL() : boolean;
-
-    /**
-     * 
-     */
-    public loadPixels();
-
     allocatePixels();
 
     readPixels();
 
     drawPixels(x : number, y : number, w : number, h : number);
 
-    /**
-     * 
-     * @param {number} x
-     * @param {number} y
-     * @return {number}
-     */
-    public get(x : number, y : number) : number;
-
-    /**
-     * 
-     * @param {number} sourceX
-     * @param {number} sourceY
-     * @param {number} sourceWidth
-     * @param {number} sourceHeight
-     * @param {PImage} target
-     * @param {number} targetX
-     * @param {number} targetY
-     */
-    getImpl(sourceX : number, sourceY : number, sourceWidth : number, sourceHeight : number, target : PImage, targetX : number, targetY : number);
-
-    /**
-     * 
-     * @param {number} x
-     * @param {number} y
-     * @param {number} argb
-     */
-    public set(x : number, y : number, argb : number);
-
-    /**
-     * 
-     * @param {PImage} sourceImage
-     * @param {number} sourceX
-     * @param {number} sourceY
-     * @param {number} sourceWidth
-     * @param {number} sourceHeight
-     * @param {number} targetX
-     * @param {number} targetY
-     */
-    setImpl(sourceImage : PImage, sourceX : number, sourceY : number, sourceWidth : number, sourceHeight : number, targetX : number, targetY : number);
-
-    /**
-     * 
-     * @param {string} filename
-     * @return {boolean}
-     */
-    public save(filename : string) : boolean;
-
-    /**
-     * 
-     * @param {PImage} image
-     */
-    processImageBeforeAsyncSave(image : PImage);
-
     static completeFinishedPixelTransfers();
 
     static completeAllPixelTransfers();
-
-    /**
-     * 
-     * @param {string} filename
-     */
-    awaitAsyncSaveCompletion(filename : string);
 
     public loadTexture();
 
@@ -1801,66 +908,6 @@ declare class PGraphicsOpenGL extends PGraphics {
     drawTexture(x : number, y : number, w : number, h : number);
 
     drawPTexture();
-
-    /**
-     * 
-     * @param {PImage} alpha
-     */
-    public mask(alpha : PImage);
-
-    /**
-     * This is really inefficient and not a good idea in OpenGL. Use get() and
-     * set() with a smaller image area, or call the filter on an image instead,
-     * and then draw that.
-     * @param {number} kind
-     */
-    public filter(kind : number);
-
-    /**
-     * This is really inefficient and not a good idea in OpenGL. Use get() and
-     * set() with a smaller image area, or call the filter on an image instead,
-     * and then draw that.
-     * @param {number} kind
-     * @param {number} param
-     */
-    public filter(kind : number, param : number);
-
-    /**
-     * 
-     * @param {number} sx
-     * @param {number} sy
-     * @param {number} sw
-     * @param {number} sh
-     * @param {number} dx
-     * @param {number} dy
-     * @param {number} dw
-     * @param {number} dh
-     */
-    public copy(sx : number, sy : number, sw : number, sh : number, dx : number, dy : number, dw : number, dh : number);
-
-    /**
-     * 
-     * @param {PImage} src
-     * @param {number} sx
-     * @param {number} sy
-     * @param {number} sw
-     * @param {number} sh
-     * @param {number} dx
-     * @param {number} dy
-     * @param {number} dw
-     * @param {number} dh
-     */
-    public copy(src : PImage, sx : number, sy : number, sw : number, sh : number, dx : number, dy : number, dw : number, dh : number);
-
-    /**
-     * Allows to set custom blend modes for the entire scene, using openGL.
-     * Reference article about blending modes:
-     * http://www.pegtop.net/delphi/articles/blendmodes/
-     * DIFFERENCE, HARD_LIGHT, SOFT_LIGHT, OVERLAY, DODGE, BURN modes cannot be
-     * implemented in fixed-function pipeline because they require
-     * conditional blending and non-linear blending equations.
-     */
-    blendModeImpl();
 
     /**
      * Not an approved function, this will change or be removed in the future.
@@ -1923,13 +970,6 @@ declare class PGraphicsOpenGL extends PGraphics {
 
     checkGLThread() : boolean;
 
-    /**
-     * 
-     * @param {number} wide
-     * @param {number} high
-     */
-    public resize(wide : number, high : number);
-
     initPrimary();
 
     beginOnscreenDraw();
@@ -1944,53 +984,7 @@ declare class PGraphicsOpenGL extends PGraphics {
 
     setViewport();
 
-    /**
-     * 
-     */
-    checkSettings();
-
-    setGLSettings();
-
     getGLParameters();
-
-    /**
-     * 
-     * @param {string} fragFilename
-     * @return {PShader}
-     */
-    public loadShader(fragFilename : string) : PShader;
-
-    /**
-     * 
-     * @param {string} fragFilename
-     * @param {string} vertFilename
-     * @return {PShader}
-     */
-    public loadShader(fragFilename : string, vertFilename : string) : PShader;
-
-    /**
-     * 
-     * @param {PShader} shader
-     */
-    public shader(shader : PShader);
-
-    /**
-     * 
-     * @param {PShader} shader
-     * @param {number} kind
-     */
-    public shader(shader : PShader, kind : number);
-
-    /**
-     * 
-     */
-    public resetShader();
-
-    /**
-     * 
-     * @param {number} kind
-     */
-    public resetShader(kind : number);
 
     getPolyShader(lit : boolean, tex : boolean) : PShader;
 
@@ -2011,12 +1005,10 @@ declare class PGraphicsOpenGL extends PGraphics {
 
 declare namespace PGraphicsOpenGL {
 
-    export abstract class Disposable<T> {
-        constructor(obj : T);
-
+    export class Disposable<T> {
         public dispose();
 
-        public abstract disposeNative();
+        public disposeNative();
     }
 
     export class AsyncPixelReader {
@@ -2072,16 +1064,6 @@ declare namespace PGraphicsOpenGL {
         public names : Array<string>;
 
         public numComp : number;
-
-        /**
-         * 
-         * @param {string} key
-         * @param {PGraphicsOpenGL.VertexAttribute} value
-         * @return {PGraphicsOpenGL.VertexAttribute}
-         */
-        public put(key : string, value : PGraphicsOpenGL.VertexAttribute) : PGraphicsOpenGL.VertexAttribute;
-
-        public get(i : number) : PGraphicsOpenGL.VertexAttribute;
     }
 
     export class VertexAttribute {
@@ -3304,26 +2286,6 @@ declare namespace PGraphicsOpenGL {
         pgl : PGL;
 
         context : number;
-
-        public constructor(tex : Texture);
-
-        /**
-         * 
-         */
-        public disposeNative();
-
-        /**
-         * 
-         * @param {*} obj
-         * @return {boolean}
-         */
-        public equals(obj : any) : boolean;
-
-        /**
-         * 
-         * @return {number}
-         */
-        public hashCode() : number;
     }
 
     export class GLResourceVertexBuffer extends PGraphicsOpenGL.Disposable<VertexBuffer> {
@@ -3332,26 +2294,6 @@ declare namespace PGraphicsOpenGL {
         pgl : PGL;
 
         context : number;
-
-        public constructor(vbo : VertexBuffer);
-
-        /**
-         * 
-         */
-        public disposeNative();
-
-        /**
-         * 
-         * @param {*} obj
-         * @return {boolean}
-         */
-        public equals(obj : any) : boolean;
-
-        /**
-         * 
-         * @return {number}
-         */
-        public hashCode() : number;
     }
 
     export class GLResourceShader extends PGraphicsOpenGL.Disposable<PShader> {
@@ -3364,26 +2306,6 @@ declare namespace PGraphicsOpenGL {
         pgl : PGL;
 
         context : number;
-
-        public constructor(sh : PShader);
-
-        /**
-         * 
-         */
-        public disposeNative();
-
-        /**
-         * 
-         * @param {*} obj
-         * @return {boolean}
-         */
-        public equals(obj : any) : boolean;
-
-        /**
-         * 
-         * @return {number}
-         */
-        public hashCode() : number;
     }
 
     export class GLResourceFrameBuffer extends PGraphicsOpenGL.Disposable<FrameBuffer> {
@@ -3400,26 +2322,6 @@ declare namespace PGraphicsOpenGL {
         pgl : PGL;
 
         context : number;
-
-        public constructor(fb : FrameBuffer);
-
-        /**
-         * 
-         */
-        public disposeNative();
-
-        /**
-         * 
-         * @param {*} obj
-         * @return {boolean}
-         */
-        public equals(obj : any) : boolean;
-
-        /**
-         * 
-         * @return {number}
-         */
-        public hashCode() : number;
     }
 }
 
