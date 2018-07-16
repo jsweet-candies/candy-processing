@@ -517,29 +517,6 @@ public class PApplet implements PConstants {
   public int mouseButton;
 
   /**
-   * ( begin auto-generated from mousePressed_var.xml )
-   *
-   * Variable storing if a mouse button is pressed. The value of the system
-   * variable <b>mousePressed</b> is true if a mouse button is pressed and
-   * false if a button is not pressed.
-   *
-   * ( end auto-generated )
-   * @webref input:mouse
-   * @see PApplet#mouseX
-   * @see PApplet#mouseY
-   * @see PApplet#pmouseX
-   * @see PApplet#pmouseY
-   * @see PApplet#mousePressed()
-   * @see PApplet#mouseReleased()
-   * @see PApplet#mouseClicked()
-   * @see PApplet#mouseMoved()
-   * @see PApplet#mouseDragged()
-   * @see PApplet#mouseButton
-   * @see PApplet#mouseWheel(MouseEvent)
-   */
-  public boolean mousePressed;
-
-  /**
    * ( begin auto-generated from key.xml )
    *
    * The system variable <b>key</b> always contains the value of the most
@@ -610,20 +587,6 @@ public class PApplet implements PConstants {
    */
   public int keyCode;
 
-  /**
-   * ( begin auto-generated from keyPressed_var.xml )
-   *
-   * The boolean system variable <b>keyPressed</b> is <b>true</b> if any key
-   * is pressed and <b>false</b> if no keys are pressed.
-   *
-   * ( end auto-generated )
-   * @webref input:keyboard
-   * @see PApplet#key
-   * @see PApplet#keyCode
-   * @see PApplet#keyPressed()
-   * @see PApplet#keyReleased()
-   */
-  public boolean keyPressed;
   List<Long> pressedKeys = new ArrayList<>(6);
 
   /**

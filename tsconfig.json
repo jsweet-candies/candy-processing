@@ -12,7 +12,7 @@
         ]
     },
     "include": [
-        "src/main/resources/META-INF/resources/webjars/processing/3.3.7-SNAPSHOT/def/**/*.ts"
+        "src/main/resources/META-INF/resources/webjars/processing/3.3.7-SNAPSHOT/**/*.ts"
     ],
     "exclude": [
       "node_modules"
