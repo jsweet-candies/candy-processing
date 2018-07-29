@@ -1,8 +1,8 @@
 /* Generated from Java with JSweet 2.2.0-SNAPSHOT - http://www.jsweet.org */
 interface PSurface {
-    initOffscreen(sketch : PApplet);
+    initOffscreen(sketch : any);
 
-    initFrame(sketch : PApplet);
+    initFrame(sketch : any);
 
     /**
      * Get the native window object associated with this drawing surface.

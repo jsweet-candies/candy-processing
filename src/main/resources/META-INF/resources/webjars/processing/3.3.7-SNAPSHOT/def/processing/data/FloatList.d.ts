@@ -239,9 +239,9 @@ declare class FloatList {
     /**
      * Randomize the list order using the random() function from the specified
      * sketch, allowing shuffle() to use its current randomSeed() setting.
-     * @param {PApplet} sketch
+     * @param {*} sketch
      */
-    public shuffle(sketch : PApplet);
+    public shuffle(sketch : any);
 
     public copy() : FloatList;
 

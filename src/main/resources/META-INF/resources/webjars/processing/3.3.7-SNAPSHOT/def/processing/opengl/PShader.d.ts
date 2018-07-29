@@ -3,7 +3,7 @@
  * Creates a shader program using the specified vertex and fragment
  * shaders.
  * 
- * @param {PApplet} parent the parent program
+ * @param {*} parent the parent program
  * @param {string} vertFilename name of the vertex shader
  * @param {string} fragFilename name of the fragment shader
  * @class
@@ -49,7 +49,7 @@ declare class PShader implements PConstants {
 
     static quadShaderAttrRegexp : string;
 
-    parent : PApplet;
+    parent : any;
 
     primaryPG : PGraphicsOpenGL;
 
@@ -167,13 +167,13 @@ declare class PShader implements PConstants {
 
     public constructor();
 
-    public constructor(parent : PApplet);
+    public constructor(parent : any);
 
-    public constructor(parent : PApplet, vertFilename : string, fragFilename : string);
+    public constructor(parent : any, vertFilename : string, fragFilename : string);
 
-    public constructor(parent : PApplet, vertURL : URL, fragURL : URL);
+    public constructor(parent : any, vertURL : URL, fragURL : URL);
 
-    public constructor(parent : PApplet, vertSource : string[], fragSource : string[]);
+    public constructor(parent : any, vertSource : string[], fragSource : string[]);
 
     public setVertexShader(vertFilename : string);
 

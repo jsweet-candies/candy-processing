@@ -6,7 +6,7 @@
  * @class
  */
 declare class PSurfaceNone implements PSurface {
-    sketch : PApplet;
+    sketch : any;
 
     graphics : PGraphics;
 
@@ -24,15 +24,15 @@ declare class PSurfaceNone implements PSurface {
 
     /**
      * 
-     * @param {PApplet} sketch
+     * @param {*} sketch
      */
-    public initOffscreen(sketch : PApplet);
+    public initOffscreen(sketch : any);
 
     /**
      * 
-     * @param {PApplet} sketch
+     * @param {*} sketch
      */
-    public initFrame(sketch : PApplet);
+    public initFrame(sketch : any);
 
     public getNative() : any;
 

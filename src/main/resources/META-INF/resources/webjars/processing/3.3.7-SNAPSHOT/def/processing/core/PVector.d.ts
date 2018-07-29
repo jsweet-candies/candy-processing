@@ -116,10 +116,10 @@ declare class PVector {
     /**
      * Make a new 2D unit vector with a random direction
      * using Processing's current random number generator
-     * @param {PApplet} parent current PApplet instance
+     * @param {*} parent current PApplet instance
      * @return {PVector} the random PVector
      */
-    public static random2D(parent : PApplet) : PVector;
+    public static random2D(parent : any) : PVector;
 
     /**
      * Set a 2D vector to a random unit vector with a random direction
@@ -134,9 +134,9 @@ declare class PVector {
      * it null and be... random.
      * @return {PVector} the random PVector
      * @param {PVector} target
-     * @param {PApplet} parent
+     * @param {*} parent
      */
-    public static random2D(target : PVector, parent : PApplet) : PVector;
+    public static random2D(target : PVector, parent : any) : PVector;
 
     /**
      * ( begin auto-generated from PVector_random3D.xml )
@@ -156,10 +156,10 @@ declare class PVector {
     /**
      * Make a new 3D unit vector with a random direction
      * using Processing's current random number generator
-     * @param {PApplet} parent current PApplet instance
+     * @param {*} parent current PApplet instance
      * @return {PVector} the random PVector
      */
-    public static random3D(parent : PApplet) : PVector;
+    public static random3D(parent : any) : PVector;
 
     /**
      * Set a 3D vector to a random unit vector with a random direction
@@ -172,9 +172,9 @@ declare class PVector {
      * Make a new 3D unit vector with a random direction
      * @return {PVector} the random PVector
      * @param {PVector} target
-     * @param {PApplet} parent
+     * @param {*} parent
      */
-    public static random3D(target : PVector, parent : PApplet) : PVector;
+    public static random3D(target : PVector, parent : any) : PVector;
 
     /**
      * ( begin auto-generated from PVector_sub.xml )

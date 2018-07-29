@@ -674,7 +674,7 @@ declare class PGraphics extends PImage implements PConstants {
 
     public sphereDetailV : number;
 
-    public setParent(parent : PApplet);
+    public setParent(parent : any);
 
     /**
      * Set (or unset) this as the main drawing surface. Meaning that it can

@@ -1496,11 +1496,7 @@ public class PGraphicsOpenGL extends PGraphics {
 
 
   protected PGraphicsOpenGL getPrimaryPG() {
-    if (primaryGraphics) {
       return this;
-    } else {
-      return (PGraphicsOpenGL)parent.g;
-    }
   }
 
   protected void setCurrentPG(PGraphicsOpenGL pg) {
@@ -1516,13 +1512,8 @@ public class PGraphicsOpenGL extends PGraphics {
   }
 
   protected PGL getPrimaryPGL() {
-    if (primaryGraphics) {
       return pgl;
-    } else {
-      return ((PGraphicsOpenGL)parent.g).pgl;
-    }
   }
-
 
   @Override
   public PGL beginPGL() {

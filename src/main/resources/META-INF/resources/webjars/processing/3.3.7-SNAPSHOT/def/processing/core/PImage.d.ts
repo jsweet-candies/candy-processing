@@ -104,7 +104,7 @@ declare class PImage implements PConstants {
      * Path to parent object that will be used with save().
      * This prevents users from needing savePath() to use PImage.save().
      */
-    public parent : PApplet;
+    public parent : any;
 
     /**
      * modified portion of the image

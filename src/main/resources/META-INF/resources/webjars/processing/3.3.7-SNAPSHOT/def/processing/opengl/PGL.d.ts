@@ -13,7 +13,7 @@ declare class PGL {
      */
     graphics : PGraphicsOpenGL;
 
-    sketch : PApplet;
+    sketch : any;
 
     /**
      * OpenGL thread

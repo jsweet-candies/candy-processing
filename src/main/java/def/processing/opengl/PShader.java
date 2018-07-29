@@ -188,10 +188,6 @@ public class PShader implements PConstants {
 
   public PShader(PApplet parent) {
     this();
-    this.parent = parent;
-    primaryPG = (PGraphicsOpenGL)parent.g;
-    pgl = primaryPG.pgl;
-    context = pgl.createEmptyContext();
   }
 
 
@@ -205,36 +201,6 @@ public class PShader implements PConstants {
    */
   public PShader(PApplet parent, String vertFilename, String fragFilename) {
     this.parent = parent;
-    primaryPG = (PGraphicsOpenGL)parent.g;
-    pgl = primaryPG.pgl;
-
-    this.vertexURL = null;
-    this.fragmentURL = null;
-    this.vertexFilename = vertFilename;
-    this.fragmentFilename = fragFilename;
-    fragmentShaderSource = pgl.loadFragmentShader(fragFilename);
-    vertexShaderSource = pgl.loadVertexShader(vertFilename);
-
-    glProgram = 0;
-    glVertex = 0;
-    glFragment = 0;
-
-    intBuffer = PGL.allocateIntBuffer(1);
-    floatBuffer = PGL.allocateFloatBuffer(1);
-
-    int vertType = getShaderType(vertexShaderSource, -1);
-    int fragType = getShaderType(fragmentShaderSource, -1);
-    if (vertType == -1 && fragType == -1) {
-      type = PShader.POLY;
-    } else if (vertType == -1) {
-      type = fragType;
-    } else if (fragType == -1) {
-      type = vertType;
-    } else if (fragType == vertType)  {
-      type = vertType;
-    } else {
-      PGraphics.showWarning(PGraphicsOpenGL.INCONSISTENT_SHADER_TYPES);
-    }
   }
 
 
@@ -243,73 +209,10 @@ public class PShader implements PConstants {
    * @param fragURL network location of the fragment shader
    */
   public PShader(PApplet parent, URL vertURL, URL fragURL) {
-    this.parent = parent;
-    primaryPG = (PGraphicsOpenGL)parent.g;
-    pgl = primaryPG.pgl;
-
-    this.vertexURL = vertURL;
-    this.fragmentURL = fragURL;
-    this.vertexFilename = null;
-    this.fragmentFilename = null;
-    fragmentShaderSource = pgl.loadFragmentShader(fragURL);
-    vertexShaderSource = pgl.loadVertexShader(vertURL);
-
-    glProgram = 0;
-    glVertex = 0;
-    glFragment = 0;
-
-    intBuffer = PGL.allocateIntBuffer(1);
-    floatBuffer = PGL.allocateFloatBuffer(1);
-
-    int vertType = getShaderType(vertexShaderSource, -1);
-    int fragType = getShaderType(fragmentShaderSource, -1);
-    if (vertType == -1 && fragType == -1) {
-      type = PShader.POLY;
-    } else if (vertType == -1) {
-      type = fragType;
-    } else if (fragType == -1) {
-      type = vertType;
-    } else if (fragType == vertType)  {
-      type = vertType;
-    } else {
-      PGraphics.showWarning(PGraphicsOpenGL.INCONSISTENT_SHADER_TYPES);
-    }
   }
 
   public PShader(PApplet parent, String[] vertSource, String[] fragSource) {
-    this.parent = parent;
-    primaryPG = (PGraphicsOpenGL)parent.g;
-    pgl = primaryPG.pgl;
-
-    this.vertexURL = null;
-    this.fragmentURL = null;
-    this.vertexFilename = null;
-    this.fragmentFilename = null;
-    vertexShaderSource = vertSource;
-    fragmentShaderSource = fragSource;
-
-    glProgram = 0;
-    glVertex = 0;
-    glFragment = 0;
-
-    intBuffer = PGL.allocateIntBuffer(1);
-    floatBuffer = PGL.allocateFloatBuffer(1);
-
-    int vertType = getShaderType(vertexShaderSource, -1);
-    int fragType = getShaderType(fragmentShaderSource, -1);
-    if (vertType == -1 && fragType == -1) {
-      type = PShader.POLY;
-    } else if (vertType == -1) {
-      type = fragType;
-    } else if (fragType == -1) {
-      type = vertType;
-    } else if (fragType == vertType)  {
-      type = vertType;
-    } else {
-      PGraphics.showWarning(PGraphicsOpenGL.INCONSISTENT_SHADER_TYPES);
-    }
   }
-
 
   public void setVertexShader(String vertFilename) {
     this.vertexFilename = vertFilename;

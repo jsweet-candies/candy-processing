@@ -33,11 +33,48 @@ import java.awt.FileDialog;
 import java.awt.Frame;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.HeadlessException;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.RandomAccessFile;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.JarURLConnection;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 // used by loadImage() functions
 import javax.imageio.ImageIO;
@@ -45,25 +82,22 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 // used by selectInput(), selectOutput(), selectFolder()
 import javax.swing.JFileChooser;
-import javax.swing.UIManager;
 // used to present the fullScreen() warning about Spaces on OS X
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 // used by desktopFile() method
 import javax.swing.filechooser.FileSystemView;
-
 // loadXML() error handling
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.net.*;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.zip.*;
-
-import def.processing.data.*;
+import def.processing.data.JSONArray;
+import def.processing.data.JSONObject;
+import def.processing.data.StringList;
+import def.processing.data.Table;
+import def.processing.data.XML;
+import def.processing.event.MouseEvent;
 
 
 /**
@@ -106,14 +140,7 @@ public class PApplet implements PConstants {
   static public final String javaVersionName =
     System.getProperty("java.version");
 
-  static public final int javaPlatform;
-  static {
-    String version = javaVersionName;
-    if (javaVersionName.startsWith("1.")) {
-      version = version.substring(2);
-    }
-    javaPlatform = parseInt(version.substring(0, version.indexOf('.')));
-  }
+  static public final int javaPlatform = 0;
 
   /**
    * Do not use; javaPlatform or javaVersionName are better options.
@@ -122,7 +149,7 @@ public class PApplet implements PConstants {
    * @deprecated
    */
   @Deprecated
-  public static final float javaVersion = 1 + javaPlatform / 10f;
+  public static final float javaVersion = 0;
 
   /**
    * Current platform in use, one of the
@@ -130,32 +157,12 @@ public class PApplet implements PConstants {
    */
   static public int platform;
 
-  static {
-    String osname = System.getProperty("os.name");
-
-    if (osname.indexOf("Mac") != -1) {
-      platform = MACOSX;
-
-    } else if (osname.indexOf("Windows") != -1) {
-      platform = WINDOWS;
-
-    } else if (osname.equals("Linux")) {  // true for the ibm vm
-      platform = LINUX;
-
-    } else {
-      platform = OTHER;
-    }
-  }
-
   /**
    * Whether to use native (AWT) dialogs for selectInput and selectOutput.
    * The native dialogs on some platforms can be ugly, buggy, or missing
    * features. For 3.3.5, this defaults to true on all platforms.
    */
   static public boolean useNativeSelect = true;
-
-  /** The PGraphics renderer associated with this PApplet */
-  public PGraphics g;
 
   /**
    * ( begin auto-generated from displayWidth.xml )
@@ -201,38 +208,16 @@ public class PApplet implements PConstants {
    */
   public String[] args;
 
-  /**
-   * Path to sketch folder. Previously undocumented, made private in 3.0a5
-   * so that people use the sketchPath() method and it's inited properly.
-   * Call sketchPath() once to set the default.
-   */
-  private String sketchPath;
-//  public String sketchPath;
 
   static final boolean DEBUG = false;
-//  static final boolean DEBUG = true;
 
   /** Default width and height for sketch when not specified */
   static public final int DEFAULT_WIDTH = 100;
   static public final int DEFAULT_HEIGHT = 100;
-
-//  /**
-//   * Exception thrown when size() is called the first time.
-//   * <p>
-//   * This is used internally so that setup() is forced to run twice
-//   * when the renderer is changed. This is the only way for us to handle
-//   * invoking the new renderer while also in the midst of rendering.
-//   */
-//  static public class RendererChangeException extends RuntimeException { }
-
   /**
    * true if no size() command has been executed. This is used to wait until
    * a size has been set before placing in the window and showing it.
    */
-//  public boolean defaultSize;
-
-//  /** Storage for the current renderer size to avoid re-allocation. */
-//  Dimension currentSize = new Dimension();
 
   /**
    * ( begin auto-generated from pixels.xml )
@@ -1200,15 +1185,6 @@ public class PApplet implements PConstants {
     }
   }
 
-
-  // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-
-
-  public PGraphics getGraphics() {
-    return g;
-  }
-
-
   // TODO should this join the sketchXxxx() functions specific to settings()?
   public void orientation(int which) {
     // ignore calls to the orientation command
@@ -1357,34 +1333,6 @@ public class PApplet implements PConstants {
       }
     }
 
-
-    void add(Object object, Method method) {
-      if (findIndex(object) == -1) {
-        if (objects == null) {
-          objects = new Object[5];
-          methods = new Method[5];
-
-        } else if (count == objects.length) {
-          objects = (Object[]) PApplet.expand(objects);
-          methods = (Method[]) PApplet.expand(methods);
-        }
-        objects[count] = object;
-        methods[count] = method;
-        count++;
-      } else {
-        die(method.getName() + "() already added for this instance of " +
-            object.getClass().getName());
-      }
-    }
-
-
-    /**
-     * Removes first object/method pair matched (and only the first,
-     * must be called multiple times if object is registered multiple times).
-     * Does not shrink array afterwards, silently returns if method not found.
-     */
-//    public void remove(Object object, Method method) {
-//      int index = findIndex(object, method);
     public void remove(Object object) {
       int index = findIndex(object);
       if (index != -1) {
@@ -1443,72 +1391,7 @@ public class PApplet implements PConstants {
    */
   public native void registerMethod(String methodName, Object target);
 
-
-  private void registerNoArgs(String name, Object o) {
-    Class<?> c = o.getClass();
-    try {
-      Method method = c.getMethod(name);
-      synchronized (registerLock) {
-        RegisteredMethods meth = registerMap.get(name);
-        if (meth == null) {
-          meth = new RegisteredMethods();
-          registerMap.put(name, meth);
-        }
-        meth.add(o, method);
-      }
-    } catch (NoSuchMethodException nsme) {
-      die("There is no public " + name + "() method in the class " +
-          o.getClass().getName());
-
-    } catch (Exception e) {
-      die("Could not register " + name + " + () for " + o, e);
-    }
-  }
-
-
-  private void registerWithArgs(String name, Object o, Class<?> cargs[]) {
-    Class<?> c = o.getClass();
-    try {
-      Method method = c.getMethod(name, cargs);
-      synchronized (registerLock) {
-        RegisteredMethods meth = registerMap.get(name);
-        if (meth == null) {
-          meth = new RegisteredMethods();
-          registerMap.put(name, meth);
-        }
-        meth.add(o, method);
-      }
-    } catch (NoSuchMethodException nsme) {
-      die("There is no public " + name + "() method in the class " +
-          o.getClass().getName());
-
-    } catch (Exception e) {
-      die("Could not register " + name + " + () for " + o, e);
-    }
-  }
-
-
-//  public void registerMethod(String methodName, Object target, Object... args) {
-//    registerWithArgs(methodName, target, args);
-//  }
-
-
-  public void unregisterMethod(String name, Object target) {
-    synchronized (registerLock) {
-      RegisteredMethods meth = registerMap.get(name);
-      if (meth == null) {
-        die("No registered methods with the name " + name + "() were found.");
-      }
-      try {
-//      Method method = o.getClass().getMethod(name, new Class[] {});
-//      meth.remove(o, method);
-        meth.remove(target);
-      } catch (Exception e) {
-        die("Could not unregister " + name + "() for " + target, e);
-      }
-    }
-  }
-
+  public native void unregisterMethod(String name, Object target) ;
 
   protected void handleMethods(String methodName) {
     synchronized (registerLock) {
@@ -1942,71 +1825,6 @@ public class PApplet implements PConstants {
       }
     }
 
-    /*
-    if (!renderer.equals(sketchRenderer())) {
-      if (external) {
-        // The PDE should have parsed it, but something still went wrong
-        final String msg =
-          String.format("Something bad happened when calling " +
-                        "size(%d, %d, %s, %s)", w, h, renderer, path);
-        throw new RuntimeException(msg);
-
-      } else {
-        System.err.println("Because you're not running from the PDE, add this to your code:");
-        System.err.println("public String sketchRenderer() {");
-        System.err.println("  return \"" + renderer + "\";");
-        System.err.println("}");
-        throw new RuntimeException("The sketchRenderer() method is not implemented.");
-      }
-    }
-    */
-
-    // size() shouldn't actually do anything here [3.0a8]
-//    surface.setSize(w, h);
-    // this won't be absolute, which will piss off PDF [3.0a8]
-//    g.setPath(path);  // finally, a path
-
-//    // Run this from the EDT, just cuz it's AWT stuff (or maybe later Swing)
-//   EventQueue.invokeLater(new Runnable() {
-//     public void run() {
-//    // Set the preferred size so that the layout managers can handle it
-//    setPreferredSize(new Dimension(w, h));
-//    setSize(w, h);
-//     }
-//   });
-//
-//    // ensure that this is an absolute path
-//    if (path != null) path = savePath(path);
-//
-//    String currentRenderer = g.getClass().getName();
-//    if (currentRenderer.equals(renderer)) {
-////      // Avoid infinite loop of throwing exception to reset renderer
-////      resizeRenderer(w, h);
-//      surface.setSize(w, h);
-//
-//    } else {  // renderer change attempted
-//      // no longer kosher with 3.0a5
-//      throw new RuntimeException("Y'all need to implement sketchRenderer()");
-//      /*
-//      // otherwise ok to fall through and create renderer below
-//      // the renderer is changing, so need to create a new object
-//      g = makeGraphics(w, h, renderer, path, true);
-//      this.width = w;
-//      this.height = h;
-//
-//      // fire resize event to make sure the applet is the proper size
-////      setSize(iwidth, iheight);
-//      // this is the function that will run if the user does their own
-//      // size() command inside setup, so set defaultSize to false.
-//      defaultSize = false;
-//
-//      // throw an exception so that setup() is called again
-//      // but with a properly sized render
-//      // this is for opengl, which needs a valid, properly sized
-//      // display before calling anything inside setup().
-//      throw new RendererChangeException();
-//      */
-//    }
   }
 
 
@@ -2090,147 +1908,7 @@ public class PApplet implements PConstants {
    * @see PGraphics#PGraphics
    *
    */
-  public PGraphics createGraphics(int w, int h, String renderer) {
-    return createGraphics(w, h, renderer, null);
-  }
-
-
-  /**
-   * Create an offscreen graphics surface for drawing, in this case
-   * for a renderer that writes to a file (such as PDF or DXF).
-   * @param path the name of the file (can be an absolute or relative path)
-   */
-  public PGraphics createGraphics(int w, int h,
-                                  String renderer, String path) {
-    return makeGraphics(w, h, renderer, path, false);
-    /*
-    if (path != null) {
-      path = savePath(path);
-    }
-    PGraphics pg = makeGraphics(w, h, renderer, path, false);
-    //pg.parent = this;  // why wasn't setParent() used before 3.0a6?
-    //pg.setParent(this);  // make save() work
-    // Nevermind, parent is set in makeGraphics()
-    return pg;
-    */
-  }
-
-
-//  public PGraphics makePrimaryGraphics(int wide, int high) {
-//    return makeGraphics(wide, high, sketchRenderer(), null, true);
-//  }
-
-
-  /**
-   * Version of createGraphics() used internally.
-   * @param path A path (or null if none), can be absolute or relative ({@link PApplet#savePath} will be called)
-   */
-  protected PGraphics makeGraphics(int w, int h,
-                                   String renderer, String path,
-                                   boolean primary) {
-//    String openglError = external ?
-//      // This first one should no longer be possible
-//      "Before using OpenGL, first select " +
-//      "Import Library > OpenGL from the Sketch menu." :
-//       // Welcome to Java programming! The training wheels are off.
-//      "The Java classpath and native library path is not " +
-//      "properly set for using the OpenGL library.";
-
-    if (!primary && !g.isGL()) {
-      if (renderer.equals(P2D)) {
-        throw new RuntimeException("createGraphics() with P2D requires size() to use P2D or P3D");
-      } else if (renderer.equals(P3D)) {
-        throw new RuntimeException("createGraphics() with P3D or OPENGL requires size() to use P2D or P3D");
-      }
-    }
-
-    try {
-      Class<?> rendererClass =
-        Thread.currentThread().getContextClassLoader().loadClass(renderer);
-
-      Constructor<?> constructor = rendererClass.getConstructor(new Class[] { });
-      PGraphics pg = (PGraphics) constructor.newInstance();
-
-      pg.setParent(this);
-      pg.setPrimary(primary);
-      if (path != null) {
-        pg.setPath(savePath(path));
-      }
-//      pg.setQuality(sketchQuality());
-//      if (!primary) {
-//        surface.initImage(pg, w, h);
-//      }
-      pg.setSize(w, h);
-
-      // everything worked, return it
-      return pg;
-
-    } catch (InvocationTargetException ite) {
-      String msg = ite.getTargetException().getMessage();
-      if ((msg != null) &&
-          (msg.indexOf("no jogl in java.library.path") != -1)) {
-        // Is this true anymore, since the JARs contain the native libs?
-        throw new RuntimeException("The jogl library folder needs to be " +
-          "specified with -Djava.library.path=/path/to/jogl");
-
-      } else {
-        printStackTrace(ite.getTargetException());
-        Throwable target = ite.getTargetException();
-        /*
-        // removing for 3.2, we'll see
-        if (platform == MACOSX) {
-          target.printStackTrace(System.out);  // OS X bug (still true?)
-        }
-        */
-        throw new RuntimeException(target.getMessage());
-      }
-
-    } catch (ClassNotFoundException cnfe) {
-//      if (cnfe.getMessage().indexOf("processing.opengl.PGraphicsOpenGL") != -1) {
-//        throw new RuntimeException(openglError +
-//                                   " (The library .jar file is missing.)");
-//      } else {
-      if (external) {
-        throw new RuntimeException("You need to use \"Import Library\" " +
-                                   "to add " + renderer + " to your sketch.");
-      } else {
-        throw new RuntimeException("The " + renderer +
-                                   " renderer is not in the class path.");
-      }
-
-    } catch (Exception e) {
-      if ((e instanceof IllegalArgumentException) ||
-          (e instanceof NoSuchMethodException) ||
-          (e instanceof IllegalAccessException)) {
-        if (e.getMessage().contains("cannot be <= 0")) {
-          // IllegalArgumentException will be thrown if w/h is <= 0
-          // http://code.google.com/p/processing/issues/detail?id=983
-          throw new RuntimeException(e);
-
-        } else {
-          printStackTrace(e);
-          String msg = renderer + " needs to be updated " +
-            "for the current release of Processing.";
-          throw new RuntimeException(msg);
-        }
-      } else {
-        /*
-        if (platform == MACOSX) {
-          e.printStackTrace(System.out);  // OS X bug (still true?)
-        }
-        */
-        printStackTrace(e);
-        throw new RuntimeException(e.getMessage());
-      }
-    }
-  }
-
-
-  /** Create default renderer, likely to be resized, but needed for surface init. */
-  protected PGraphics createPrimaryGraphics() {
-    return makeGraphics(sketchWidth(), sketchHeight(),
-                        sketchRenderer(), sketchOutputPath(), true);
-  }
+  public native PGraphics createGraphics(int w, int h, String renderer);
 
 
   /**
@@ -2276,110 +1954,7 @@ public class PApplet implements PConstants {
   protected long frameRateLastNanos = 0;
 
 
-  public void handleDraw() {
-    //debug("handleDraw() " + g + " " + looping + " " + redraw + " valid:" + this.isValid() + " visible:" + this.isVisible());
-
-    // canDraw = g != null && (looping || redraw);
-    if (g == null) return;
-    if (!looping && !redraw) return;
-//    System.out.println("looping/redraw = " + looping + " " + redraw);
-
-    // no longer in use by any of our renderers
-//    if (!g.canDraw()) {
-//      debug("g.canDraw() is false");
-//      // Don't draw if the renderer is not yet ready.
-//      // (e.g. OpenGL has to wait for a peer to be on screen)
-//      return;
-//    }
-
-    // Store the quality setting in case it's changed during draw and the
-    // drawing context needs to be re-built before the next frame.
-//    int pquality = g.smooth;
-
-    if (insideDraw) {
-      System.err.println("handleDraw() called before finishing");
-      System.exit(1);
-    }
-
-    insideDraw = true;
-    g.beginDraw();
-    if (recorder != null) {
-      recorder.beginDraw();
-    }
-
-    long now = System.nanoTime();
-
-    if (frameCount == 0) {
-        // 3.0a5 should be no longer needed; handled by PSurface
-        //surface.checkDisplaySize();
-
-//        try {
-        //println("Calling setup()");
-      setup();
-        //println("Done with setup()");
-
-//        } catch (RendererChangeException e) {
-//          // Give up, instead set the new renderer and re-attempt setup()
-//          return;
-//        }
-//      defaultSize = false;
-
-    } else {  // frameCount > 0, meaning an actual draw()
-      // update the current frameRate
-      double rate = 1000000.0 / ((now - frameRateLastNanos) / 1000000.0);
-      float instantaneousRate = (float) (rate / 1000.0);
-      frameRate = (frameRate * 0.9f) + (instantaneousRate * 0.1f);
-
-      if (frameCount != 0) {
-        handleMethods("pre");
-      }
-
-      // use dmouseX/Y as previous mouse pos, since this is the
-      // last position the mouse was in during the previous draw.
-      pmouseX = dmouseX;
-      pmouseY = dmouseY;
-
-        //println("Calling draw()");
-      draw();
-        //println("Done calling draw()");
-
-      // dmouseX/Y is updated only once per frame (unlike emouseX/Y)
-      dmouseX = mouseX;
-      dmouseY = mouseY;
-
-      // these are called *after* loop so that valid
-      // drawing commands can be run inside them. it can't
-      // be before, since a call to background() would wipe
-      // out anything that had been drawn so far.
-      handleMethods("draw");
-
-      redraw = false;  // unset 'redraw' flag in case it was set
-      // (only do this once draw() has run, not just setup())
-    }
-    g.endDraw();
-
-//    if (pquality != g.smooth) {
-//      surface.setSmooth(g.smooth);
-//    }
-
-    if (recorder != null) {
-      recorder.endDraw();
-    }
-    insideDraw = false;
-
-    if (frameCount != 0) {
-      handleMethods("post");
-    }
-
-    frameRateLastNanos = now;
-    frameCount++;
-  }
-
-
-//  /** Not official API, not guaranteed to work in the future. */
-//  public boolean canDraw() {
-//    return g != null && (looping || redraw);
-//  }
+  public native void handleDraw();
 
 
   //////////////////////////////////////////////////////////////
@@ -3242,24 +2817,6 @@ public class PApplet implements PConstants {
   }
 
 
-  /**
-   * Function for an applet/application to kill itself and
-   * display an error. Mostly this is here to be improved later.
-   */
-  public void die(String what) {
-    dispose();
-    throw new RuntimeException(what);
-  }
-
-
-  /**
-   * Same as above but with an exception. Also needs work.
-   */
-  public void die(String what, Exception e) {
-    if (e != null) e.printStackTrace();
-    die(what);
-  }
-
 
   /**
    * ( begin auto-generated from exit.xml )
@@ -3281,29 +2838,7 @@ public class PApplet implements PConstants {
    * ( end auto-generated )
    * @webref structure
    */
-  public void exit() {
-    if (surface.isStopped()) {
-      // exit immediately, dispose() has already been called,
-      // meaning that the main thread has long since exited
-      exitActual();
-
-    } else if (looping) {
-      // dispose() will be called as the thread exits
-      finished = true;
-      // tell the code to call exitActual() to do a System.exit()
-      // once the next draw() has completed
-      exitCalled = true;
-
-    } else if (!looping) {
-      // if not looping, shut down things explicitly,
-      // because the main thread will be sleeping
-      dispose();
-
-      // now get out
-      exitActual();
-    }
-  }
-
+  public native void exit();
 
   public boolean exitCalled() {
     return exitCalled;
@@ -3323,44 +2858,6 @@ public class PApplet implements PConstants {
     }
   }
 
-
-  /**
-   * Called to dispose of resources and shut down the sketch.
-   * Destroys the thread, dispose the renderer,and notify listeners.
-   * <p>
-   * Not to be called or overriden by users. If called multiple times,
-   * will only notify listeners once. Register a dispose listener instead.
-   */
-  public void dispose() {
-    // moved here from stop()
-    finished = true;  // let the sketch know it is shut down time
-
-    // don't run the disposers twice
-    if (surface.stopThread()) {
-
-      // shut down renderer
-      if (g != null) {
-        g.dispose();
-      }
-      // run dispose() methods registered by libraries
-      handleMethods("dispose");
-    }
-
-    if (platform == MACOSX) {
-      try {
-        final String td = "def.processing.core.ThinkDifferent";
-        final Class<?> thinkDifferent = getClass().getClassLoader().loadClass(td);
-        thinkDifferent.getMethod("cleanup").invoke(null);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-
-  }
-
-
-
-  //////////////////////////////////////////////////////////////
 
 
   /**
@@ -3445,21 +2942,11 @@ public class PApplet implements PConstants {
    * @see PApplet#saveFrame()
    * @see PApplet#createGraphics(int, int, String)
    */
-  public void save(String filename) {
-    g.save(savePath(filename));
-  }
-
+  public native void save(String filename);
 
   /**
    */
-  public void saveFrame() {
-    try {
-      g.save(savePath("screen-" + nf(frameCount, 4) + ".tif"));
-    } catch (SecurityException se) {
-      System.err.println("Can't use saveFrame() when running in a browser, " +
-                         "unless using a signed applet.");
-    }
-  }
+  public native void saveFrame();
 
 
   /**
@@ -3495,15 +2982,7 @@ public class PApplet implements PConstants {
    * @see PApplet#frameCount
    * @param filename any sequence of letters or numbers that ends with either ".tif", ".tga", ".jpg", or ".png"
    */
-  public void saveFrame(String filename) {
-    try {
-      g.save(savePath(insertFrame(filename)));
-    } catch (SecurityException se) {
-      System.err.println("Can't use saveFrame() when running in a browser, " +
-                         "unless using a signed applet.");
-    }
-  }
-
+  public native void saveFrame(String filename);
 
   /**
    * Check a string for #### signs to see if the frame number should be
@@ -5848,22 +5327,9 @@ public class PApplet implements PConstants {
   * @see PGraphics#textFont(PFont, float)
   * @see PApplet#createFont(String, float, boolean, char[])
   */
-  public PFont loadFont(String filename) {
-    if (!filename.toLowerCase().endsWith(".vlw")) {
-      throw new IllegalArgumentException("loadFont() is for .vlw files, try createFont()");
-    }
-    try {
-      InputStream input = createInput(filename);
-      return new PFont(input);
-
-    } catch (Exception e) {
-      die("Could not load font " + filename + ". " +
-          "Make sure that the font has been copied " +
-          "to the data folder of your sketch.", e);
-    }
-    return null;
-  }
-
+  public native PFont loadFont(String filename);
+  
+  protected PGraphics g;
 
   /**
    * Used by PGraphics to remove the requirement for loading a font!
@@ -6643,161 +6109,7 @@ public class PApplet implements PConstants {
   /**
    * Call openStream() without automatic gzip decompression.
    */
-  public InputStream createInputRaw(String filename) {
-    if (filename == null) return null;
-
-    if (sketchPath == null) {
-      System.err.println("The sketch path is not set.");
-      throw new RuntimeException("Files must be loaded inside setup() or after it has been called.");
-    }
-
-    if (filename.length() == 0) {
-      // an error will be called by the parent function
-      //System.err.println("The filename passed to openStream() was empty.");
-      return null;
-    }
-
-    // First check whether this looks like a URL
-    if (filename.contains(":")) {  // at least smells like URL
-      try {
-        URL url = new URL(filename);
-        URLConnection conn = url.openConnection();
-
-        if (conn instanceof HttpURLConnection) {
-          HttpURLConnection httpConn = (HttpURLConnection) conn;
-          // Will not handle a protocol change (see below)
-          httpConn.setInstanceFollowRedirects(true);
-          int response = httpConn.getResponseCode();
-          // Default won't follow HTTP -> HTTPS redirects for security reasons
-          // http://stackoverflow.com/a/1884427
-          if (response >= 300 && response < 400) {
-            String newLocation = httpConn.getHeaderField("Location");
-            return createInputRaw(newLocation);
-          }
-          return conn.getInputStream();
-        } else if (conn instanceof JarURLConnection) {
-          return url.openStream();
-        }
-      } catch (MalformedURLException mfue) {
-        // not a url, that's fine
-
-      } catch (FileNotFoundException fnfe) {
-        // Added in 0119 b/c Java 1.5 throws FNFE when URL not available.
-        // http://dev.processing.org/bugs/show_bug.cgi?id=403
-
-      } catch (IOException e) {
-        // changed for 0117, shouldn't be throwing exception
-        printStackTrace(e);
-        //System.err.println("Error downloading from URL " + filename);
-        return null;
-        //throw new RuntimeException("Error downloading from URL " + filename);
-      }
-    }
-
-    InputStream stream = null;
-
-    // Moved this earlier than the getResourceAsStream() checks, because
-    // calling getResourceAsStream() on a directory lists its contents.
-    // http://dev.processing.org/bugs/show_bug.cgi?id=716
-    try {
-      // First see if it's in a data folder. This may fail by throwing
-      // a SecurityException. If so, this whole block will be skipped.
-      File file = new File(dataPath(filename));
-      if (!file.exists()) {
-        // next see if it's just in the sketch folder
-        file = sketchFile(filename);
-      }
-
-      if (file.isDirectory()) {
-        return null;
-      }
-      if (file.exists()) {
-        try {
-          // handle case sensitivity check
-          String filePath = file.getCanonicalPath();
-          String filenameActual = new File(filePath).getName();
-          // make sure there isn't a subfolder prepended to the name
-          String filenameShort = new File(filename).getName();
-          // if the actual filename is the same, but capitalized
-          // differently, warn the user.
-          //if (filenameActual.equalsIgnoreCase(filenameShort) &&
-          //!filenameActual.equals(filenameShort)) {
-          if (!filenameActual.equals(filenameShort)) {
-            throw new RuntimeException("This file is named " +
-                                       filenameActual + " not " +
-                                       filename + ". Rename the file " +
-                                       "or change your code.");
-          }
-        } catch (IOException e) { }
-      }
-
-      // if this file is ok, may as well just load it
-      stream = new FileInputStream(file);
-      if (stream != null) return stream;
-
-      // have to break these out because a general Exception might
-      // catch the RuntimeException being thrown above
-    } catch (IOException ioe) {
-    } catch (SecurityException se) { }
-
-    // Using getClassLoader() prevents java from converting dots
-    // to slashes or requiring a slash at the beginning.
-    // (a slash as a prefix means that it'll load from the root of
-    // the jar, rather than trying to dig into the package location)
-    ClassLoader cl = getClass().getClassLoader();
-
-    // by default, data files are exported to the root path of the jar.
-    // (not the data folder) so check there first.
-    stream = cl.getResourceAsStream("data/" + filename);
-    if (stream != null) {
-      String cn = stream.getClass().getName();
-      // this is an irritation of sun's java plug-in, which will return
-      // a non-null stream for an object that doesn't exist. like all good
-      // things, this is probably introduced in java 1.5. awesome!
-      // http://dev.processing.org/bugs/show_bug.cgi?id=359
-      if (!cn.equals("sun.plugin.cache.EmptyInputStream")) {
-        return stream;
-      }
-    }
-
-    // When used with an online script, also need to check without the
-    // data folder, in case it's not in a subfolder called 'data'.
-    // http://dev.processing.org/bugs/show_bug.cgi?id=389
-    stream = cl.getResourceAsStream(filename);
-    if (stream != null) {
-      String cn = stream.getClass().getName();
-      if (!cn.equals("sun.plugin.cache.EmptyInputStream")) {
-        return stream;
-      }
-    }
-
-    try {
-      // attempt to load from a local file, used when running as
-      // an application, or as a signed applet
-      try {  // first try to catch any security exceptions
-        try {
-          stream = new FileInputStream(dataPath(filename));
-          if (stream != null) return stream;
-        } catch (IOException e2) { }
-
-        try {
-          stream = new FileInputStream(sketchPath(filename));
-          if (stream != null) return stream;
-        } catch (Exception e) { }  // ignored
-
-        try {
-          stream = new FileInputStream(filename);
-          if (stream != null) return stream;
-        } catch (IOException e1) { }
-
-      } catch (SecurityException se) { }  // online, whups
-
-    } catch (Exception e) {
-      printStackTrace(e);
-    }
-
-    return null;
-  }
+  public native InputStream createInputRaw(String filename);
 
 
   /**
@@ -7490,12 +6802,7 @@ public class PApplet implements PConstants {
   }
 
 
-  public String sketchPath() {
-    if (sketchPath == null) {
-      sketchPath = calcSketchPath();
-    }
-    return sketchPath;
-  }
+  public native String sketchPath();
 
 
   /**
@@ -7610,47 +6917,7 @@ public class PApplet implements PConstants {
    * Return a full path to an item in the data folder as a File object.
    * See the dataPath() method for more information.
    */
-  public File dataFile(String where) {
-    // isAbsolute() could throw an access exception, but so will writing
-    // to the local disk using the sketch path, so this is safe here.
-    File why = new File(where);
-    if (why.isAbsolute()) return why;
-
-    URL jarURL = getClass().getProtectionDomain().getCodeSource().getLocation();
-    // Decode URL
-    String jarPath;
-    try {
-      jarPath = jarURL.toURI().getPath();
-    } catch (URISyntaxException e) {
-      e.printStackTrace();
-      return null;
-    }
-    if (jarPath.contains("Contents/Java/")) {
-      File containingFolder = new File(jarPath).getParentFile();
-      File dataFolder = new File(containingFolder, "data");
-      return new File(dataFolder, where);
-    }
-    // Windows, Linux, or when not using a Mac OS X .app file
-    File workingDirItem =
-      new File(sketchPath + File.separator + "data" + File.separator + where);
-//    if (workingDirItem.exists()) {
-    return workingDirItem;
-//    }
-//    // In some cases, the current working directory won't be set properly.
-  }
-
-
-  /**
-   * On Windows and Linux, this is simply the data folder. On Mac OS X, this is
-   * the path to the data folder buried inside Contents/Java
-   */
-//  public File inputFile(String where) {
-//  }
-
-
-//  public String inputPath(String where) {
-//  }
-
+  public native File dataFile(String where);
 
   /**
    * Takes a path and creates any in-between folders if they don't
@@ -10005,313 +9272,8 @@ public class PApplet implements PConstants {
   // hurting, but unless we do, errors inside settings() are never passed
   // through to the PDE. There are other ways around that, no doubt, but I'm
   // also suspecting that these "not showing up" bugs might be EDT issues.
-  static public void runSketch(final String[] args,
-                               final PApplet constructedSketch) {
-//    EventQueue.invokeLater(new Runnable() {
-//      public void run() {
-//        runSketchEDT(args, constructedSketch);
-//      }
-//    });
-//  }
-//
-//
-//  /**
-//   * Moving this to the EDT for 3.0a6 because that's the proper thing to do
-//   * when messing with Swing components. But mostly we're AWT, so who knows.
-//   */
-//  static protected void runSketchEDT(final String[] args,
-//                                     final PApplet constructedSketch) {
-    // Supposed to help with flicker, but no effect on OS X.
-    // TODO IIRC this helped on Windows, but need to double check.
-    System.setProperty("sun.awt.noerasebackground", "true");
-
-    // Remove 60fps limit on the JavaFX "pulse" timer
-    System.setProperty("javafx.animation.fullspeed", "true");
-
-    // Doesn't seem to do anything helpful here (that can't be done via Runner)
-    //System.setProperty("com.apple.mrj.application.apple.menu.about.name", "potato");
-
-    Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-      public void uncaughtException(Thread t, Throwable e) {
-        e.printStackTrace();
-        uncaughtThrowable = e;
-      }
-    });
-
-    // This doesn't work, need to mess with Info.plist instead
-    /*
-    // In an exported application, add the Contents/Java folder to the
-    // java.library.path, so that native libraries work properly.
-    // Without this, the library path is only set to Contents/MacOS
-    // where the launcher binary lives.
-    if (platform == MACOSX) {
-      URL coreJarURL =
-        PApplet.class.getProtectionDomain().getCodeSource().getLocation();
-      // The jarPath from above will/may be URL encoded (%20 for spaces)
-      String coreJarPath = urlDecode(coreJarURL.getPath());
-      if (coreJarPath.endsWith("/Contents/Java/core.jar")) {
-        // remove the /core.jar part from the end
-        String javaPath = coreJarPath.substring(0, coreJarPath.length() - 9);
-        String libraryPath = System.getProperty("java.library.path");
-        libraryPath += File.pathSeparator + javaPath;
-        System.setProperty("java.library.path", libraryPath);
-      }
-    }
-    */
-
-    // Catch any HeadlessException to provide more useful feedback
-    try {
-      // Call validate() while resize events are in progress
-      Toolkit.getDefaultToolkit().setDynamicLayout(true);
-    } catch (HeadlessException e) {
-      System.err.println("Cannot run sketch without a display. Read this for possible solutions:");
-      System.err.println("https://github.com/processing/processing/wiki/Running-without-a-Display");
-      System.exit(1);
-    }
-
-    // So that the system proxy setting are used by default
-    System.setProperty("java.net.useSystemProxies", "true");
-
-    if (args.length < 1) {
-      System.err.println("Usage: PApplet [options] <class name> [sketch args]");
-      System.err.println("See the Javadoc for PApplet for an explanation.");
-      System.exit(1);
-    }
-
-    boolean external = false;
-    int[] location = null;
-    int[] editorLocation = null;
-
-    String name = null;
-    int windowColor = 0;
-    int stopColor = 0xff808080;
-    boolean hideStop = false;
-
-    int displayNum = -1;  // use default
-//    boolean fullScreen = false;
-    boolean present = false;
-//    boolean spanDisplays = false;
-    int density = -1;
-
-    String param = null, value = null;
-    String folder = calcSketchPath();
-
-    int argIndex = 0;
-    while (argIndex < args.length) {
-      int equals = args[argIndex].indexOf('=');
-      if (equals != -1) {
-        param = args[argIndex].substring(0, equals);
-        value = args[argIndex].substring(equals + 1);
-
-        if (param.equals(ARGS_EDITOR_LOCATION)) {
-          external = true;
-          editorLocation = parseInt(split(value, ','));
-
-        } else if (param.equals(ARGS_DISPLAY)) {
-          displayNum = parseInt(value, -1);
-          if (displayNum == -1) {
-            System.err.println("Could not parse " + value + " for " + ARGS_DISPLAY);
-          }
-
-        } else if (param.equals(ARGS_WINDOW_COLOR)) {
-          if (value.charAt(0) == '#' && value.length() == 7) {
-            value = value.substring(1);
-            windowColor = 0xff000000 | Integer.parseInt(value, 16);
-          } else {
-            System.err.println(ARGS_WINDOW_COLOR + " should be a # followed by six digits");
-          }
-
-        } else if (param.equals(ARGS_STOP_COLOR)) {
-          if (value.charAt(0) == '#' && value.length() == 7) {
-            value = value.substring(1);
-            stopColor = 0xff000000 | Integer.parseInt(value, 16);
-          } else {
-            System.err.println(ARGS_STOP_COLOR + " should be a # followed by six digits");
-          }
-
-        } else if (param.equals(ARGS_SKETCH_FOLDER)) {
-          folder = value;
-
-        } else if (param.equals(ARGS_LOCATION)) {
-          location = parseInt(split(value, ','));
-
-        } else if (param.equals(ARGS_DENSITY)) {
-          density = parseInt(value, -1);
-          if (density == -1) {
-            System.err.println("Could not parse " + value + " for " + ARGS_DENSITY);
-          } else if (density != 1 && density != 2) {
-            density = -1;
-            System.err.println(ARGS_DENSITY + " should be 1 or 2");
-          }
-        }
-
-      } else {
-        if (args[argIndex].equals(ARGS_PRESENT)) {
-          present = true;
-
-//        } else if (args[argIndex].equals(ARGS_SPAN_DISPLAYS)) {
-//          spanDisplays = true;
-
-        } else if (args[argIndex].equals(ARGS_HIDE_STOP)) {
-          hideStop = true;
-
-        } else if (args[argIndex].equals(ARGS_EXTERNAL)) {
-          external = true;
-
-        } else {
-          name = args[argIndex];
-          break;  // because of break, argIndex won't increment again
-        }
-      }
-      argIndex++;
-    }
-
-//    // Now that sketch path is passed in args after the sketch name
-//    // it's not set in the above loop(the above loop breaks after
-//    // finding sketch name). So setting sketch path here.
-//    // https://github.com/processing/processing/commit/0a14835e6f5f4766b022e73a8fe562318636727c
-//    // TODO this is a hack added for PDE X and needs to be removed [fry 141104]
-//    for (int i = 0; i < args.length; i++) {
-//      if (args[i].startsWith(ARGS_SKETCH_FOLDER)){
-//        folder = args[i].substring(args[i].indexOf('=') + 1);
-//      }
-//    }
-
-    final PApplet sketch;
-    if (constructedSketch != null) {
-      sketch = constructedSketch;
-    } else {
-      try {
-        Class<?> c =
-          Thread.currentThread().getContextClassLoader().loadClass(name);
-        sketch = (PApplet) c.getDeclaredConstructor().newInstance();
-      } catch (RuntimeException re) {
-        // Don't re-package runtime exceptions
-        throw re;
-      } catch (Exception e) {
-        // Package non-runtime exceptions so we can throw them freely
-        throw new RuntimeException(e);
-      }
-    }
-
-    if (platform == MACOSX) {
-      try {
-        final String td = "def.processing.core.ThinkDifferent";
-        Class<?> thinkDifferent =
-          Thread.currentThread().getContextClassLoader().loadClass(td);
-        Method method =
-          thinkDifferent.getMethod("init", new Class[] { PApplet.class });
-        method.invoke(null, new Object[] { sketch });
-      } catch (Exception e) {
-        e.printStackTrace();  // That's unfortunate
-      }
-    }
-
-    // Set the suggested display that's coming from the command line
-    // (and most likely, from the PDE's preference setting).
-    sketch.display = displayNum;
-
-    // Set the suggested density that is coming from command line
-    // (most likely set from the PDE based on a system DPI scaling)
-    sketch.suggestedDensity = density;
-
-    sketch.present = present;
-
-    // For 3.0.1, moved this above handleSettings() so that loadImage() can be
-    // used inside settings(). Sets a terrible precedent, but the alternative
-    // of not being able to size a sketch to an image is driving people loopy.
-    // A handful of things that need to be set before init/start.
-//    if (folder == null) {
-//      folder = calcSketchPath();
-//    }
-    sketch.sketchPath = folder;
-
-    // Don't set 'args' to a zero-length array if it should be null [3.0a8]
-    if (args.length != argIndex + 1) {
-      // pass everything after the class name in as args to the sketch itself
-      // (fixed for 2.0a5, this was just subsetting by 1, which didn't skip opts)
-      sketch.args = PApplet.subset(args, argIndex + 1);
-    }
-
-    // Call the settings() method which will give us our size() call
-//    try {
-    sketch.handleSettings();
-//    } catch (Throwable t) {
-//      System.err.println("I think I'm gonna hurl");
-//    }
-
-////    sketch.spanDisplays = spanDisplays;
-//    // If spanning screens, that means we're also full screen.
-////    fullScreen |= spanDisplays;
-//    if (spanDisplays) {
-//      displayIndex = SPAN;
-////      fullScreen = true;
-//    }
-
-//    // If the applet doesn't call for full screen, but the command line does,
-//    // enable it. Conversely, if the command line does not, don't disable it.
-//    // Query the applet to see if it wants to be full screen all the time.
-//    //fullScreen |= sketch.sketchFullScreen();
-//    sketch.fullScreen |= fullScreen;
-
-    sketch.external = external;
-
-    if (windowColor != 0) {
-      sketch.windowColor = windowColor;
-    }
-
-    final PSurface surface = sketch.initSurface();
-//      sketch.initSurface(windowColor, displayIndex, fullScreen, spanDisplays);
-
-    /*
-    // Wait until the applet has figured out its width. In a static mode app,
-    // everything happens inside setup(), so this will be after setup() has
-    // completed, and the empty draw() has set "finished" to true.
-    while (sketch.defaultSize && !sketch.finished) {
-      //System.out.println("default size");
-      try {
-        Thread.sleep(5);
-
-      } catch (InterruptedException e) {
-        //System.out.println("interrupt");
-      }
-    }
-    */
-
-    if (present) {
-      if (hideStop) {
-        stopColor = 0;  // they'll get the hint
-      }
-      surface.placePresent(stopColor);
-    } else {
-      surface.placeWindow(location, editorLocation);
-    }
-
-    // not always running externally when in present mode
-    // moved above setVisible() in 3.0 alpha 11
-    if (sketch.external) {
-      surface.setupExternalMessages();
-    }
-
-    sketch.showSurface();
-    sketch.startSurface();
-    /*
-    if (sketch.getGraphics().displayable()) {
-      surface.setVisible(true);
-    }
-
-    //sketch.init();
-    surface.startThread();
-    */
-  }
-
-
-  /** Danger: available for advanced subclassing, but here be dragons. */
-  protected void showSurface() {
-    if (getGraphics().displayable()) {
-      surface.setVisible(true);
-    }
-  }
+  static public native void runSketch(final String[] args,
+                               final PApplet constructedSketch);
 
 
   /** See warning in showSurface() */
@@ -10409,12 +9371,7 @@ public class PApplet implements PConstants {
    * @param filename filename for output
    * @see PApplet#endRecord()
    */
-  public PGraphics beginRecord(String renderer, String filename) {
-    filename = insertFrame(filename);
-    PGraphics rec = createGraphics(width, height, renderer, filename);
-    beginRecord(rec);
-    return rec;
-  }
+  public native PGraphics beginRecord(String renderer, String filename);
 
 
   /**
@@ -10483,12 +9440,7 @@ public class PApplet implements PConstants {
    * @see PApplet#endRaw()
    * @see PApplet#hint(int)
    */
-  public PGraphics beginRaw(String renderer, String filename) {
-    filename = insertFrame(filename);
-    PGraphics rec = createGraphics(width, height, renderer, filename);
-    g.beginRaw(rec);
-    return rec;
-  }
+  public native PGraphics beginRaw(String renderer, String filename);
 
 
 

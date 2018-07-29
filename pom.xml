@@ -78,6 +78,7 @@
 					<encoding>UTF-8</encoding>
 					<ignoredProblems>
 						<ignoredProblem>INVALID_METHOD_BODY_IN_INTERFACE</ignoredProblem>
+						<ignoredProblem>INVALID_PRIVATE_IN_INTERFACE</ignoredProblem>
 					</ignoredProblems>
 					<factoryClassName>org.jsweet.extension.processing.ProcessingJSweetFactory</factoryClassName>
 				</configuration>
