@@ -2069,39 +2069,6 @@ public class PApplet implements PConstants {
   //////////////////////////////////////////////////////////////
 
 
-
-
-  /**
-   * ( begin auto-generated from mousePressed.xml )
-   *
-   * The <b>mousePressed()</b> function is called once after every time a
-   * mouse button is pressed. The <b>mouseButton</b> variable (see the
-   * related reference entry) can be used to determine which button has been pressed.
-   *
-   * ( end auto-generated )
-   * <h3>Advanced</h3>
-   *
-   * If you must, use
-   * int button = mouseEvent.getButton();
-   * to figure out which button was clicked. It will be one of:
-   * MouseEvent.BUTTON1, MouseEvent.BUTTON2, MouseEvent.BUTTON3
-   * Note, however, that this is completely inconsistent across
-   * platforms.
-   * @webref input:mouse
-   * @see PApplet#mouseX
-   * @see PApplet#mouseY
-   * @see PApplet#pmouseX
-   * @see PApplet#pmouseY
-   * @see PApplet#mousePressed
-   * @see PApplet#mouseReleased()
-   * @see PApplet#mouseClicked()
-   * @see PApplet#mouseMoved()
-   * @see PApplet#mouseDragged()
-   * @see PApplet#mouseButton
-   * @see PApplet#mouseWheel(MouseEvent)
-   */
-  public void mousePressed() { }
-
   /**
    * ( begin auto-generated from mouseReleased.xml )
    *
@@ -2206,84 +2173,9 @@ public class PApplet implements PConstants {
    * @nowebref
    */
   public void mouseWheel() { }
-
-
-  /**
-   *
-   * ( begin auto-generated from keyPressed.xml )
-   *
-   * The <b>keyPressed()</b> function is called once every time a key is
-   * pressed. The key that was pressed is stored in the <b>key</b> variable.
-   * <br/> <br/>
-   * For non-ASCII keys, use the <b>keyCode</b> variable. The keys included
-   * in the ASCII specification (BACKSPACE, TAB, ENTER, RETURN, ESC, and
-   * DELETE) do not require checking to see if they key is coded, and you
-   * should simply use the <b>key</b> variable instead of <b>keyCode</b> If
-   * you're making cross-platform projects, note that the ENTER key is
-   * commonly used on PCs and Unix and the RETURN key is used instead on
-   * Macintosh. Check for both ENTER and RETURN to make sure your program
-   * will work for all platforms.
-   * <br/> <br/>
-   * Because of how operating systems handle key repeats, holding down a key
-   * may cause multiple calls to keyPressed() (and keyReleased() as well).
-   * The rate of repeat is set by the operating system and how each computer
-   * is configured.
-   *
-   * ( end auto-generated )
-   * <h3>Advanced</h3>
-   *
-   * Called each time a single key on the keyboard is pressed.
-   * Because of how operating systems handle key repeats, holding
-   * down a key will cause multiple calls to keyPressed(), because
-   * the OS repeat takes over.
-   * <p>
-   * Examples for key handling:
-   * (Tested on Windows XP, please notify if different on other
-   * platforms, I have a feeling Mac OS and Linux may do otherwise)
-   * <PRE>
-   * 1. Pressing 'a' on the keyboard:
-   *    keyPressed  with key == 'a' and keyCode == 'A'
-   *    keyTyped    with key == 'a' and keyCode ==  0
-   *    keyReleased with key == 'a' and keyCode == 'A'
-   *
-   * 2. Pressing 'A' on the keyboard:
-   *    keyPressed  with key == 'A' and keyCode == 'A'
-   *    keyTyped    with key == 'A' and keyCode ==  0
-   *    keyReleased with key == 'A' and keyCode == 'A'
-   *
-   * 3. Pressing 'shift', then 'a' on the keyboard (caps lock is off):
-   *    keyPressed  with key == CODED and keyCode == SHIFT
-   *    keyPressed  with key == 'A'   and keyCode == 'A'
-   *    keyTyped    with key == 'A'   and keyCode == 0
-   *    keyReleased with key == 'A'   and keyCode == 'A'
-   *    keyReleased with key == CODED and keyCode == SHIFT
-   *
-   * 4. Holding down the 'a' key.
-   *    The following will happen several times,
-   *    depending on your machine's "key repeat rate" settings:
-   *    keyPressed  with key == 'a' and keyCode == 'A'
-   *    keyTyped    with key == 'a' and keyCode ==  0
-   *    When you finally let go, you'll get:
-   *    keyReleased with key == 'a' and keyCode == 'A'
-   *
-   * 5. Pressing and releasing the 'shift' key
-   *    keyPressed  with key == CODED and keyCode == SHIFT
-   *    keyReleased with key == CODED and keyCode == SHIFT
-   *    (note there is no keyTyped)
-   *
-   * 6. Pressing the tab key in an applet with Java 1.4 will
-   *    normally do nothing, but PApplet dynamically shuts
-   *    this behavior off if Java 1.4 is in use (tested 1.4.2_05 Windows).
-   *    Java 1.1 (Microsoft VM) passes the TAB key through normally.
-   *    Not tested on other platforms or for 1.3.
-   * </PRE>
-   * @webref input:keyboard
-   * @see PApplet#key
-   * @see PApplet#keyCode
-   * @see PApplet#keyPressed
-   * @see PApplet#keyReleased()
-   */
-  public void keyPressed() { }
+  
+  public boolean mousePressed;
+  public boolean keyPressed;
 
 
   /**
