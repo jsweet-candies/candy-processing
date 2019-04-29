@@ -6362,6 +6362,8 @@ interface PApplet extends PConstants {
      * @see PImage#blendColor(int,int,int)
      */
     blend(src : PImage, sx : number, sy : number, sw : number, sh : number, dx : number, dy : number, dw : number, dh : number, mode : number);
+
+    externals : PApplet.Externals;
 }
 
 declare namespace PApplet {
@@ -8726,6 +8728,10 @@ declare namespace PApplet {
         vessel : PImage;
 
         public constructor(__parent: any, filename : string, extension : string, vessel : PImage);
+    }
+
+    export class Externals {
+        public canvas : HTMLCanvasElement;
     }
 }
 

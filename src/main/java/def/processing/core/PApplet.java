@@ -92,6 +92,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import def.dom.HTMLCanvasElement;
 import def.processing.data.JSONArray;
 import def.processing.data.JSONObject;
 import def.processing.data.StringList;
@@ -13903,4 +13904,10 @@ public class PApplet implements PConstants {
     if (recorder != null) recorder.blend(src, sx, sy, sw, sh, dx, dy, dw, dh, mode);
     g.blend(src, sx, sy, sw, sh, dx, dy, dw, dh, mode);
   }
+  
+  public static class Externals {
+	  public HTMLCanvasElement canvas;
+  }
+  
+  public Externals externals;
 }

@@ -111,7 +111,7 @@ declare class Table {
      */
     odsParseSheet(sheet : XML, header : boolean);
 
-    odsAppendNotNull(kid : XML, buffer : { str: string });
+    odsAppendNotNull(kid : XML, buffer : { str: string, toString: Function });
 
     /**
      * incomplete, do not use
