@@ -28,6 +28,8 @@ import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
 
+import def.dom.ImageData;
+
 /**
    * ( begin auto-generated from PImage.xml )
    *
@@ -3256,4 +3258,6 @@ int testFunction(int dst, int src) {
    * @param filename a sequence of letters and numbers
    */
   public native boolean save(String filename);
+  
+  public native void fromImageData(ImageData imageData);
 }
