@@ -8743,6 +8743,8 @@ declare namespace PApplet {
         height : number;
 
         imageData : ImageData;
+
+        toImageData() : ImageData;
     }
 
     export class RegisteredMethods {
