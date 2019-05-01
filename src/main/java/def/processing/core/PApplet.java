@@ -93,12 +93,14 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import def.dom.HTMLCanvasElement;
+import def.dom.ImageData;
 import def.processing.data.JSONArray;
 import def.processing.data.JSONObject;
 import def.processing.data.StringList;
 import def.processing.data.Table;
 import def.processing.data.XML;
 import def.processing.event.MouseEvent;
+import jsweet.lang.Interface;
 
 
 /**
@@ -137,6 +139,16 @@ import def.processing.event.MouseEvent;
  * than working around legacy Java code.
  */
 public class PApplet implements PConstants {
+	  
+  @Interface
+  public static abstract class PImageLike {
+	  int width;
+	  int height;
+	  
+	  ImageData imageData;
+	  public abstract ImageData toImageData();
+  }
+	  
   /** Full name of the Java version (i.e. 1.5.0_11). */
   static public final String javaVersionName =
     System.getProperty("java.version");
@@ -9660,10 +9672,13 @@ public class PApplet implements PConstants {
    * @see PGraphics#endShape(int)
    * @see PGraphics#vertex(float, float, float, float, float)
    */
-  public void texture(PImage image) {
-    if (recorder != null) recorder.texture(image);
-    g.texture(image);
-  }
+  public native void texture(PImage image);
+  
+  /**
+   * @param img A PImage like object (candy-processing-webcam:Capture is one for instance)
+   * @see PApplet#texture(PImage)
+   */
+  public native void texture(PImageLike image);
 
 
   /**
@@ -10822,35 +10837,42 @@ public class PApplet implements PConstants {
    * @see PGraphics#background(float, float, float, float)
    * @see PGraphics#alpha(int)
    */
-  public void image(PImage img, float a, float b) {
-    if (recorder != null) recorder.image(img, a, b);
-    g.image(img, a, b);
-  }
-
+  public native void image(PImage img, float a, float b);
+  
+  /**
+   * @param img A PImage like object (candy-processing-webcam:Capture is one for instance)
+   * @see PApplet#image(PImage, float, float)
+   */
+  public native void image(PImageLike img, float a, float b);
 
   /**
    * @param c width to display the image by default
    * @param d height to display the image by default
    */
-  public void image(PImage img, float a, float b, float c, float d) {
-    if (recorder != null) recorder.image(img, a, b, c, d);
-    g.image(img, a, b, c, d);
-  }
-
+  public native void image(PImage img, float a, float b, float c, float d);
+  
+  /**
+   * @param img A PImage like object (candy-processing-webcam:Capture is one for instance)
+   * @see PApplet#image(PImage, float, float, float, float)
+   */
+  public native void image(PImageLike img, float a, float b, float c, float d);
 
   /**
    * Draw an image(), also specifying u/v coordinates.
    * In this method, the  u, v coordinates are always based on image space
    * location, regardless of the current textureMode().
-   *
-   * @nowebref
    */
-  public void image(PImage img,
+  public native void image(PImage img,
+		  float a, float b, float c, float d,
+		  int u1, int v1, int u2, int v2);
+  
+  /**
+   * @param img A PImage like object (candy-processing-webcam:Capture is one for instance)
+   * @see PApplet#image(PImageLike, float, float, float, float, int, int, int, int)
+   */
+  public native void image(PImageLike img,
                     float a, float b, float c, float d,
-                    int u1, int v1, int u2, int v2) {
-    if (recorder != null) recorder.image(img, a, b, c, d, u1, v1, u2, v2);
-    g.image(img, a, b, c, d, u1, v1, u2, v2);
-  }
+                    int u1, int v1, int u2, int v2);
 
 
   /**

@@ -3260,4 +3260,6 @@ int testFunction(int dst, int src) {
   public native boolean save(String filename);
   
   public native void fromImageData(ImageData imageData);
+  
+  public native ImageData toImageData();
 }

@@ -1126,6 +1126,8 @@ declare class PImage implements PConstants {
     public save(filename : string) : boolean;
 
     public fromImageData(imageData : ImageData);
+
+    public toImageData() : ImageData;
 }
 
 

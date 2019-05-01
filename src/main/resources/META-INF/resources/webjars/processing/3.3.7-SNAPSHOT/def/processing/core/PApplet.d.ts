@@ -2888,6 +2888,13 @@ interface PApplet extends PConstants {
     texture(image : PImage);
 
     /**
+     * @param img A PImage like object (candy-processing-webcam:Capture is one for instance)
+     * @see PApplet#texture(PImage)
+     * @param {*} image
+     */
+    texture(image : PApplet.PImageLike);
+
+    /**
      * Removes texture image for current shape.
      * Needs to be called between beginShape and endShape
      */
@@ -3838,6 +3845,14 @@ interface PApplet extends PConstants {
     image(img : PImage, a : number, b : number);
 
     /**
+     * @param {*} img A PImage like object (candy-processing-webcam:Capture is one for instance)
+     * @see PApplet#image(PImage, float, float)
+     * @param {number} a
+     * @param {number} b
+     */
+    image(img : PApplet.PImageLike, a : number, b : number);
+
+    /**
      * @param {number} c width to display the image by default
      * @param {number} d height to display the image by default
      * @param {PImage} img
@@ -3847,11 +3862,19 @@ interface PApplet extends PConstants {
     image(img : PImage, a : number, b : number, c : number, d : number);
 
     /**
+     * @param {*} img A PImage like object (candy-processing-webcam:Capture is one for instance)
+     * @see PApplet#image(PImage, float, float, float, float)
+     * @param {number} a
+     * @param {number} b
+     * @param {number} c
+     * @param {number} d
+     */
+    image(img : PApplet.PImageLike, a : number, b : number, c : number, d : number);
+
+    /**
      * Draw an image(), also specifying u/v coordinates.
      * In this method, the  u, v coordinates are always based on image space
      * location, regardless of the current textureMode().
-     * 
-     * @nowebref
      * @param {PImage} img
      * @param {number} a
      * @param {number} b
@@ -3863,6 +3886,20 @@ interface PApplet extends PConstants {
      * @param {number} v2
      */
     image(img : PImage, a : number, b : number, c : number, d : number, u1 : number, v1 : number, u2 : number, v2 : number);
+
+    /**
+     * @param {*} img A PImage like object (candy-processing-webcam:Capture is one for instance)
+     * @see PApplet#image(PImageLike, float, float, float, float, int, int, int, int)
+     * @param {number} a
+     * @param {number} b
+     * @param {number} c
+     * @param {number} d
+     * @param {number} u1
+     * @param {number} v1
+     * @param {number} u2
+     * @param {number} v2
+     */
+    image(img : PApplet.PImageLike, a : number, b : number, c : number, d : number, u1 : number, v1 : number, u2 : number, v2 : number);
 
     /**
      * ( begin auto-generated from shapeMode.xml )
@@ -8699,6 +8736,14 @@ declare namespace PApplet {
 
 
 declare namespace PApplet {
+
+    export interface PImageLike {
+        width : number;
+
+        height : number;
+
+        imageData : ImageData;
+    }
 
     export class RegisteredMethods {
         public __parent: any;
