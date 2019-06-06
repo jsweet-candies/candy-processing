@@ -93,6 +93,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import def.dom.HTMLCanvasElement;
+import def.dom.HTMLElement;
 import def.dom.ImageData;
 import def.processing.data.JSONArray;
 import def.processing.data.JSONObject;
@@ -13492,4 +13493,6 @@ public class PApplet implements PConstants {
 	}
 
 	public Externals externals;
+
+	public NativeFeatures nativeFeatures;
 }
