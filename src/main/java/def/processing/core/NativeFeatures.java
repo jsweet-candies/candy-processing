@@ -1,6 +1,7 @@
 package def.processing.core;
 
 import def.dom.CanvasRenderingContext2D;
+import def.dom.MediaStream;
 import def.dom.HTMLCanvasElement;
 import def.dom.HTMLElement;
 import def.dom.HTMLVideoElement;
@@ -34,7 +35,7 @@ public abstract class NativeFeatures {
 	public native HTMLElement invoke(NativeFeatures.queryDomElementBySelector featureQueryDomElementBySelector,
 			String cssSelector);
 
-	public native Promise<Object> invoke(NativeFeatures.getUserMedia featureGetUserMedia, Object options);
+	public native Promise<MediaStream> invoke(NativeFeatures.getUserMedia featureGetUserMedia, Object options);
 
 	public native <TElement> Promise<TElement> resolve(TElement element);
 

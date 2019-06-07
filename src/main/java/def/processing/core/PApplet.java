@@ -73,6 +73,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.function.Consumer;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -2607,6 +2608,8 @@ public class PApplet implements PConstants {
 	 */
 	public native void exit();
 
+	public List<Consumer<PApplet>> onExitListeners;
+	
 	public boolean exitCalled() {
 		return exitCalled;
 	}

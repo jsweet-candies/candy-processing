@@ -19,7 +19,7 @@ interface NativeFeatures {
 
     invoke(featureQueryDomElementBySelector : "queryDomElementBySelector", cssSelector : string) : HTMLElement;
 
-    invoke(featureGetUserMedia : "getUserMedia", options : any) : Promise<any>;
+    invoke(featureGetUserMedia : "getUserMedia", options : any) : Promise<MediaStream>;
 
     resolve<TElement>(element : TElement) : Promise<TElement>;
 }

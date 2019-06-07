@@ -1258,6 +1258,8 @@ interface PApplet extends PConstants {
      */
     exit();
 
+    onExitListeners : Array<(p1: any) => void>;
+
     /**
      * Some subclasses (I'm looking at you, processing.py) might wish to do
      * something other than actually terminate the JVM. This gives them a chance to
