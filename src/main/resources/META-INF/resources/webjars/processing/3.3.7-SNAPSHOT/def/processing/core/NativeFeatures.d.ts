@@ -7,6 +7,8 @@
 interface NativeFeatures {
     invoke(featureCreatePImageFromCanvasContext : "createPImageFromCanvasContext", width : number, height : number, canvasContext : CanvasRenderingContext2D) : PImage;
 
+    invoke(featureFreeObjectMemory : "freeObjectMemory", object : any);
+
     invoke(featureCreateDomElement : "createDomElement", tagName : "video") : HTMLVideoElement;
 
     invoke(featureCreateDomElement : "createDomElement", tagName : "canvas") : HTMLCanvasElement;
@@ -33,6 +35,8 @@ declare namespace NativeFeatures {
     export interface getUserMedia {    }
 
     export interface createPImageFromCanvasContext {    }
+
+    export interface freeObjectMemory {    }
 }
 
 

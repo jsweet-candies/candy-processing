@@ -21,6 +21,8 @@ public abstract class NativeFeatures {
 			NativeFeatures.createPImageFromCanvasContext featureCreatePImageFromCanvasContext, int width, int height,
 			CanvasRenderingContext2D canvasContext);
 
+	public native void invoke(NativeFeatures.freeObjectMemory featureFreeObjectMemory, Object object);
+	
 	public native HTMLVideoElement invoke(NativeFeatures.createDomElement featureCreateDomElement, video tagName);
 
 	public native HTMLCanvasElement invoke(NativeFeatures.createDomElement featureCreateDomElement, canvas tagName);
@@ -70,4 +72,11 @@ public abstract class NativeFeatures {
 
 	@StringType
 	public static NativeFeatures.createPImageFromCanvasContext createPImageFromCanvasContext = null;
+	
+	@StringType
+	public interface freeObjectMemory {
+	}
+
+	@StringType
+	public static NativeFeatures.freeObjectMemory freeObjectMemory = null;
 }
