@@ -73,7 +73,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -94,8 +94,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import def.dom.HTMLCanvasElement;
-import def.dom.HTMLElement;
 import def.dom.ImageData;
+import def.js.Promise;
 import def.processing.data.JSONArray;
 import def.processing.data.JSONObject;
 import def.processing.data.StringList;
@@ -2608,7 +2608,7 @@ public class PApplet implements PConstants {
 	 */
 	public native void exit();
 
-	public List<Consumer<PApplet>> onExitListeners;
+	public List<Function<PApplet, Promise<Void>>> onExitListeners;
 	
 	public boolean exitCalled() {
 		return exitCalled;

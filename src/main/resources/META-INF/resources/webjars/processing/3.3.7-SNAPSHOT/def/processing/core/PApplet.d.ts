@@ -1258,7 +1258,7 @@ interface PApplet extends PConstants {
      */
     exit();
 
-    onExitListeners : Array<(p1: any) => void>;
+    onExitListeners : Array<(p1: any) => Promise<void>>;
 
     /**
      * Some subclasses (I'm looking at you, processing.py) might wish to do
