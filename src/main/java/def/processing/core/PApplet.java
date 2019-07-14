@@ -10439,34 +10439,34 @@ public class PApplet implements PConstants {
 	 * @see PGraphics#background(float, float, float, float)
 	 * @see PGraphics#alpha(int)
 	 */
-	public native void image(PImage img, float a, float b);
+	public native Promise<Void> image(PImage img, float a, float b);
 
 	/**
 	 * @param img A PImage like object (candy-processing-webcam:Capture is one for
 	 *            instance)
 	 * @see PApplet#image(PImage, float, float)
 	 */
-	public native void image(PImageLike img, float a, float b);
+	public native Promise<Void> image(PImageLike img, float a, float b);
 
 	/**
 	 * @param c width to display the image by default
 	 * @param d height to display the image by default
 	 */
-	public native void image(PImage img, float a, float b, float c, float d);
+	public native Promise<Void> image(PImage img, float a, float b, float c, float d);
 
 	/**
 	 * @param img A PImage like object (candy-processing-webcam:Capture is one for
 	 *            instance)
 	 * @see PApplet#image(PImage, float, float, float, float)
 	 */
-	public native void image(PImageLike img, float a, float b, float c, float d);
+	public native Promise<Void> image(PImageLike img, float a, float b, float c, float d);
 
 	/**
 	 * Draw an image(), also specifying u/v coordinates. In this method, the u, v
 	 * coordinates are always based on image space location, regardless of the
 	 * current textureMode().
 	 */
-	public native void image(PImage img, float a, float b, float c, float d, int u1, int v1, int u2, int v2);
+	public native Promise<Void> image(PImage img, float a, float b, float c, float d, int u1, int v1, int u2, int v2);
 
 	/**
 	 * @param img A PImage like object (candy-processing-webcam:Capture is one for
@@ -10474,7 +10474,7 @@ public class PApplet implements PConstants {
 	 * @see PApplet#image(PImageLike, float, float, float, float, int, int, int,
 	 *      int)
 	 */
-	public native void image(PImageLike img, float a, float b, float c, float d, int u1, int v1, int u2, int v2);
+	public native Promise<Void> image(PImageLike img, float a, float b, float c, float d, int u1, int v1, int u2, int v2);
 
 	/**
 	 * ( begin auto-generated from shapeMode.xml )
