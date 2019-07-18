@@ -3934,8 +3934,9 @@ interface PApplet extends PConstants {
      * @see PGraphics#tint(float)
      * @see PGraphics#background(float, float, float, float)
      * @see PGraphics#alpha(int)
+     * @return {Promise}
      */
-    image(img : PImage, a : number, b : number);
+    image(img : PImage, a : number, b : number) : Promise<void>;
 
     /**
      * @param {*} img A PImage like object (candy-processing-webcam:Capture is one for
@@ -3943,8 +3944,9 @@ interface PApplet extends PConstants {
      * @see PApplet#image(PImage, float, float)
      * @param {number} a
      * @param {number} b
+     * @return {Promise}
      */
-    image(img : PApplet.PImageLike, a : number, b : number);
+    image(img : PApplet.PImageLike, a : number, b : number) : Promise<void>;
 
     /**
      * @param {number} c width to display the image by default
@@ -3952,8 +3954,9 @@ interface PApplet extends PConstants {
      * @param {PImage} img
      * @param {number} a
      * @param {number} b
+     * @return {Promise}
      */
-    image(img : PImage, a : number, b : number, c : number, d : number);
+    image(img : PImage, a : number, b : number, c : number, d : number) : Promise<void>;
 
     /**
      * @param {*} img A PImage like object (candy-processing-webcam:Capture is one for
@@ -3963,8 +3966,9 @@ interface PApplet extends PConstants {
      * @param {number} b
      * @param {number} c
      * @param {number} d
+     * @return {Promise}
      */
-    image(img : PApplet.PImageLike, a : number, b : number, c : number, d : number);
+    image(img : PApplet.PImageLike, a : number, b : number, c : number, d : number) : Promise<void>;
 
     /**
      * Draw an image(), also specifying u/v coordinates. In this method, the u, v
@@ -3979,8 +3983,9 @@ interface PApplet extends PConstants {
      * @param {number} v1
      * @param {number} u2
      * @param {number} v2
+     * @return {Promise}
      */
-    image(img : PImage, a : number, b : number, c : number, d : number, u1 : number, v1 : number, u2 : number, v2 : number);
+    image(img : PImage, a : number, b : number, c : number, d : number, u1 : number, v1 : number, u2 : number, v2 : number) : Promise<void>;
 
     /**
      * @param {*} img A PImage like object (candy-processing-webcam:Capture is one for
@@ -3995,8 +4000,9 @@ interface PApplet extends PConstants {
      * @param {number} v1
      * @param {number} u2
      * @param {number} v2
+     * @return {Promise}
      */
-    image(img : PApplet.PImageLike, a : number, b : number, c : number, d : number, u1 : number, v1 : number, u2 : number, v2 : number);
+    image(img : PApplet.PImageLike, a : number, b : number, c : number, d : number, u1 : number, v1 : number, u2 : number, v2 : number) : Promise<void>;
 
     /**
      * ( begin auto-generated from shapeMode.xml )
