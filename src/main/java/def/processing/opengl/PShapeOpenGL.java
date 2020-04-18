@@ -4576,12 +4576,6 @@ public class PShapeOpenGL extends PShape {
   // Rendering methods
 
 
-  /*
-  public void draw() {
-    draw(pg);
-  }
-  */
-
 
   @Override
   public native void draw(PGraphics g);

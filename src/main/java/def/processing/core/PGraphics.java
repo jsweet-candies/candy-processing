@@ -44,8 +44,10 @@ import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import def.js.Promise;
 import def.processing.opengl.PGL;
 import def.processing.opengl.PShader;
+import jsweet.lang.Async;
 
   /**
    * ( begin auto-generated from PGraphics.xml )
@@ -3753,32 +3755,13 @@ public class PGraphics extends PImage implements PConstants {
    * @see PGraphics#background(float, float, float, float)
    * @see PGraphics#alpha(int)
    */
-  public void image(PImage img, float a, float b) {
-    // Starting in release 0144, image errors are simply ignored.
-    // loadImageAsync() sets width and height to -1 when loading fails.
-    if (img.width == -1 || img.height == -1) return;
-
-    if (imageMode == CORNER || imageMode == CORNERS) {
-      imageImpl(img,
-                a, b, a+img.width, b+img.height,
-                0, 0, img.width, img.height);
-
-    } else if (imageMode == CENTER) {
-      float x1 = a - img.width/2;
-      float y1 = b - img.height/2;
-      imageImpl(img,
-                x1, y1, x1+img.width, y1+img.height,
-                0, 0, img.width, img.height);
-    }
-  }
+  @Async public native void image(PImage img, float a, float b);
 
   /**
    * @param c width to display the image by default
    * @param d height to display the image by default
    */
-  public void image(PImage img, float a, float b, float c, float d) {
-    image(img, a, b, c, d, 0, 0, img.width, img.height);
-  }
+  @Async public native void image(PImage img, float a, float b, float c, float d);
 
 
   /**
@@ -3788,110 +3771,9 @@ public class PGraphics extends PImage implements PConstants {
    *
    * @nowebref
    */
-  public void image(PImage img,
+  @Async public native void image(PImage img,
                     float a, float b, float c, float d,
-                    int u1, int v1, int u2, int v2) {
-    // Starting in release 0144, image errors are simply ignored.
-    // loadImageAsync() sets width and height to -1 when loading fails.
-    if (img.width == -1 || img.height == -1) return;
-
-    if (imageMode == CORNER) {
-      if (c < 0) {  // reset a negative width
-        a += c; c = -c;
-      }
-      if (d < 0) {  // reset a negative height
-        b += d; d = -d;
-      }
-
-      imageImpl(img,
-                a, b, a + c, b + d,
-                u1, v1, u2, v2);
-
-    } else if (imageMode == CORNERS) {
-      if (c < a) {  // reverse because x2 < x1
-        float temp = a; a = c; c = temp;
-      }
-      if (d < b) {  // reverse because y2 < y1
-        float temp = b; b = d; d = temp;
-      }
-
-      imageImpl(img,
-                a, b, c, d,
-                u1, v1, u2, v2);
-
-    } else if (imageMode == CENTER) {
-      // c and d are width/height
-      if (c < 0) c = -c;
-      if (d < 0) d = -d;
-      float x1 = a - c/2;
-      float y1 = b - d/2;
-
-      imageImpl(img,
-                x1, y1, x1 + c, y1 + d,
-                u1, v1, u2, v2);
-    }
-  }
-
-
-  /**
-   * Expects x1, y1, x2, y2 coordinates where (x2 >= x1) and (y2 >= y1).
-   * If tint() has been called, the image will be colored.
-   * <p/>
-   * The default implementation draws an image as a textured quad.
-   * The (u, v) coordinates are in image space (they're ints, after all..)
-   */
-  protected void imageImpl(PImage img,
-                           float x1, float y1, float x2, float y2,
-                           int u1, int v1, int u2, int v2) {
-    boolean savedStroke = stroke;
-//    boolean savedFill = fill;
-    int savedTextureMode = textureMode;
-
-    stroke = false;
-//    fill = true;
-    textureMode = IMAGE;
-
-//    float savedFillR = fillR;
-//    float savedFillG = fillG;
-//    float savedFillB = fillB;
-//    float savedFillA = fillA;
-//
-//    if (tint) {
-//      fillR = tintR;
-//      fillG = tintG;
-//      fillB = tintB;
-//      fillA = tintA;
-//
-//    } else {
-//      fillR = 1;
-//      fillG = 1;
-//      fillB = 1;
-//      fillA = 1;
-//    }
-
-    u1 *= img.pixelDensity;
-    u2 *= img.pixelDensity;
-    v1 *= img.pixelDensity;
-    v2 *= img.pixelDensity;
-
-    beginShape(QUADS);
-    texture(img);
-    vertex(x1, y1, u1, v1);
-    vertex(x1, y2, u1, v2);
-    vertex(x2, y2, u2, v2);
-    vertex(x2, y1, u2, v1);
-    endShape();
-
-    stroke = savedStroke;
-//    fill = savedFill;
-    textureMode = savedTextureMode;
-
-//    fillR = savedFillR;
-//    fillG = savedFillG;
-//    fillB = savedFillB;
-//    fillA = savedFillA;
-  }
-
+                    int u1, int v1, int u2, int v2);
 
   //////////////////////////////////////////////////////////////
 
@@ -3926,24 +3808,7 @@ public class PGraphics extends PImage implements PConstants {
   }
 
 
-  public void shape(PShape shape) {
-    if (shape.isVisible()) {  // don't do expensive matrix ops if invisible
-      // Flushing any remaining geometry generated in the immediate mode
-      // to avoid depth-sorting issues.
-      flush();
-
-      if (shapeMode == CENTER) {
-        pushMatrix();
-        translate(-shape.getWidth()/2, -shape.getHeight()/2);
-      }
-
-      shape.draw(this); // needs to handle recorder too
-
-      if (shapeMode == CENTER) {
-        popMatrix();
-      }
-    }
-  }
+  public native void shape(PShape shape);
 
 
 
@@ -4528,24 +4393,7 @@ public class PGraphics extends PImage implements PConstants {
    * @see PGraphics#fill(int, float)
    * @see_external String
    */
-  public void text(char c, float x, float y) {
-    if (textFont == null) {
-      defaultFontOrDeath("text");
-    }
-
-    if (textAlignY == CENTER) {
-      y += textAscent() / 2;
-    } else if (textAlignY == TOP) {
-      y += textAscent();
-    } else if (textAlignY == BOTTOM) {
-      y -= textDescent();
-    //} else if (textAlignY == BASELINE) {
-      // do nothing
-    }
-
-    textBuffer[0] = c;
-    textLineAlignImpl(textBuffer, 0, 1, x, y);
-  }
+  public native void text(char c, float x, float y);
 
 
   /**
@@ -4604,46 +4452,7 @@ public class PGraphics extends PImage implements PConstants {
    * @param start array index at which to start writing characters
    * @param stop array index at which to stop writing characters
    */
-  public void text(char[] chars, int start, int stop, float x, float y) {
-    // If multiple lines, sum the height of the additional lines
-    float high = 0; //-textAscent();
-    for (int i = start; i < stop; i++) {
-      if (chars[i] == '\n') {
-        high += textLeading;
-      }
-    }
-    if (textAlignY == CENTER) {
-      // for a single line, this adds half the textAscent to y
-      // for multiple lines, subtract half the additional height
-      //y += (textAscent() - textDescent() - high)/2;
-      y += (textAscent() - high)/2;
-    } else if (textAlignY == TOP) {
-      // for a single line, need to add textAscent to y
-      // for multiple lines, no different
-      y += textAscent();
-    } else if (textAlignY == BOTTOM) {
-      // for a single line, this is just offset by the descent
-      // for multiple lines, subtract leading for each line
-      y -= textDescent() + high;
-    //} else if (textAlignY == BASELINE) {
-      // do nothing
-    }
-
-//    int start = 0;
-    int index = 0;
-    while (index < stop) { //length) {
-      if (chars[index] == '\n') {
-        textLineAlignImpl(chars, start, index, x, y);
-        start = index + 1;
-        y += textLeading;
-      }
-      index++;
-    }
-    if (start < stop) {  //length) {
-      textLineAlignImpl(chars, start, index, x, y);
-    }
-  }
-
+  public native void text(char[] chars, int start, int stop, float x, float y);
 
   /**
    * Same as above but with a z coordinate.
@@ -4688,118 +4497,7 @@ public class PGraphics extends PImage implements PConstants {
    * @param x2 by default, the width of the text box, see rectMode() for more info
    * @param y2 by default, the height of the text box, see rectMode() for more info
    */
-  public void text(String str, float x1, float y1, float x2, float y2) {
-    if (textFont == null) {
-      defaultFontOrDeath("text");
-    }
-
-    float hradius, vradius;
-    switch (rectMode) {
-    case CORNER:
-      x2 += x1; y2 += y1;
-      break;
-    case RADIUS:
-      hradius = x2;
-      vradius = y2;
-      x2 = x1 + hradius;
-      y2 = y1 + vradius;
-      x1 -= hradius;
-      y1 -= vradius;
-      break;
-    case CENTER:
-      hradius = x2 / 2.0f;
-      vradius = y2 / 2.0f;
-      x2 = x1 + hradius;
-      y2 = y1 + vradius;
-      x1 -= hradius;
-      y1 -= vradius;
-    }
-    if (x2 < x1) {
-      float temp = x1; x1 = x2; x2 = temp;
-    }
-    if (y2 < y1) {
-      float temp = y1; y1 = y2; y2 = temp;
-    }
-
-//    float currentY = y1;
-    float boxWidth = x2 - x1;
-
-//    // ala illustrator, the text itself must fit inside the box
-//    currentY += textAscent(); //ascent() * textSize;
-//    // if the box is already too small, tell em to f off
-//    if (currentY > y2) return;
-
-    float spaceWidth = textWidth(' ');
-
-    if (textBreakStart == null) {
-      textBreakStart = new int[20];
-      textBreakStop = new int[20];
-    }
-    textBreakCount = 0;
-
-    int length = str.length();
-    if (length + 1 > textBuffer.length) {
-      textBuffer = new char[length + 1];
-    }
-    str.getChars(0, length, textBuffer, 0);
-    // add a fake newline to simplify calculations
-    textBuffer[length++] = '\n';
-
-    int sentenceStart = 0;
-    for (int i = 0; i < length; i++) {
-      if (textBuffer[i] == '\n') {
-//        currentY = textSentence(textBuffer, sentenceStart, i,
-//                                lineX, boxWidth, currentY, y2, spaceWidth);
-        boolean legit =
-          textSentence(textBuffer, sentenceStart, i, boxWidth, spaceWidth);
-        if (!legit) break;
-//      if (Float.isNaN(currentY)) break;  // word too big (or error)
-//      if (currentY > y2) break;  // past the box
-        sentenceStart = i + 1;
-      }
-    }
-
-    // lineX is the position where the text starts, which is adjusted
-    // to left/center/right based on the current textAlign
-    float lineX = x1; //boxX1;
-    if (textAlign == CENTER) {
-      lineX = lineX + boxWidth/2f;
-    } else if (textAlign == RIGHT) {
-      lineX = x2; //boxX2;
-    }
-
-    float boxHeight = y2 - y1;
-    //int lineFitCount = 1 + PApplet.floor((boxHeight - textAscent()) / textLeading);
-    // incorporate textAscent() for the top (baseline will be y1 + ascent)
-    // and textDescent() for the bottom, so that lower parts of letters aren't
-    // outside the box. [0151]
-    float topAndBottom = textAscent() + textDescent();
-    int lineFitCount = 1 + PApplet.floor((boxHeight - topAndBottom) / textLeading);
-    int lineCount = Math.min(textBreakCount, lineFitCount);
-
-    if (textAlignY == CENTER) {
-      float lineHigh = textAscent() + textLeading * (lineCount - 1);
-      float y = y1 + textAscent() + (boxHeight - lineHigh) / 2;
-      for (int i = 0; i < lineCount; i++) {
-        textLineAlignImpl(textBuffer, textBreakStart[i], textBreakStop[i], lineX, y);
-        y += textLeading;
-      }
-
-    } else if (textAlignY == BOTTOM) {
-      float y = y2 - textDescent() - textLeading * (lineCount - 1);
-      for (int i = 0; i < lineCount; i++) {
-        textLineAlignImpl(textBuffer, textBreakStart[i], textBreakStop[i], lineX, y);
-        y += textLeading;
-      }
-
-    } else {  // TOP or BASELINE just go to the default
-      float y = y1 + textAscent();
-      for (int i = 0; i < lineCount; i++) {
-        textLineAlignImpl(textBuffer, textBreakStart[i], textBreakStop[i], lineX, y);
-        y += textLeading;
-      }
-    }
-  }
+  public native void text(String str, float x1, float y1, float x2, float y2);
 
 
   /**
@@ -4944,183 +4642,6 @@ public class PGraphics extends PImage implements PConstants {
   public void text(float num, float x, float y, float z) {
     text(PApplet.nfs(num, 0, 3), x, y, z);
   }
-
-
-  //////////////////////////////////////////////////////////////
-
-  // TEXT IMPL
-
-  // These are most likely to be overridden by subclasses, since the other
-  // (public) functions handle generic features like setting alignment.
-
-
-  /**
-   * Handles placement of a text line, then calls textLineImpl
-   * to actually render at the specific point.
-   */
-  protected void textLineAlignImpl(char buffer[], int start, int stop,
-                                   float x, float y) {
-    if (textAlign == CENTER) {
-      x -= textWidthImpl(buffer, start, stop) / 2f;
-
-    } else if (textAlign == RIGHT) {
-      x -= textWidthImpl(buffer, start, stop);
-    }
-
-    textLineImpl(buffer, start, stop, x, y);
-  }
-
-
-  /**
-   * Implementation of actual drawing for a line of text.
-   */
-  protected void textLineImpl(char buffer[], int start, int stop,
-                              float x, float y) {
-    for (int index = start; index < stop; index++) {
-      textCharImpl(buffer[index], x, y);
-
-      // this doesn't account for kerning
-      x += textWidth(buffer[index]);
-    }
-//    textX = x;
-//    textY = y;
-//    textZ = 0;  // this will get set by the caller if non-zero
-  }
-
-
-  protected void textCharImpl(char ch, float x, float y) { //, float z) {
-    PFont.Glyph glyph = textFont.getGlyph(ch);
-    if (glyph != null) {
-      if (textMode == MODEL) {
-        float high    = glyph.height     / (float) textFont.getSize();
-        float bwidth  = glyph.width      / (float) textFont.getSize();
-        float lextent = glyph.leftExtent / (float) textFont.getSize();
-        float textent = glyph.topExtent  / (float) textFont.getSize();
-
-        float x1 = x + lextent * textSize;
-        float y1 = y - textent * textSize;
-        float x2 = x1 + bwidth * textSize;
-        float y2 = y1 + high * textSize;
-
-        textCharModelImpl(glyph.image,
-                          x1, y1, x2, y2,
-                          glyph.width, glyph.height);
-      }
-    } else if (ch != ' ' && ch != 127) {
-      showWarning("No glyph found for the " + ch + " (\\u" + PApplet.hex(ch, 4) + ") character");
-    }
-  }
-
-
-  protected void textCharModelImpl(PImage glyph,
-                                   float x1, float y1, //float z1,
-                                   float x2, float y2, //float z2,
-                                   int u2, int v2) {
-    boolean savedTint = tint;
-    int savedTintColor = tintColor;
-    float savedTintR = tintR;
-    float savedTintG = tintG;
-    float savedTintB = tintB;
-    float savedTintA = tintA;
-    boolean savedTintAlpha = tintAlpha;
-
-    tint = true;
-    tintColor = fillColor;
-    tintR = fillR;
-    tintG = fillG;
-    tintB = fillB;
-    tintA = fillA;
-    tintAlpha = fillAlpha;
-
-    imageImpl(glyph, x1, y1, x2, y2, 0, 0, u2, v2);
-
-    tint = savedTint;
-    tintColor = savedTintColor;
-    tintR = savedTintR;
-    tintG = savedTintG;
-    tintB = savedTintB;
-    tintA = savedTintA;
-    tintAlpha = savedTintAlpha;
-  }
-
-
-  /*
-  protected void textCharScreenImpl(PImage glyph,
-                                    int xx, int yy,
-                                    int w0, int h0) {
-    int x0 = 0;
-    int y0 = 0;
-
-    if ((xx >= width) || (yy >= height) ||
-        (xx + w0 < 0) || (yy + h0 < 0)) return;
-
-    if (xx < 0) {
-      x0 -= xx;
-      w0 += xx;
-      xx = 0;
-    }
-    if (yy < 0) {
-      y0 -= yy;
-      h0 += yy;
-      yy = 0;
-    }
-    if (xx + w0 > width) {
-      w0 -= ((xx + w0) - width);
-    }
-    if (yy + h0 > height) {
-      h0 -= ((yy + h0) - height);
-    }
-
-    int fr = fillRi;
-    int fg = fillGi;
-    int fb = fillBi;
-    int fa = fillAi;
-
-    int pixels1[] = glyph.pixels; //images[glyph].pixels;
-
-    // TODO this can be optimized a bit
-    for (int row = y0; row < y0 + h0; row++) {
-      for (int col = x0; col < x0 + w0; col++) {
-        //int a1 = (fa * pixels1[row * textFont.twidth + col]) >> 8;
-        int a1 = (fa * pixels1[row * glyph.width + col]) >> 8;
-        int a2 = a1 ^ 0xff;
-        //int p1 = pixels1[row * glyph.width + col];
-        int p2 = pixels[(yy + row-y0)*width + (xx+col-x0)];
-
-        pixels[(yy + row-y0)*width + xx+col-x0] =
-          (0xff000000 |
-           (((a1 * fr + a2 * ((p2 >> 16) & 0xff)) & 0xff00) << 8) |
-           (( a1 * fg + a2 * ((p2 >>  8) & 0xff)) & 0xff00) |
-           (( a1 * fb + a2 * ( p2        & 0xff)) >> 8));
-      }
-    }
-  }
-  */
-
-
-//  /**
-//   * Convenience method to get a legit FontMetrics object. Where possible,
-//   * override this any renderer subclass so that you're not using what's
-//   * returned by getDefaultToolkit() to get your metrics.
-//   */
-//  @SuppressWarnings("deprecation")
-//  public FontMetrics getFontMetrics(Font font) {  // ignore
-//    Frame frame = parent.frame;
-//    if (frame != null) {
-//      return frame.getToolkit().getFontMetrics(font);
-//    }
-//    return Toolkit.getDefaultToolkit().getFontMetrics(font);
-//  }
-//
-//
-//  /**
-//   * Convenience method to jump through some Java2D hoops and get an FRC.
-//   */
-//  public FontRenderContext getFontRenderContext(Font font) {  // ignore
-//    return getFontMetrics(font).getFontRenderContext();
-//  }
-
-
 
   //////////////////////////////////////////////////////////////
 

@@ -532,11 +532,6 @@ interface PApplet extends PConstants {
     looping : boolean;
 
     /**
-     * flag set to true when a redraw is asked for by the user
-     */
-    redraw : any;
-
-    /**
      * ( begin auto-generated from frameCount.xml )
      * 
      * The system variable <b>frameCount</b> contains the number of frames displayed
@@ -1005,6 +1000,33 @@ interface PApplet extends PConstants {
     frameRateLastNanos : number;
 
     handleDraw();
+
+    /**
+     * ( begin auto-generated from redraw.xml )
+     * 
+     * Executes the code within <b>draw()</b> one time. This functions allows the
+     * program to update the display window only when necessary, for example when an
+     * event registered by <b>mousePressed()</b> or <b>keyPressed()</b> occurs.
+     * <br/>
+     * <br/>
+     * structuring a program, it only makes sense to call redraw() within events
+     * such as <b>mousePressed()</b>. This is because <b>redraw()</b> does not run
+     * <b>draw()</b> immediately (it only sets a flag that indicates an update is
+     * needed). <br/>
+     * <br/>
+     * <b>redraw()</b> within <b>draw()</b> has no effect because <b>draw()</b> is
+     * continuously called anyway.
+     * 
+     * ( end auto-generated )
+     * 
+     * @webref structure
+     * @usage web_application
+     * @see PApplet#draw()
+     * @see PApplet#loop()
+     * @see PApplet#noLoop()
+     * @see PApplet#frameRate(float)
+     */
+    redraw();
 
     /**
      * ( begin auto-generated from loop.xml )
@@ -3934,9 +3956,8 @@ interface PApplet extends PConstants {
      * @see PGraphics#tint(float)
      * @see PGraphics#background(float, float, float, float)
      * @see PGraphics#alpha(int)
-     * @return {Promise}
      */
-    image(img : PImage, a : number, b : number) : Promise<void>;
+    image(img : PImage, a : number, b : number);
 
     /**
      * @param {*} img A PImage like object (candy-processing-webcam:Capture is one for
@@ -3944,9 +3965,8 @@ interface PApplet extends PConstants {
      * @see PApplet#image(PImage, float, float)
      * @param {number} a
      * @param {number} b
-     * @return {Promise}
      */
-    image(img : PApplet.PImageLike, a : number, b : number) : Promise<void>;
+    image(img : PApplet.PImageLike, a : number, b : number);
 
     /**
      * @param {number} c width to display the image by default
@@ -3954,9 +3974,8 @@ interface PApplet extends PConstants {
      * @param {PImage} img
      * @param {number} a
      * @param {number} b
-     * @return {Promise}
      */
-    image(img : PImage, a : number, b : number, c : number, d : number) : Promise<void>;
+    image(img : PImage, a : number, b : number, c : number, d : number);
 
     /**
      * @param {*} img A PImage like object (candy-processing-webcam:Capture is one for
@@ -3966,9 +3985,8 @@ interface PApplet extends PConstants {
      * @param {number} b
      * @param {number} c
      * @param {number} d
-     * @return {Promise}
      */
-    image(img : PApplet.PImageLike, a : number, b : number, c : number, d : number) : Promise<void>;
+    image(img : PApplet.PImageLike, a : number, b : number, c : number, d : number);
 
     /**
      * Draw an image(), also specifying u/v coordinates. In this method, the u, v
@@ -3983,9 +4001,8 @@ interface PApplet extends PConstants {
      * @param {number} v1
      * @param {number} u2
      * @param {number} v2
-     * @return {Promise}
      */
-    image(img : PImage, a : number, b : number, c : number, d : number, u1 : number, v1 : number, u2 : number, v2 : number) : Promise<void>;
+    image(img : PImage, a : number, b : number, c : number, d : number, u1 : number, v1 : number, u2 : number, v2 : number);
 
     /**
      * @param {*} img A PImage like object (candy-processing-webcam:Capture is one for
@@ -4000,9 +4017,8 @@ interface PApplet extends PConstants {
      * @param {number} v1
      * @param {number} u2
      * @param {number} v2
-     * @return {Promise}
      */
-    image(img : PApplet.PImageLike, a : number, b : number, c : number, d : number, u1 : number, v1 : number, u2 : number, v2 : number) : Promise<void>;
+    image(img : PApplet.PImageLike, a : number, b : number, c : number, d : number, u1 : number, v1 : number, u2 : number, v2 : number);
 
     /**
      * ( begin auto-generated from shapeMode.xml )
@@ -11728,24 +11744,6 @@ declare class PGraphics extends PImage implements PConstants {
 
     smoothWarning(method : string);
 
-    /**
-     * Expects x1, y1, x2, y2 coordinates where (x2 >= x1) and (y2 >= y1).
-     * If tint() has been called, the image will be colored.
-     * <p/>
-     * The default implementation draws an image as a textured quad.
-     * The (u, v) coordinates are in image space (they're ints, after all..)
-     * @param {PImage} img
-     * @param {number} x1
-     * @param {number} y1
-     * @param {number} x2
-     * @param {number} y2
-     * @param {number} u1
-     * @param {number} v1
-     * @param {number} u2
-     * @param {number} v2
-     */
-    imageImpl(img : PImage, x1 : number, y1 : number, x2 : number, y2 : number, u1 : number, v1 : number, u2 : number, v2 : number);
-
     createFont(name : string, size : number, smooth : boolean, charset : string[]) : PFont;
 
     /**
@@ -11985,31 +11983,6 @@ declare class PGraphics extends PImage implements PConstants {
     public text(num : number, x : number, y : number);
 
     public text(num : number, x : number, y : number, z : number);
-
-    /**
-     * Handles placement of a text line, then calls textLineImpl
-     * to actually render at the specific point.
-     * @param {Array} buffer
-     * @param {number} start
-     * @param {number} stop
-     * @param {number} x
-     * @param {number} y
-     */
-    textLineAlignImpl(buffer : string[], start : number, stop : number, x : number, y : number);
-
-    /**
-     * Implementation of actual drawing for a line of text.
-     * @param {Array} buffer
-     * @param {number} start
-     * @param {number} stop
-     * @param {number} x
-     * @param {number} y
-     */
-    textLineImpl(buffer : string[], start : number, stop : number, x : number, y : number);
-
-    textCharImpl(ch : string, x : number, y : number);
-
-    textCharModelImpl(glyph : PImage, x1 : number, y1 : number, x2 : number, y2 : number, u2 : number, v2 : number);
 
     /**
      * ( begin auto-generated from pushMatrix.xml )
@@ -28033,8 +28006,6 @@ declare class PShader implements PConstants {
      * linking the shader program.
      */
     setup();
-
-    draw(idxId : number, count : number, offset : number);
 
     /**
      * Returns the ID location of the attribute parameter given its name.

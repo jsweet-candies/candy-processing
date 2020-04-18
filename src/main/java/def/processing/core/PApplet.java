@@ -102,6 +102,7 @@ import def.processing.data.StringList;
 import def.processing.data.Table;
 import def.processing.data.XML;
 import def.processing.event.MouseEvent;
+import jsweet.lang.Async;
 import jsweet.lang.Interface;
 
 /**
@@ -639,9 +640,6 @@ public class PApplet implements PConstants {
 	public float frameRate = 10;
 
 	protected boolean looping = true;
-
-	/** flag set to true when a redraw is asked for by the user */
-	protected boolean redraw = true;
 
 	/**
 	 * ( begin auto-generated from frameCount.xml )
@@ -1501,8 +1499,7 @@ public class PApplet implements PConstants {
 	 * @see PApplet#noLoop()
 	 * @see PApplet#draw()
 	 */
-	public void setup() {
-	}
+	@Async public native void setup();
 
 	/**
 	 * ( begin auto-generated from draw.xml )
@@ -1533,11 +1530,7 @@ public class PApplet implements PConstants {
 	 * @see PApplet#frameRate(float)
 	 * @see PGraphics#background(float, float, float, float)
 	 */
-	public void draw() {
-		// if no draw method, then shut things down
-		// System.out.println("no draw method, goodbye");
-		finished = true;
-	}
+	@Async public native void draw();
 
 	//////////////////////////////////////////////////////////////
 
@@ -1871,22 +1864,7 @@ public class PApplet implements PConstants {
 	 * @see PApplet#noLoop()
 	 * @see PApplet#frameRate(float)
 	 */
-	synchronized public void redraw() {
-		if (!looping) {
-			redraw = true;
-//      if (thread != null) {
-//        // wake from sleep (necessary otherwise it'll be
-//        // up to 10 seconds before update)
-//        if (CRUSTY_THREADS) {
-//          thread.interrupt();
-//        } else {
-//          synchronized (blocker) {
-//            blocker.notifyAll();
-//          }
-//        }
-//      }
-		}
-	}
+	@Async public native void redraw();
 
 	/**
 	 * ( begin auto-generated from loop.xml )
@@ -2306,16 +2284,7 @@ public class PApplet implements PConstants {
 	 * @see PApplet#frameRate
 	 * @see PApplet#draw()
 	 */
-	public void delay(int napTime) {
-		// if (frameCount != 0) {
-		// if (napTime > 0) {
-		try {
-			Thread.sleep(napTime);
-		} catch (InterruptedException e) {
-		}
-		// }
-		// }
-	}
+	@Async public native void delay(int napTime);
 
 	/**
 	 * ( begin auto-generated from frameRate.xml )
@@ -2606,7 +2575,7 @@ public class PApplet implements PConstants {
 	 * 
 	 * @webref structure
 	 */
-	public native void exit();
+	@Async public native void exit();
 
 	public List<Function<PApplet, Promise<Void>>> onExitListeners;
 	
@@ -10439,34 +10408,34 @@ public class PApplet implements PConstants {
 	 * @see PGraphics#background(float, float, float, float)
 	 * @see PGraphics#alpha(int)
 	 */
-	public native Promise<Void> image(PImage img, float a, float b);
+	@Async public native void image(PImage img, float a, float b);
 
 	/**
 	 * @param img A PImage like object (candy-processing-webcam:Capture is one for
 	 *            instance)
 	 * @see PApplet#image(PImage, float, float)
 	 */
-	public native Promise<Void> image(PImageLike img, float a, float b);
+	@Async public native void image(PImageLike img, float a, float b);
 
 	/**
 	 * @param c width to display the image by default
 	 * @param d height to display the image by default
 	 */
-	public native Promise<Void> image(PImage img, float a, float b, float c, float d);
+	@Async public native void image(PImage img, float a, float b, float c, float d);
 
 	/**
 	 * @param img A PImage like object (candy-processing-webcam:Capture is one for
 	 *            instance)
 	 * @see PApplet#image(PImage, float, float, float, float)
 	 */
-	public native Promise<Void> image(PImageLike img, float a, float b, float c, float d);
+	@Async public native void image(PImageLike img, float a, float b, float c, float d);
 
 	/**
 	 * Draw an image(), also specifying u/v coordinates. In this method, the u, v
 	 * coordinates are always based on image space location, regardless of the
 	 * current textureMode().
 	 */
-	public native Promise<Void> image(PImage img, float a, float b, float c, float d, int u1, int v1, int u2, int v2);
+	@Async public native void image(PImage img, float a, float b, float c, float d, int u1, int v1, int u2, int v2);
 
 	/**
 	 * @param img A PImage like object (candy-processing-webcam:Capture is one for
@@ -10474,7 +10443,7 @@ public class PApplet implements PConstants {
 	 * @see PApplet#image(PImageLike, float, float, float, float, int, int, int,
 	 *      int)
 	 */
-	public native Promise<Void> image(PImageLike img, float a, float b, float c, float d, int u1, int v1, int u2, int v2);
+	@Async public native void image(PImageLike img, float a, float b, float c, float d, int u1, int v1, int u2, int v2);
 
 	/**
 	 * ( begin auto-generated from shapeMode.xml )
